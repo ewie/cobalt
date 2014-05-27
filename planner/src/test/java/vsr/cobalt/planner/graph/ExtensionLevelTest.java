@@ -1,0 +1,334 @@
+/*
+ * Copyright (c) 2014, Erik Wienhold
+ * All rights reserved.
+ *
+ * Licensed under the BSD 3-Clause License.
+ */
+
+package vsr.cobalt.planner.graph;
+
+import org.testng.annotations.Test;
+import vsr.cobalt.planner.models.Action;
+import vsr.cobalt.planner.models.Property;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotEquals;
+import static org.testng.Assert.assertTrue;
+import static vsr.cobalt.testing.Utilities.assertEmpty;
+import static vsr.cobalt.testing.Utilities.emptySet;
+import static vsr.cobalt.testing.Utilities.immutableSetOf;
+import static vsr.cobalt.testing.Utilities.setOf;
+import static vsr.cobalt.testing.Utilities.make;
+import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.testing.makers.ActionMaker.anAction;
+import static vsr.cobalt.testing.makers.ActionProvisionMaker.aMinimalActionProvision;
+import static vsr.cobalt.testing.makers.ActionProvisionMaker.anActionProvision;
+import static vsr.cobalt.testing.makers.ExtensionLevelMaker.anExtensionLevel;
+import static vsr.cobalt.testing.makers.PropertyMaker.aMinimalProperty;
+import static vsr.cobalt.testing.makers.PropertyMaker.aProperty;
+import static vsr.cobalt.testing.makers.PropertyProvisionMaker.aPropertyProvision;
+import static vsr.cobalt.testing.makers.PropositionSetMaker.aPropositionSet;
+import static vsr.cobalt.testing.makers.WidgetMaker.aWidget;
+
+@Test
+public class ExtensionLevelTest {
+
+  @Test
+  public static class New {
+
+    @Test(expectedExceptions = IllegalArgumentException.class,
+        expectedExceptionsMessageRegExp = "expecting one or more provisions")
+    public void rejectEmptySet() {
+      new ExtensionLevel(emptySet(ActionProvision.class));
+    }
+
+  }
+
+  @Test
+  public static class GetActionProvisions {
+
+    @Test
+    public void returnAllActionProvisions() {
+      final ActionProvision ap = make(aMinimalActionProvision());
+      final ExtensionLevel extensionLevel = make(anExtensionLevel().withProvision(ap));
+      assertEquals(extensionLevel.getActionProvisions(), setOf(ap));
+    }
+
+  }
+
+  @Test
+  public static class GetRequiredActions {
+
+    @Test
+    public void includeAllPrecursorActions() {
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+
+      final Action request = make(aMinimalAction()
+          .withPre(aPropositionSet().withCleared(p1)));
+
+      final Action precursor1 = make(aMinimalAction()
+          .withPost(aPropositionSet().withCleared(p1)));
+
+      final Action precursor2 = make(aMinimalAction()
+          .withPost(aPropositionSet().withCleared(p1, p2)));
+
+      final ActionProvision ap1 = make(anActionProvision()
+          .withRequest(request)
+          .withPrecursor(precursor1));
+
+      final ActionProvision ap2 = make(anActionProvision()
+          .withRequest(request)
+          .withPrecursor(precursor2));
+
+      final ExtensionLevel extensionLevel = make(anExtensionLevel().withProvision(ap1, ap2));
+
+      assertEquals(extensionLevel.getRequiredActions(), setOf(precursor1, precursor2));
+    }
+
+    @Test
+    public void includeAllProvidingActions() {
+      final Property p1 = make(aProperty().withName("p1"));
+      final Property p2 = make(aProperty().withName("p2"));
+
+      final Action request = make(aMinimalAction()
+          .withPre(aPropositionSet()
+              .withCleared(p1)
+              .withFilled(p2)));
+
+      final Action precursor = make(aMinimalAction()
+          .withPost(aPropositionSet().withCleared(p1)));
+
+      final Action provider = make(aMinimalAction().withPub(p2));
+
+      final ActionProvision ap = make(anActionProvision()
+          .withPrecursor(precursor)
+          .withRequest(request)
+          .withProvision(aPropertyProvision()
+              .withProvidingAction(provider)
+              .withRequest(p2)
+              .withOffer(p2)));
+
+      final ExtensionLevel extensionLevel = make(anExtensionLevel().withProvision(ap));
+
+      assertEquals(extensionLevel.getRequiredActions(), setOf(precursor, provider));
+    }
+
+    @Test
+    public void handlePrecursorLessActionProvisions() {
+      final Property p = make(aMinimalProperty());
+
+      final Action request = make(aMinimalAction()
+          .withPre(aPropositionSet().withFilled(p)));
+
+      final Action provider = make(aMinimalAction().withPub(p));
+
+      final ActionProvision ap = make(anActionProvision()
+          .withRequest(request)
+          .withProvision(aPropertyProvision()
+              .withProvidingAction(provider)
+              .withRequest(p)
+              .withOffer(p)));
+
+      final ExtensionLevel extensionLevel = make(anExtensionLevel().withProvision(ap));
+
+      assertEquals(extensionLevel.getRequiredActions(), setOf(provider));
+    }
+
+  }
+
+  @Test
+  public static class GetRequestedActions {
+
+    @Test
+    public void returnAllRequestedActions() {
+      final Property p1 = make(aProperty().withName("p1"));
+      final Property p2 = make(aProperty().withName("p2"));
+
+      final Action request1 = make(aMinimalAction()
+          .withPre(aPropositionSet().withCleared(p1)));
+
+      final Action request2 = make(aMinimalAction()
+          .withPre(aPropositionSet().withCleared(p2)));
+
+      final Action precursor = make(aMinimalAction()
+          .withPost(aPropositionSet().withCleared(p1, p2)));
+
+      final ActionProvision ap1 = make(anActionProvision()
+          .withRequest(request1)
+          .withPrecursor(precursor));
+
+      final ActionProvision ap2 = make(anActionProvision()
+          .withRequest(request2)
+          .withPrecursor(precursor));
+
+      final ExtensionLevel extensionLevel = make(anExtensionLevel()
+          .withProvision(ap1, ap2));
+
+      assertEquals(extensionLevel.getRequestedActions(), setOf(ap1.getRequestedAction(), ap2.getRequestedAction()));
+    }
+
+  }
+
+  @Test
+  public static class CanExtendOn {
+
+    @Test
+    public void returnTrueWhenAllRequestedActionsAreSubsetOfOtherPrecursorActions() {
+      final Property p = make(aMinimalProperty());
+
+      final Action request = make(aMinimalAction()
+          .withPre(aPropositionSet().withCleared(p)));
+
+      final Action precursor = make(aMinimalAction()
+      .withPost(aPropositionSet().withCleared(p)));
+
+      final ExtensionLevel xl = make(anExtensionLevel()
+          .withProvision(anActionProvision()
+              .withRequest(request)
+              .withPrecursor(precursor)));
+
+      final Level l = mock(Level.class);
+      when(l.getRequiredActions()).thenReturn(immutableSetOf(request));
+
+      assertTrue(xl.canExtendOn(l));
+    }
+
+    @Test
+    public void returnFalseWhenAnyRequestedActionIsNotMemberOfOtherPrecursorActions() {
+      final Property p = make(aMinimalProperty());
+
+      final Action request = make(aMinimalAction()
+          .withPre(aPropositionSet().withCleared(p)));
+
+      final Action precursor = make(aMinimalAction()
+          .withPost(aPropositionSet().withCleared(p)));
+
+      final ExtensionLevel xl = make(anExtensionLevel()
+          .withProvision(anActionProvision()
+              .withRequest(request)
+              .withPrecursor(precursor)));
+
+      final Level l = mock(Level.class);
+      when(l.getRequiredActions()).thenReturn(immutableSetOf(make(aMinimalAction())));
+
+      assertFalse(xl.canExtendOn(l));
+    }
+
+  }
+
+  @Test
+  public static class GetActionProvisionsByRequestedAction {
+
+    @Test
+    public void returnAllActionProvisionsHavingTheGivenRequestedAction() {
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+
+      final Action request = make(aMinimalAction()
+          .withPre(aPropositionSet().withCleared(p1)));
+
+      final Action precursor1 = make(aMinimalAction()
+          .withPost(aPropositionSet().withCleared(p1)));
+
+      final Action precursor2 = make(aMinimalAction()
+          .withPost(aPropositionSet().withCleared(p1, p2)));
+
+      final ActionProvision ap1 = make(anActionProvision()
+          .withRequest(request)
+          .withPrecursor(precursor1));
+
+      final ActionProvision ap2 = make(anActionProvision()
+          .withRequest(request)
+          .withPrecursor(precursor2));
+
+      final ExtensionLevel extensionLevel = make(anExtensionLevel().withProvision(ap1, ap2));
+
+      assertEquals(extensionLevel.getActionProvisionsByRequestedAction(request), setOf(ap1, ap2));
+    }
+
+    @Test
+    public void excludeActionProvisionsNotHavingTheGivenRequestedAction() {
+      final Property p = make(aMinimalProperty().withName("p"));
+
+      final Action request = make(aMinimalAction()
+          .withPre(aPropositionSet().withCleared(p)));
+
+      final Action precursor = make(aMinimalAction()
+          .withPost(aPropositionSet().withCleared(p)));
+
+      final ActionProvision ap = make(anActionProvision()
+          .withPrecursor(precursor)
+          .withRequest(request));
+
+      final ExtensionLevel extensionLevel = make(anExtensionLevel().withProvision(ap));
+
+      final Action targetX = make(anAction());
+
+      assertEmpty(extensionLevel.getActionProvisionsByRequestedAction(targetX));
+    }
+
+    @Test
+    public void returnEmptySetWhenNoActionProvisionHasTheGivenRequestedAction() {
+      final ExtensionLevel extensionLevel = make(anExtensionLevel()
+          .withProvision(aMinimalActionProvision()));
+
+      final Action a = make(anAction()
+          .withWidget(aWidget().withIdentifier("w")));
+
+      assertEmpty(extensionLevel.getActionProvisionsByRequestedAction(a));
+    }
+
+  }
+
+  @Test
+  public static class Equality {
+
+    @Test
+    public void useHashCodeOfActionProvisionSet() {
+      final ExtensionLevel xl = new ExtensionLevel(immutableSetOf(make(aMinimalActionProvision())));
+      assertEquals(xl.hashCode(), xl.getActionProvisions().hashCode());
+    }
+
+    @Test
+    public void returnTrueWhenActionProvisionSetsAreEqual() {
+      final ExtensionLevel xl1 = new ExtensionLevel(immutableSetOf(make(aMinimalActionProvision())));
+      final ExtensionLevel xl2 = new ExtensionLevel(immutableSetOf(make(aMinimalActionProvision())));
+      assertEquals(xl1, xl2);
+    }
+
+    @Test
+    public void returnFalseWhenComparedWithNonExtensionLevel() {
+      final ExtensionLevel xl = new ExtensionLevel(immutableSetOf(make(aMinimalActionProvision())));
+      final Object x = new Object();
+      assertNotEquals(xl, x);
+    }
+
+    @Test
+    public void returnFalseWhenActionProvisionSetsDiffer() {
+      final Property p = make(aMinimalProperty().withName("p"));
+
+      final Action a1 = make(aMinimalAction()
+          .withPre(aPropositionSet().withCleared(p)));
+
+      final Action a2 = make(aMinimalAction()
+          .withPost(aPropositionSet().withCleared(p)));
+
+      final ActionProvision ap1 = make(anActionProvision()
+          .withRequest(a1)
+          .withPrecursor(a2));
+
+      final ActionProvision ap2 = make(aMinimalActionProvision());
+
+      final ExtensionLevel xl1 = new ExtensionLevel(immutableSetOf(ap1));
+      final ExtensionLevel xl2 = new ExtensionLevel(immutableSetOf(ap2));
+
+      assertNotEquals(xl1, xl2);
+    }
+
+  }
+
+}
