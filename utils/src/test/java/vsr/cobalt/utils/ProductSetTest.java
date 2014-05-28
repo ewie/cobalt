@@ -5,12 +5,10 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner;
+package vsr.cobalt.utils;
 
 import com.google.common.collect.ImmutableSet;
 import org.testng.annotations.Test;
-import vsr.cobalt.planner.ProductSet;
-import vsr.cobalt.planner.ProductSetIterator;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;

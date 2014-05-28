@@ -13,7 +13,7 @@ import vsr.cobalt.planner.models.Task;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
-import static vsr.cobalt.testing.Utilities.assertSubClass;
+import static vsr.cobalt.testing.Assert.assertSubClass;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.testing.makers.TaskMaker.aMinimalTask;

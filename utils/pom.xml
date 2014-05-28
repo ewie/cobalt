@@ -11,16 +11,6 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>cobalt-planner</artifactId>
-
-  <dependencies>
-
-    <dependency>
-      <groupId>vsr.cobalt</groupId>
-      <artifactId>cobalt-utils</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-  </dependencies>
+  <artifactId>cobalt-utils</artifactId>
 
 </project>

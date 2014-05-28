@@ -10,40 +10,13 @@ package vsr.cobalt.testing;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import com.google.common.collect.ImmutableSet;
-import vsr.cobalt.testing.maker.Maker;
 
 import static org.testng.Assert.fail;
 
 /**
  * @author Erik Wienhold
  */
-public abstract class Utilities {
-
-  public static <T> T make(final Maker<T> maker) {
-    return maker.make();
-  }
-
-  @SafeVarargs
-  public static <E> ImmutableSet<E> immutableSetOf(final E... elements) {
-    return ImmutableSet.of(elements);
-  }
-
-  @SafeVarargs
-  public static <E> Set<E> setOf(final E... elements) {
-    return new HashSet<>(Arrays.asList(elements));
-  }
-
-  public static <E> ImmutableSet<E> emptySet() {
-    return ImmutableSet.of();
-  }
-
-  public static <E> ImmutableSet<E> emptySet(final Class<E> unused) {
-    return ImmutableSet.of();
-  }
+public final class Assert {
 
   public static void assertSubClass(final Class<?> clazz, final Class<?> parent) {
     Class<?> c = clazz;
@@ -59,6 +32,30 @@ public abstract class Utilities {
   }
 
   public static void assertEmpty(final Object obj) {
+    if (!empty(obj)) {
+      fail("not empty: " + obj);
+    }
+  }
+
+  public static void assertNotEmpty(final Object obj) {
+    if (empty(obj)) {
+      fail("empty: " + obj);
+    }
+  }
+
+  public static void assertContains(final Object obj, final Object x) {
+    if (!contains(obj, x)) {
+      fail("does not contain: " + x + " " + obj);
+    }
+  }
+
+  public static void assertNotContains(final Object obj, final Object x) {
+    if (contains(obj, x)) {
+      fail("does contain: " + x + " " + obj);
+    }
+  }
+
+  private static boolean empty(final Object obj) {
     final Method mth = getMethod(obj, "isEmpty");
     if (mth == null) {
       fail("object has no method isEmpty");
@@ -66,15 +63,30 @@ public abstract class Utilities {
     if (!returnsAny(mth, "boolean", "java.lang.Boolean")) {
       fail("expecting isEmpty to return boolean or java.lang.Boolean");
     }
-    boolean isEmpty = false;
     try {
-      isEmpty = (boolean) mth.invoke(obj);
+      return (boolean) mth.invoke(obj);
     } catch (IllegalAccessException | InvocationTargetException ex) {
       fail("cannot invoke isEmpty " + ex.getMessage(), ex);
     }
-    if (!isEmpty) {
-      fail("not empty: " + obj);
+    // never reached
+    return false;
+  }
+
+  private static boolean contains(final Object obj, final Object x) {
+    final Method mth = getMethod(obj, "contains", Object.class);
+    if (mth == null) {
+      fail("object has no method contains");
     }
+    if (!returnsAny(mth, "boolean", "java.lang.Boolean")) {
+      fail("expecting contains to return boolean or java.lang.Boolean");
+    }
+    try {
+      return (boolean) mth.invoke(obj, x);
+    } catch (IllegalAccessException | InvocationTargetException ex) {
+      fail("cannot invoke contains " + ex.getMessage(), ex);
+    }
+    // never reached
+    return false;
   }
 
   private static boolean returnsAny(final Method mth, final String... names) {
@@ -83,11 +95,11 @@ public abstract class Utilities {
     return 0 <= Arrays.binarySearch(names, name);
   }
 
-  private static Method getMethod(final Object obj, final String name) {
+  private static Method getMethod(final Object obj, final String name, final Class<?>... params) {
     final Class<?> cls = obj.getClass();
     Method mth = null;
     try {
-      mth = cls.getMethod(name);
+      mth = cls.getMethod(name, params);
     } catch (final NoSuchMethodException ignored) {
     }
     if (mth != null) {

@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner;
+package vsr.cobalt.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -30,7 +30,7 @@ import com.google.common.collect.ImmutableSet;
  *  {1,5,6}} =: A x B x C
  * </pre>
  */
-class ProductSetIterator<E> extends ProbingIterator<ImmutableSet<E>> {
+public class ProductSetIterator<E> extends ProbingIterator<ImmutableSet<E>> {
 
   /**
    * The counters created from each set.

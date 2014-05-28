@@ -2,6 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>vsr.cobalt</groupId>
@@ -11,6 +12,8 @@
 
   <modules>
     <module>planner</module>
+    <module>testing</module>
+    <module>utils</module>
   </modules>
 
   <name>Cobalt</name>
@@ -101,6 +104,13 @@
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
       <version>6.8.8</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>vsr.cobalt</groupId>
+      <artifactId>cobalt-testing</artifactId>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
 

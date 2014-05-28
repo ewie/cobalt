@@ -5,18 +5,16 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner;
+package vsr.cobalt.utils;
 
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 import org.testng.annotations.Test;
-import vsr.cobalt.planner.ProbingIterator;
-import vsr.cobalt.planner.ProductSetIterator;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
-import static vsr.cobalt.testing.Utilities.assertSubClass;
+import static vsr.cobalt.testing.Assert.assertSubClass;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.immutableSetOf;
 import static vsr.cobalt.testing.Utilities.setOf;

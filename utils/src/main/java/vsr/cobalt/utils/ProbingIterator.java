@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner;
+package vsr.cobalt.utils;
 
 import java.util.NoSuchElementException;
 
@@ -19,7 +19,7 @@ import com.google.common.collect.UnmodifiableIterator;
  *
  * @author Erik Wienhold
  */
-abstract class ProbingIterator<T> extends UnmodifiableIterator<T> {
+public abstract class ProbingIterator<T> extends UnmodifiableIterator<T> {
 
   private boolean done;
 

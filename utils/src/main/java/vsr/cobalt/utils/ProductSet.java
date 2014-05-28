@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner;
+package vsr.cobalt.utils;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableSet;
  *
  * @author Erik Wienhold
  */
-class ProductSet<E> implements Iterable<ImmutableSet<E>> {
+public class ProductSet<E> implements Iterable<ImmutableSet<E>> {
 
   private final ImmutableSet<ImmutableSet<E>> sets;
 

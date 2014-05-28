@@ -13,6 +13,7 @@ import vsr.cobalt.planner.models.Task;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
+import static vsr.cobalt.testing.Assert.assertEmpty;
 import static vsr.cobalt.testing.Utilities.immutableSetOf;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
@@ -22,7 +23,6 @@ import static vsr.cobalt.testing.makers.TaskMaker.aMinimalTask;
 import static vsr.cobalt.testing.makers.TaskMaker.aTask;
 import static vsr.cobalt.testing.makers.TaskProvisionMaker.aMinimalTaskProvision;
 import static vsr.cobalt.testing.makers.TaskProvisionMaker.aTaskProvision;
-import static vsr.cobalt.testing.Utilities.assertEmpty;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.setOf;
 

@@ -24,6 +24,7 @@ import vsr.cobalt.planner.graph.TaskProvision;
 import vsr.cobalt.planner.models.Action;
 import vsr.cobalt.planner.models.Property;
 import vsr.cobalt.planner.models.Task;
+import vsr.cobalt.utils.ProductSet;
 
 /**
  * A graph extender extends an unsatisfied graph by one level.

@@ -17,10 +17,11 @@ import vsr.cobalt.planner.graph.TaskProvision;
 import vsr.cobalt.planner.models.Action;
 import vsr.cobalt.planner.models.Property;
 import vsr.cobalt.planner.models.Task;
+import vsr.cobalt.utils.ProbingIterator;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
-import static vsr.cobalt.testing.Utilities.assertSubClass;
+import static vsr.cobalt.testing.Assert.assertSubClass;
 import static vsr.cobalt.testing.Utilities.immutableSetOf;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;

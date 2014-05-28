@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
-import static vsr.cobalt.testing.Utilities.assertSubClass;
+import static vsr.cobalt.testing.Assert.assertSubClass;
 
 @Test
 public class WidgetTest {

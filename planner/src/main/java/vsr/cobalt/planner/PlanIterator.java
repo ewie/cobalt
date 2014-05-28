@@ -20,6 +20,9 @@ import vsr.cobalt.planner.graph.Level;
 import vsr.cobalt.planner.graph.TaskProvision;
 import vsr.cobalt.planner.models.Action;
 import vsr.cobalt.planner.models.Task;
+import vsr.cobalt.utils.ProbingIterator;
+import vsr.cobalt.utils.ProductSet;
+import vsr.cobalt.utils.ProductSetIterator;
 
 /**
  * Iterates over all plans available in a graph.
