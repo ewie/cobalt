@@ -14,13 +14,6 @@ public class AtomicValue<T> implements Value<T> {
 
   private T value;
 
-  public AtomicValue(final T value) {
-    this.value = value;
-  }
-
-  public AtomicValue() {
-  }
-
   @Override
   public T get() {
     return value;

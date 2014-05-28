@@ -7,6 +7,8 @@
 
 package vsr.cobalt.testing.makers;
 
+import java.util.Collection;
+
 import com.google.common.collect.ImmutableSet;
 import vsr.cobalt.planner.models.Property;
 import vsr.cobalt.planner.models.PropositionSet;
@@ -18,9 +20,9 @@ import vsr.cobalt.testing.maker.Maker;
  */
 public class PropositionSetMaker implements Maker<PropositionSet> {
 
-  private CollectionValue<Property> cleared = new CollectionValue<>();
+  private final CollectionValue<Property> cleared = new CollectionValue<>();
 
-  private CollectionValue<Property> filled = new CollectionValue<>();
+  private final CollectionValue<Property> filled = new CollectionValue<>();
 
   public static PropositionSetMaker aPropositionSet() {
     return new PropositionSetMaker();
@@ -33,8 +35,8 @@ public class PropositionSetMaker implements Maker<PropositionSet> {
         ImmutableSet.copyOf(filled.get()));
   }
 
-  public PropositionSetMaker withCleared(final ImmutableSet<Property> properties) {
-    cleared = new CollectionValue<>(properties);
+  public PropositionSetMaker withCleared(final Collection<Property> properties) {
+    cleared.set(properties);
     return this;
   }
 
@@ -48,8 +50,8 @@ public class PropositionSetMaker implements Maker<PropositionSet> {
     return this;
   }
 
-  public PropositionSetMaker withFilled(final ImmutableSet<Property> properties) {
-    filled = new CollectionValue<>(properties);
+  public PropositionSetMaker withFilled(final Collection<Property> properties) {
+    filled.set(properties);
     return this;
   }
 

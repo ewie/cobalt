@@ -18,13 +18,6 @@ public class CollectionValue<T> implements Value<Collection<T>> {
 
   private final Collection<T> values = new ArrayList<>();
 
-  public CollectionValue() {
-  }
-
-  public CollectionValue(final Collection<T> values) {
-    values.addAll(values);
-  }
-
   public boolean isEmpty() {
     return values.isEmpty();
   }
