@@ -130,7 +130,8 @@ public class GraphExtender {
     return aps;
   }
 
-  private Collection<ActionProvision> createActionProvisionsWithPrecursor(final Action request, final Action precursor) {
+  private Collection<ActionProvision> createActionProvisionsWithPrecursor(final Action request,
+                                                                          final Action precursor) {
     final Set<Property> ps = request.getFilledPropertiesNotSatisfiedByPrecursor(precursor);
 
     if (ps.isEmpty()) {
@@ -142,8 +143,8 @@ public class GraphExtender {
         return Collections.emptySet();
       }
       final Collection<ActionProvision> aps = new ArrayList<>();
-      for (final ImmutableSet<PropertyProvision> pps : ppps) {
-        aps.add(ActionProvision.createWithPrecursor(request, precursor, pps));
+      for (final Set<PropertyProvision> pps : ppps) {
+        aps.add(ActionProvision.createWithPrecursor(request, precursor, ImmutableSet.copyOf(pps)));
       }
       return aps;
     }
@@ -160,8 +161,8 @@ public class GraphExtender {
         return Collections.emptySet();
       }
       final Collection<ActionProvision> aps = new ArrayList<>();
-      for (final ImmutableSet<PropertyProvision> pps : ppps) {
-        aps.add(ActionProvision.createWithoutPrecursor(request, pps));
+      for (final Set<PropertyProvision> pps : ppps) {
+        aps.add(ActionProvision.createWithoutPrecursor(request, ImmutableSet.copyOf(pps)));
       }
       return aps;
     }

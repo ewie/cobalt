@@ -9,6 +9,8 @@ package vsr.cobalt.planner;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -54,12 +56,12 @@ public class PlanIterator extends ProbingIterator<Plan> {
 
   /**
    * Create a new plan iterator using a graph and depth range.
+   * <p/>
+   * Because the plan extraction usually happens after each graph extension, the constraining of the graph depth allows
+   * to ignore plans which have been extracted before, when the plan iterator had been used with a less extended version
+   * of the given graph.
    *
-   * Because the plan extraction usually happens after each graph extension, the constraining of the graph depth
-   * allows to ignore plans which have been extracted before, when the plan iterator had been used with a less
-   * extended version of the given graph.
-   *
-   * @param graph a graph to examine
+   * @param graph    a graph to examine
    * @param minDepth the minimum graph depth for a plan
    * @param maxDepth the maximum graph depth for a plan
    */
@@ -81,7 +83,7 @@ public class PlanIterator extends ProbingIterator<Plan> {
   /**
    * Create a new plan iterator without constraining the maximum graph depth.
    *
-   * @param graph a graph to examine
+   * @param graph    a graph to examine
    * @param minDepth the minimum graph depth for a plan
    */
   public PlanIterator(final Graph graph, final int minDepth) {
@@ -284,7 +286,7 @@ public class PlanIterator extends ProbingIterator<Plan> {
      */
     public void createNextLevel() {
       if (provisionCombinations.hasNext()) {
-        level = createLevel(provisionCombinations.next());
+        level = createLevel(ImmutableSet.copyOf(provisionCombinations.next()));
       } else {
         level = null;
       }
@@ -304,12 +306,12 @@ public class PlanIterator extends ProbingIterator<Plan> {
     }
 
     private static ProductSet<TaskProvision> createCombinations(final InitialLevel level) {
-      final ImmutableSet<Task> ts = level.getRequestedTasks();
-      final ImmutableSet.Builder<ImmutableSet<TaskProvision>> tps = ImmutableSet.builder();
+      final Set<Task> ts = level.getRequestedTasks();
+      final Set<Set<TaskProvision>> tps = new HashSet<>();
       for (final Task t : ts) {
         tps.add(level.getTaskProvisionsByRequestedTask(t));
       }
-      return new ProductSet<>(tps.build());
+      return new ProductSet<>(tps);
     }
 
   }
@@ -335,14 +337,14 @@ public class PlanIterator extends ProbingIterator<Plan> {
 
     private static ProductSet<ActionProvision> createCombinations(final ExtensionLevel level,
                                                                   final ImmutableSet<Action> actions) {
-      final ImmutableSet.Builder<ImmutableSet<ActionProvision>> apss = ImmutableSet.builder();
+      final Set<Set<ActionProvision>> apss = new HashSet<>();
       for (final Action a : actions) {
         final ImmutableSet<ActionProvision> aps = level.getActionProvisionsByRequestedAction(a);
         if (!aps.isEmpty()) {
           apss.add(aps);
         }
       }
-      return new ProductSet<>(apss.build());
+      return new ProductSet<>(apss);
     }
 
   }

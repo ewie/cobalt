@@ -7,24 +7,24 @@
 
 package vsr.cobalt.utils;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Set;
 
 /**
  * The product set (cross product) of a set of sets.
  *
  * @author Erik Wienhold
  */
-public class ProductSet<E> implements Iterable<ImmutableSet<E>> {
+public class ProductSet<E> implements Iterable<Set<E>> {
 
-  private final ImmutableSet<ImmutableSet<E>> sets;
+  private final Set<? extends Set<E>> sets;
 
   /**
    * Create a product set using a set of sets.
    *
    * @param sets a set of sets
    */
-  public ProductSet(final ImmutableSet<ImmutableSet<E>> sets) {
-    for (final ImmutableSet<E> set : sets) {
+  public ProductSet(final Set<? extends Set<E>> sets) {
+    for (final Set<E> set : sets) {
       if (set.isEmpty()) {
         throw new IllegalArgumentException("expecting a set of non-empty sets");
       }

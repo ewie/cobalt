@@ -7,6 +7,9 @@
 
 package vsr.cobalt.utils;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -30,7 +33,7 @@ import com.google.common.collect.ImmutableSet;
  *  {1,5,6}} =: A x B x C
  * </pre>
  */
-public class ProductSetIterator<E> extends ProbingIterator<ImmutableSet<E>> {
+public class ProductSetIterator<E> extends ProbingIterator<Set<E>> {
 
   /**
    * The counters created from each set.
@@ -42,8 +45,8 @@ public class ProductSetIterator<E> extends ProbingIterator<ImmutableSet<E>> {
    */
   private boolean done;
 
-  public ProductSetIterator(final ImmutableSet<ImmutableSet<E>> sets) {
-    for (final ImmutableSet<E> set : sets) {
+  public ProductSetIterator(final Set<? extends Set<E>> sets) {
+    for (final Set<E> set : sets) {
       if (set.isEmpty()) {
         throw new IllegalArgumentException("expecting a set of non-empty sets");
       }
@@ -54,12 +57,12 @@ public class ProductSetIterator<E> extends ProbingIterator<ImmutableSet<E>> {
   }
 
   @Override
-  protected ImmutableSet<E> probeNextValue() {
+  protected Set<E> probeNextValue() {
     if (done) {
       return null;
     }
 
-    final ImmutableSet.Builder<E> values = ImmutableSet.builder();
+    final Set<E> values = new HashSet<>(counters.size());
 
     done = true;
 
@@ -68,12 +71,12 @@ public class ProductSetIterator<E> extends ProbingIterator<ImmutableSet<E>> {
       done = done && counter.increment();
     }
 
-    return values.build();
+    return values;
   }
 
-  private static <E> ImmutableList<Counter<E>> createCounters(final ImmutableSet<ImmutableSet<E>> sets) {
+  private static <E> ImmutableList<Counter<E>> createCounters(final Set<? extends Set<E>> sets) {
     final ImmutableList.Builder<Counter<E>> counters = ImmutableList.builder();
-    for (final ImmutableSet<E> set : sets) {
+    for (final Set<E> set : sets) {
       counters.add(new Counter<>(set));
     }
     return counters.build();
@@ -96,7 +99,7 @@ public class ProductSetIterator<E> extends ProbingIterator<ImmutableSet<E>> {
      */
     private int index = 0;
 
-    public Counter(final ImmutableSet<E> values) {
+    public Counter(final Set<E> values) {
       // convert to a sequence to get random access
       this.values = ImmutableList.copyOf(values);
     }

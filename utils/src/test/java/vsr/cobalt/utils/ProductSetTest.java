@@ -14,6 +14,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.immutableSetOf;
+import static vsr.cobalt.testing.Utilities.setOf;
 
 @Test
 public class ProductSetTest {
@@ -24,7 +25,7 @@ public class ProductSetTest {
     @Test(expectedExceptions = IllegalArgumentException.class,
         expectedExceptionsMessageRegExp = "expecting a set of non-empty sets")
     public void rejectEmptySets() {
-      new ProductSet<>(immutableSetOf(emptySet()));
+      new ProductSet<>(setOf(emptySet()));
     }
 
   }

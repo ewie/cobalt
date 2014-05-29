@@ -16,7 +16,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 import static vsr.cobalt.testing.Assert.assertSubClass;
 import static vsr.cobalt.testing.Utilities.emptySet;
-import static vsr.cobalt.testing.Utilities.immutableSetOf;
 import static vsr.cobalt.testing.Utilities.setOf;
 
 /**
@@ -36,7 +35,7 @@ public class ProductSetIteratorTest {
     @Test(expectedExceptions = IllegalArgumentException.class,
         expectedExceptionsMessageRegExp = "expecting a set of non-empty sets")
     public void rejectEmptySets() {
-      new ProductSetIterator<>(immutableSetOf(emptySet()));
+      new ProductSetIterator<>(setOf(emptySet()));
     }
 
   }
@@ -46,19 +45,18 @@ public class ProductSetIteratorTest {
 
     @Test
     public void returnNullWhenDepleted() {
-      final ImmutableSet<ImmutableSet<Object>> s = emptySet();
+      final Set<ImmutableSet<Object>> s = emptySet();
       final ProductSetIterator<Object> psi = new ProductSetIterator<>(s);
       assertNull(psi.probeNextValue());
     }
 
     @Test
-    public void returnEveryCombinationOnSuccessiveCalls() throws Exception {
-      final ImmutableSet<ImmutableSet<Integer>> s = immutableSetOf(
-          immutableSetOf(0, 1), immutableSetOf(2, 3));
+    public void returnEveryCombinationOnSuccessiveCalls() {
+      final Set<Set<Integer>> s = setOf(setOf(0, 1), setOf(2, 3));
 
-      final ImmutableSet<ImmutableSet<Integer>> xps = immutableSetOf(
-          immutableSetOf(0, 2), immutableSetOf(0, 3),
-          immutableSetOf(1, 2), immutableSetOf(1, 3));
+      final Set<Set<Integer>> xps = setOf(
+          setOf(0, 2), setOf(0, 3),
+          setOf(1, 2), setOf(1, 3));
 
       final ProductSetIterator<Integer> psi = new ProductSetIterator<>(s);
       final Set<Set<Integer>> ps = setOf();
@@ -66,6 +64,25 @@ public class ProductSetIteratorTest {
       ps.add(psi.probeNextValue());
       ps.add(psi.probeNextValue());
       ps.add(psi.probeNextValue());
+      ps.add(psi.probeNextValue());
+
+      assertNull(psi.probeNextValue());
+      assertEquals(ps, xps);
+    }
+
+    @Test
+    public void preventModificationFromOutside() {
+      final Set<Integer> t = setOf(1);
+      final Set<Set<Integer>> s = setOf(setOf(0), t);
+
+      final Set<Set<Integer>> xps = setOf(setOf(0, 1));
+
+      final ProductSetIterator<Integer> psi = new ProductSetIterator<>(s);
+      final Set<Set<Integer>> ps = setOf();
+
+      // this should not affect the iterator
+      t.add(2);
+
       ps.add(psi.probeNextValue());
 
       assertNull(psi.probeNextValue());
