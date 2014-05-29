@@ -10,9 +10,9 @@ package vsr.cobalt.planner.models;
 import java.util.Objects;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 
 import static com.google.common.collect.Sets.difference;
+import static java.util.Collections.disjoint;
 
 /**
  * A set of effects specifying properties whose values will be cleared or filled.
@@ -34,14 +34,14 @@ public final class EffectSet {
   private final ImmutableSet<Property> toFill;
 
   /**
-   * Create an effect set with two disjoint set of properties, one providing properties to be cleared,
-   * the other providing properties to be filled.
+   * Create an effect set with two disjoint set of properties, one providing properties to be cleared, the other
+   * providing properties to be filled.
    *
    * @param toClear a set of properties to clear
    * @param toFill  a set of properties to fill
    */
   public EffectSet(final ImmutableSet<Property> toClear, final ImmutableSet<Property> toFill) {
-    if (!Sets.intersection(toClear, toFill).isEmpty()) {
+    if (!disjoint(toClear, toFill)) {
       throw new IllegalArgumentException("expecting properties to clear and fill to be disjoint sets");
     }
     this.toClear = toClear;

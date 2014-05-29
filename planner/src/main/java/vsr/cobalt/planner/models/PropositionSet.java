@@ -10,7 +10,8 @@ package vsr.cobalt.planner.models;
 import java.util.Objects;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
+
+import static java.util.Collections.disjoint;
 
 /**
  * A set of propositions specifying the absence or presence of values for specific properties.
@@ -40,7 +41,7 @@ public final class PropositionSet {
    * @param filled  a set of properties with some value
    */
   public PropositionSet(final ImmutableSet<Property> cleared, final ImmutableSet<Property> filled) {
-    if (!Sets.intersection(cleared, filled).isEmpty()) {
+    if (!disjoint(cleared, filled)) {
       throw new IllegalArgumentException("expecting cleared and filled properties to be disjoint sets");
     }
     this.cleared = cleared;
