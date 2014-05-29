@@ -20,6 +20,7 @@ import static org.testng.Assert.assertSame;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.testing.makers.ActionProvisionMaker.anActionProvision;
+import static vsr.cobalt.testing.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.testing.makers.ExtensionLevelMaker.anExtensionLevel;
 import static vsr.cobalt.testing.makers.GraphMaker.aGraph;
 import static vsr.cobalt.testing.makers.GraphMaker.aMinimalGraph;
@@ -77,12 +78,12 @@ public class PlanTest {
               .withCleared(p1)));
 
       final Action a2 = make(aMinimalAction()
-          .withPost(aPropositionSet()
-              .withCleared(p1)));
+          .withEffects(anEffectSet()
+              .withToClear(p1)));
 
       final Action a3 = make(aMinimalAction()
-          .withPost(aPropositionSet()
-              .withCleared(p1, p2)));
+          .withEffects(anEffectSet()
+              .withToClear(p1, p2)));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
@@ -137,8 +138,8 @@ public class PlanTest {
               .withCleared(p1)));
 
       final Action a2 = make(aMinimalAction()
-          .withPost(aPropositionSet()
-              .withCleared(p1))
+          .withEffects(anEffectSet()
+              .withToClear(p1))
           .withPre(aPropositionSet()
               .withCleared(p2)));
 

@@ -17,7 +17,7 @@ import com.google.common.collect.Sets;
  *
  * @author Erik Wienhold
  */
-public class PropositionSet {
+public final class PropositionSet {
 
   private static final PropositionSet EMPTY = new PropositionSet(ImmutableSet.<Property>of(),
       ImmutableSet.<Property>of());
@@ -103,13 +103,13 @@ public class PropositionSet {
   }
 
   @Override
-  public final boolean equals(final Object other) {
+  public boolean equals(final Object other) {
     return super.equals(other)
         || other instanceof PropositionSet
         && equals((PropositionSet) other);
   }
 
-  protected boolean equals(final PropositionSet other) {
+  private boolean equals(final PropositionSet other) {
     return Objects.equals(cleared, other.cleared)
         && Objects.equals(filled, other.filled);
   }

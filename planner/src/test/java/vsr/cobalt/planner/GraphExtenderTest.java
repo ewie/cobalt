@@ -23,10 +23,11 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.immutableSetOf;
-import static vsr.cobalt.testing.Utilities.setOf;
 import static vsr.cobalt.testing.Utilities.make;
+import static vsr.cobalt.testing.Utilities.setOf;
 import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.testing.makers.ActionProvisionMaker.anActionProvision;
+import static vsr.cobalt.testing.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.testing.makers.ExtensionLevelMaker.anExtensionLevel;
 import static vsr.cobalt.testing.makers.GoalMaker.aGoal;
 import static vsr.cobalt.testing.makers.GraphMaker.aGraph;
@@ -171,16 +172,16 @@ public class GraphExtenderTest {
 
       // actions for the first extension
       final Action a3 = make(aMinimalAction()
-          .withPost(aPropositionSet()
-              .withFilled(p1)));
+          .withEffects(anEffectSet()
+              .withToFill(p1)));
 
       final Action a4 = make(aMinimalAction()
-          .withPost(aPropositionSet()
-              .withFilled(p2)));
+          .withEffects(anEffectSet()
+              .withToFill(p2)));
 
       final Action a5 = make(aMinimalAction()
-          .withPost(aPropositionSet()
-              .withFilled(p2)));
+          .withEffects(anEffectSet()
+              .withToFill(p2)));
 
       // create the initial graph
       final Graph g1 = make(aGraph()
@@ -244,7 +245,7 @@ public class GraphExtenderTest {
       // the action which can be precursor of a1
       final Action a2 = make(aMinimalAction()
           .withWidget(w)
-          .withPost(aPropositionSet().withCleared(p3)));
+          .withEffects(anEffectSet().withToClear(p3)));
 
       // the action publishing a compatible property required by a1
       final Action a3 = make(aMinimalAction().withPub(p2));
@@ -305,8 +306,8 @@ public class GraphExtenderTest {
 
       // an action which can be source of a1 and a2
       final Action a3 = make(aMinimalAction()
-          .withPost(aPropositionSet()
-              .withCleared(p2)));
+          .withEffects(anEffectSet()
+              .withToClear(p2)));
 
       final Graph g1 = make(aGraph()
           .withInitialLevel(anInitialLevel()

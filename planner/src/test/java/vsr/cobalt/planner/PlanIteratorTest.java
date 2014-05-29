@@ -27,6 +27,7 @@ import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.testing.makers.ActionProvisionMaker.anActionProvision;
+import static vsr.cobalt.testing.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.testing.makers.ExtensionLevelMaker.anExtensionLevel;
 import static vsr.cobalt.testing.makers.GraphMaker.aGraph;
 import static vsr.cobalt.testing.makers.GraphMaker.aMinimalGraph;
@@ -162,11 +163,11 @@ public class PlanIteratorTest {
           .withPre(aPropositionSet().withCleared(p1)));
 
       final Action a2 = make(aMinimalAction()
-          .withPost(aPropositionSet().withCleared(p1))
+          .withEffects(anEffectSet().withToClear(p1))
           .withPre(aPropositionSet().withCleared(p2)));
 
       final Action a3 = make(aMinimalAction()
-          .withPost(aPropositionSet().withCleared(p2)));
+          .withEffects(anEffectSet().withToClear(p2)));
 
       final TaskProvision tp = make(aTaskProvision()
           .withProvidingAction(a1)
@@ -210,15 +211,15 @@ public class PlanIteratorTest {
           .withPre(aPropositionSet().withCleared(p1)));
 
       final Action a2 = make(aMinimalAction()
-          .withPost(aPropositionSet().withCleared(p1))
+          .withEffects(anEffectSet().withToClear(p1))
           .withPre(aPropositionSet().withCleared(p2)));
 
       final Action a3 = make(aMinimalAction()
-          .withPost(aPropositionSet().withCleared(p1))
+          .withEffects(anEffectSet().withToClear(p1))
           .withPre(aPropositionSet().withCleared(p3)));
 
       final Action a4 = make(aMinimalAction()
-          .withPost(aPropositionSet().withCleared(p2)));
+          .withEffects(anEffectSet().withToClear(p2)));
 
       final TaskProvision tp = make(aTaskProvision()
           .withProvidingAction(a1)
@@ -271,7 +272,7 @@ public class PlanIteratorTest {
       final Action a2 = make(aMinimalAction().withTask(t));
 
       final Action a3 = make(aMinimalAction()
-          .withPost(aPropositionSet().withCleared(p)));
+          .withEffects(anEffectSet().withToClear(p)));
 
       final TaskProvision tp1 = make(aTaskProvision()
           .withProvidingAction(a1)
@@ -317,7 +318,7 @@ public class PlanIteratorTest {
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
-          .withPost(aPropositionSet().withCleared(p)));
+          .withEffects(anEffectSet().withToClear(p)));
 
       final TaskProvision tp = make(aTaskProvision()
           .withProvidingAction(a1)

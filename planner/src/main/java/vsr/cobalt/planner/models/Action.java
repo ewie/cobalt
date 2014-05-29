@@ -22,7 +22,12 @@ public final class Action {
   private final PropositionSet preConditions;
 
   /**
-   * The post-conditions.
+   * The effects.
+   */
+  private final EffectSet effects;
+
+  /**
+   * The post-conditions resulting from the pre-conditions and effects.
    */
   private final PropositionSet postConditions;
 
@@ -41,49 +46,60 @@ public final class Action {
    *
    * @param widget              the owning widget
    * @param preConditions       the pre-conditions
-   * @param postConditions      the post-conditions
+   * @param effects             the effects
    * @param publishedProperties the set of published properties
    * @param realizedTasks       the set of realized tasks
    */
-  public Action(final Widget widget, final PropositionSet preConditions, final PropositionSet postConditions,
+  public Action(final Widget widget, final PropositionSet preConditions, final EffectSet effects,
                 final ImmutableSet<Property> publishedProperties, final ImmutableSet<Task> realizedTasks) {
     this.widget = widget;
     this.preConditions = preConditions;
-    this.postConditions = postConditions;
+    this.effects = effects;
     this.publishedProperties = publishedProperties;
     this.realizedTasks = realizedTasks;
+    postConditions = effects.createPostConditions(preConditions);
   }
 
   /**
    * Create an action realizing no tasks.
    *
-   * @param widget         the owning widget
-   * @param preConditions  the pre-conditions
-   * @param postConditions the post-conditions
+   * @param widget        the owning widget
+   * @param preConditions the pre-conditions
+   * @param effects       the effects
    */
-  public Action(final Widget widget, final PropositionSet preConditions, final PropositionSet postConditions,
+  public Action(final Widget widget, final PropositionSet preConditions, final EffectSet effects,
                 final ImmutableSet<Property> publishedProperties) {
-    this(widget, preConditions, postConditions, publishedProperties, ImmutableSet.<Task>of());
+    this(widget, preConditions, effects, publishedProperties, ImmutableSet.<Task>of());
   }
 
   /**
    * Create an action publishing no properties and realizing no tasks.
    *
-   * @param widget         the owning widget
-   * @param preConditions  the pre-conditions
-   * @param postConditions the post-conditions
+   * @param widget        the owning widget
+   * @param preConditions the pre-conditions
+   * @param effects       the effects
    */
-  public Action(final Widget widget, final PropositionSet preConditions, final PropositionSet postConditions) {
-    this(widget, preConditions, postConditions, ImmutableSet.<Property>of());
+  public Action(final Widget widget, final PropositionSet preConditions, final EffectSet effects) {
+    this(widget, preConditions, effects, ImmutableSet.<Property>of());
   }
 
   /**
-   * Create an action without any pre- or post-conditions and no realized tasks.
+   * Create an action publishing no properties and realizing no tasks.
+   *
+   * @param widget        the owning widget
+   * @param preConditions the pre-conditions
+   */
+  public Action(final Widget widget, final PropositionSet preConditions) {
+    this(widget, preConditions, EffectSet.empty());
+  }
+
+  /**
+   * Create an action without any pre-conditions, effects or realized tasks.
    *
    * @param widget the owning widget
    */
   public Action(final Widget widget) {
-    this(widget, PropositionSet.empty(), PropositionSet.empty());
+    this(widget, PropositionSet.empty(), EffectSet.empty());
   }
 
   /**
@@ -98,6 +114,13 @@ public final class Action {
    */
   public PropositionSet getPreConditions() {
     return preConditions;
+  }
+
+  /**
+   * @return the post-conditions
+   */
+  public EffectSet getEffects() {
+    return effects;
   }
 
   /**

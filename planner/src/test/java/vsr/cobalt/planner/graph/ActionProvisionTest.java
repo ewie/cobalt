@@ -20,11 +20,12 @@ import static org.testng.Assert.assertSame;
 import static vsr.cobalt.testing.Assert.assertEmpty;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.immutableSetOf;
-import static vsr.cobalt.testing.Utilities.setOf;
 import static vsr.cobalt.testing.Utilities.make;
+import static vsr.cobalt.testing.Utilities.setOf;
 import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.testing.makers.ActionProvisionMaker.aMinimalActionProvision;
 import static vsr.cobalt.testing.makers.ActionProvisionMaker.anActionProvision;
+import static vsr.cobalt.testing.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.testing.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.testing.makers.PropertyProvisionMaker.aMinimalPropertyProvision;
 import static vsr.cobalt.testing.makers.PropertyProvisionMaker.aPropertyProvision;
@@ -51,7 +52,7 @@ public class ActionProvisionTest {
               .withCleared(p2)));
 
       final Action precursor = make(aMinimalAction()
-          .withPost(aPropositionSet().withCleared(p2)));
+          .withEffects(anEffectSet().withToClear(p2)));
 
       final Action a1 = make(aMinimalAction()
           .withWidget(aWidget().withIdentifier("w1"))
@@ -85,7 +86,7 @@ public class ActionProvisionTest {
 
       final Action precursor = make(aMinimalAction()
           .withWidget(aWidget().withIdentifier("w2"))
-          .withPost(aPropositionSet().withCleared(p)));
+          .withEffects(anEffectSet().withToClear(p)));
 
       ActionProvision.createWithPrecursor(request, precursor);
     }
@@ -107,7 +108,7 @@ public class ActionProvisionTest {
           .withPre(aPropositionSet().withFilled(p)));
 
       final Action precursor = make(aMinimalAction()
-          .withPost(aPropositionSet().withFilled(p)));
+          .withEffects(anEffectSet().withToFill(p)));
 
       ActionProvision.createWithPrecursor(request, precursor);
     }
@@ -122,7 +123,7 @@ public class ActionProvisionTest {
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action precursor = make(aMinimalAction()
-          .withPost(aPropositionSet().withCleared(p)));
+          .withEffects(anEffectSet().withToClear(p)));
 
       final PropertyProvision pp = make(aMinimalPropertyProvision());
 
@@ -142,9 +143,9 @@ public class ActionProvisionTest {
               .withCleared(p2)));
 
       final Action precursor = make(aMinimalAction()
-          .withPost(aPropositionSet()
-              .withFilled(p1)
-              .withCleared(p2)));
+          .withEffects(anEffectSet()
+              .withToFill(p1)
+              .withToClear(p2)));
 
       final PropertyProvision pp = make(aPropertyProvision()
           .withProvidingAction(aMinimalAction()
@@ -162,7 +163,7 @@ public class ActionProvisionTest {
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action precursor = make(aMinimalAction()
-          .withPost(aPropositionSet().withCleared(p)));
+          .withEffects(anEffectSet().withToClear(p)));
 
       final ActionProvision ap = ActionProvision.createWithPrecursor(request, precursor);
 
@@ -257,8 +258,8 @@ public class ActionProvisionTest {
               .withCleared(p2)));
 
       precursor = make(aMinimalAction()
-          .withPost(aPropositionSet()
-              .withCleared(p2)));
+          .withEffects(anEffectSet()
+              .withToClear(p2)));
 
       propertyProvision = make(aPropertyProvision()
           .withProvidingAction(aMinimalAction().withPub(p1))
@@ -357,8 +358,8 @@ public class ActionProvisionTest {
               .withFilled(p2)));
 
       final Action precursor = make(aMinimalAction()
-          .withPost(aPropositionSet()
-              .withCleared(p1)));
+          .withEffects(anEffectSet()
+              .withToClear(p1)));
 
       final Action provider = make(aMinimalAction().withPub(p2));
 
@@ -424,7 +425,7 @@ public class ActionProvisionTest {
       final Property p = make(aMinimalProperty().withName("p"));
 
       final Action precursor = make(aMinimalAction()
-          .withPost(aPropositionSet().withCleared(p)));
+          .withEffects(anEffectSet().withToClear(p)));
 
       final ActionProvision ap1 = make(aMinimalActionProvision()
           .withPrecursor(precursor)
@@ -452,14 +453,14 @@ public class ActionProvisionTest {
       final ActionProvision ap1 = make(aMinimalActionProvision()
           .withRequest(request)
           .withPrecursor(aMinimalAction()
-              .withPost(aPropositionSet().withCleared(p1))));
+              .withEffects(anEffectSet().withToClear(p1))));
 
       final ActionProvision ap2 = make(aMinimalActionProvision()
           .withRequest(request)
           .withPrecursor(aMinimalAction()
-              .withPost(aPropositionSet()
-                  .withCleared(p1)
-                  .withCleared(p2))));
+              .withEffects(anEffectSet()
+                  .withToClear(p1)
+                  .withToClear(p2))));
 
       assertNotEquals(ap1, ap2);
     }
@@ -475,7 +476,7 @@ public class ActionProvisionTest {
               .withFilled(p2)));
 
       final Action precursor = make(aMinimalAction()
-          .withPost(aPropositionSet().withCleared(p1)));
+          .withEffects(anEffectSet().withToClear(p1)));
 
       final ActionProvision ap1 = make(aMinimalActionProvision()
           .withRequest(request)

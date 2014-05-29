@@ -22,6 +22,7 @@ import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.testing.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.testing.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.testing.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.testing.makers.TaskMaker.aMinimalTask;
@@ -41,7 +42,7 @@ public class ActionTest {
 
     private PropositionSet pre;
 
-    private PropositionSet post;
+    private EffectSet effects;
 
     private ImmutableSet<Property> published;
 
@@ -52,39 +53,44 @@ public class ActionTest {
       final Property p = make(aMinimalProperty());
       widget = make(aMinimalWidget());
       pre = make(aPropositionSet().withCleared(p));
-      post = make(aPropositionSet().withFilled(p));
+      effects = make(anEffectSet().withToFill(p));
       published = emptySet(Property.class);
       tasks = emptySet(Task.class);
       action = make(aMinimalAction()
           .withWidget(widget)
           .withPre(pre)
-          .withPost(post)
+          .withEffects(effects)
           .withPubs(published)
           .withTasks(tasks));
     }
 
-    @Test(description = "return the widget")
+    @Test
     public void getWidget()
         throws Exception {
       assertSame(action.getWidget(), widget);
     }
 
-    @Test(description = "return the pre-conditions")
+    @Test
     public void getPreConditions() {
       assertSame(action.getPreConditions(), pre);
     }
 
-    @Test(description = "return the post-conditions")
-    public void getPostConditions() {
-      assertSame(action.getPostConditions(), post);
+    @Test
+    public void getEffects() {
+      assertSame(action.getEffects(), effects);
     }
 
-    @Test(description = "return the published properties")
+    @Test
+    public void getPostConditions() {
+      assertEquals(action.getPostConditions(), effects.createPostConditions(pre));
+    }
+
+    @Test
     public void getPublishedProperties() {
       assertSame(action.getPublishedProperties(), published);
     }
 
-    @Test(description = "return the tasks")
+    @Test
     public void getRealizedTasks() {
       assertSame(action.getRealizedTasks(), tasks);
     }
@@ -178,7 +184,7 @@ public class ActionTest {
       final Property p = make(aMinimalProperty());
 
       final Action source = make(aMinimalAction()
-          .withPost(aPropositionSet().withCleared(p)));
+          .withEffects(anEffectSet().withToClear(p)));
 
       final Action target = make(aMinimalAction()
           .withPre(aPropositionSet().withCleared(p)));
@@ -245,8 +251,8 @@ public class ActionTest {
               .withFilled(p1)));
 
       final Action precursor = make(aMinimalAction()
-          .withPost(aPropositionSet()
-              .withCleared(p1, p2)));
+          .withEffects(anEffectSet()
+              .withToClear(p1, p2)));
 
       final ImmutableSet<Property> ps = target.getFilledPropertiesNotSatisfiedByPrecursor(precursor);
 
@@ -294,13 +300,13 @@ public class ActionTest {
     @Test
     public void returnFalseWhenPostConditionsDiffer() {
       final Action a1 = make(aMinimalAction()
-          .withPost(aPropositionSet()
-              .withCleared(aMinimalProperty()
+          .withEffects(anEffectSet()
+              .withToClear(aMinimalProperty()
                   .withName("p1"))));
 
       final Action a2 = make(aMinimalAction()
-          .withPost(aPropositionSet()
-              .withCleared(aMinimalProperty()
+          .withEffects(anEffectSet()
+              .withToClear(aMinimalProperty()
                   .withName("p2"))));
 
       assertNotEquals(a1, a2);

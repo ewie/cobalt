@@ -20,6 +20,7 @@ import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.testing.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.testing.makers.ExtensionLevelMaker.anExtensionLevel;
 import static vsr.cobalt.testing.makers.GraphMaker.aGraph;
 import static vsr.cobalt.testing.makers.InitialLevelMaker.anInitialLevel;
@@ -89,12 +90,12 @@ public class ActionReachabilityIndexTest {
       // a non-enabled precursor action for a1
       final Action a2 = make(aMinimalAction()
           .withPre(aPropositionSet().withCleared(p1))
-          .withPost(aPropositionSet().withFilled(p1)));
+          .withEffects(anEffectSet().withFilled(p1)));
 
       // a non-enabled precursor action for a1
       final Action a3 = make(aMinimalAction()
           .withPre(aPropositionSet().withCleared(p2))
-          .withPost(aPropositionSet().withFilled(p1)));
+          .withEffects(anEffectSet().withFilled(p1)));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
@@ -128,7 +129,7 @@ public class ActionReachabilityIndexTest {
 
       // an enabled precursor action for request
       final Action precursor = make(aMinimalAction()
-          .withPost(aPropositionSet().withFilled(p1)));
+          .withEffects(anEffectSet().withFilled(p1)));
 
       // an enabled providing action for request
       final Action provider = make(aMinimalAction().withPub(p2));
@@ -172,7 +173,7 @@ public class ActionReachabilityIndexTest {
       // a non-enabled precursor action for request
       final Action precursor = make(aMinimalAction()
           .withPre(aPropositionSet().withCleared(p))
-          .withPost(aPropositionSet().withFilled(p)));
+          .withEffects(anEffectSet().withFilled(p)));
 
       // cannot be enabled because of the precursor action
       final ActionProvision ap = make(anActionProvision()

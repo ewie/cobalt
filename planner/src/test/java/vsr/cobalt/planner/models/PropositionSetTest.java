@@ -16,9 +16,9 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.testing.Utilities.make;
+import static vsr.cobalt.testing.Utilities.setOf;
 import static vsr.cobalt.testing.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.testing.makers.PropositionSetMaker.aPropositionSet;
-import static vsr.cobalt.testing.Utilities.setOf;
 
 @Test
 public class PropositionSetTest {
