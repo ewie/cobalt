@@ -7,7 +7,9 @@
 
 package vsr.cobalt.planner.models;
 
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -20,8 +22,9 @@ import static java.util.Collections.disjoint;
  */
 public final class PropositionSet {
 
-  private static final PropositionSet EMPTY = new PropositionSet(ImmutableSet.<Property>of(),
-      ImmutableSet.<Property>of());
+  private static final Set<Property> EMPTY_PROPERTIES = Collections.emptySet();
+
+  private static final PropositionSet EMPTY = new PropositionSet(EMPTY_PROPERTIES, EMPTY_PROPERTIES);
 
   /**
    * The set of properties without a value.
@@ -40,12 +43,12 @@ public final class PropositionSet {
    * @param cleared a set of properties with no value
    * @param filled  a set of properties with some value
    */
-  public PropositionSet(final ImmutableSet<Property> cleared, final ImmutableSet<Property> filled) {
+  public PropositionSet(final Set<Property> cleared, final Set<Property> filled) {
     if (!disjoint(cleared, filled)) {
       throw new IllegalArgumentException("expecting cleared and filled properties to be disjoint sets");
     }
-    this.cleared = cleared;
-    this.filled = filled;
+    this.cleared = ImmutableSet.copyOf(cleared);
+    this.filled = ImmutableSet.copyOf(filled);
   }
 
   /**
@@ -80,14 +83,14 @@ public final class PropositionSet {
   /**
    * @return the set of cleared properties
    */
-  public ImmutableSet<Property> getClearedProperties() {
+  public Set<Property> getClearedProperties() {
     return cleared;
   }
 
   /**
    * @return the set of filled properties
    */
-  public ImmutableSet<Property> getFilledProperties() {
+  public Set<Property> getFilledProperties() {
     return filled;
   }
 

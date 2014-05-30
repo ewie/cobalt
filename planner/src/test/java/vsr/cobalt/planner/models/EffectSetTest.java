@@ -8,15 +8,15 @@
 package vsr.cobalt.planner.models;
 
 import java.util.Objects;
+import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotEquals;
 import static vsr.cobalt.testing.Assert.assertEmpty;
-import static vsr.cobalt.testing.Utilities.immutableSetOf;
+import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 import static vsr.cobalt.testing.makers.EffectSetMaker.anEffectSet;
@@ -33,9 +33,23 @@ public class EffectSetTest {
         expectedExceptionsMessageRegExp = "expecting properties to clear and fill to be disjoint sets")
     public void rejectNonDisjointPropertySets() {
       final Property p = make(aMinimalProperty());
-      final ImmutableSet<Property> clear = immutableSetOf(p);
-      final ImmutableSet<Property> fill = immutableSetOf(p);
-      new EffectSet(clear, fill);
+      new EffectSet(setOf(p), setOf(p));
+    }
+
+    @Test
+    public void preventModificationOfPropertiesToClear() {
+      final Set<Property> ps = emptySet();
+      final EffectSet ef = new EffectSet(ps, emptySet(Property.class));
+      ps.add(null);
+      assertNotEquals(ef.getPropertiesToClear(), ps);
+    }
+
+    @Test
+    public void preventModificationOfPropertiesToFill() {
+      final Set<Property> ps = emptySet();
+      final EffectSet ef = new EffectSet(emptySet(Property.class), ps);
+      ps.add(null);
+      assertNotEquals(ef.getPropertiesToFill(), ps);
     }
 
   }
@@ -84,7 +98,7 @@ public class EffectSetTest {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
-      final EffectSet e = new EffectSet(immutableSetOf(p1), immutableSetOf(p2));
+      final EffectSet e = new EffectSet(setOf(p1), setOf(p2));
 
       final PropositionSet pre = make(aPropositionSet());
 

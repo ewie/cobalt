@@ -8,6 +8,7 @@
 package vsr.cobalt.planner.graph;
 
 import java.util.Objects;
+import java.util.Set;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -19,7 +20,6 @@ import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertSame;
 import static vsr.cobalt.testing.Assert.assertEmpty;
 import static vsr.cobalt.testing.Utilities.emptySet;
-import static vsr.cobalt.testing.Utilities.immutableSetOf;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
@@ -72,7 +72,7 @@ public class ActionProvisionTest {
           .withOffer(p1)
           .withRequest(p1));
 
-      ActionProvision.createWithPrecursor(request, precursor, immutableSetOf(pp1, pp2));
+      ActionProvision.createWithPrecursor(request, precursor, setOf(pp1, pp2));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class,
@@ -127,7 +127,7 @@ public class ActionProvisionTest {
 
       final PropertyProvision pp = make(aMinimalPropertyProvision());
 
-      ActionProvision.createWithPrecursor(request, precursor, immutableSetOf(pp));
+      ActionProvision.createWithPrecursor(request, precursor, setOf(pp));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class,
@@ -153,9 +153,37 @@ public class ActionProvisionTest {
           .withOffer(p1)
           .withRequest(p1));
 
-      ActionProvision.createWithPrecursor(request, precursor, immutableSetOf(pp));
+      ActionProvision.createWithPrecursor(request, precursor, setOf(pp));
     }
 
+    @Test
+    public void preventModificationOfPropertyProvisions() {
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+
+      final Action request = make(aMinimalAction()
+          .withPre(aPropositionSet()
+              .withCleared(p1)
+              .withFilled(p2)));
+
+      final Action precursor = make(aMinimalAction()
+          .withEffects(anEffectSet()
+              .withToClear(p1)));
+
+      final PropertyProvision pp = make(aPropertyProvision()
+          .withProvidingAction(aMinimalAction().withPub(p2))
+          .withOffer(p2)
+          .withRequest(p2));
+
+      final Set<PropertyProvision> pps = setOf(pp);
+
+      final ActionProvision ap = ActionProvision.createWithPrecursor(request, precursor, pps);
+      pps.add(null);
+
+      assertNotEquals(ap.getPropertyProvisions(), pps);
+    }
+
+    @Test
     public void defaultToEmptySetOfPropertyProvisions() {
       final Property p = make(aMinimalProperty());
 
@@ -203,7 +231,7 @@ public class ActionProvisionTest {
           .withOffer(p)
           .withRequest(p));
 
-      ActionProvision.createWithoutPrecursor(request, immutableSetOf(pp1, pp2));
+      ActionProvision.createWithoutPrecursor(request, setOf(pp1, pp2));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class,
@@ -231,7 +259,28 @@ public class ActionProvisionTest {
     public void rejectPropertyProvisionWithRequestedPropertyNotRequiredByRequestedAction() {
       final Action request = make(aMinimalAction());
       final PropertyProvision pp = make(aMinimalPropertyProvision());
-      ActionProvision.createWithoutPrecursor(request, immutableSetOf(pp));
+      ActionProvision.createWithoutPrecursor(request, setOf(pp));
+    }
+
+    @Test
+    public void preventModificationOfPropertyProvisions() {
+      final Property p = make(aMinimalProperty());
+
+      final Action request = make(aMinimalAction()
+          .withPre(aPropositionSet()
+              .withFilled(p)));
+
+      final PropertyProvision pp = make(aPropertyProvision()
+          .withProvidingAction(aMinimalAction().withPub(p))
+          .withOffer(p)
+          .withRequest(p));
+
+      final Set<PropertyProvision> pps = setOf(pp);
+
+      final ActionProvision ap = ActionProvision.createWithoutPrecursor(request, pps);
+      pps.add(null);
+
+      assertNotEquals(ap.getPropertyProvisions(), pps);
     }
 
   }
@@ -294,8 +343,8 @@ public class ActionProvisionTest {
 
     @Test
     public void returnProvidingActions() {
-      final Property p1 = make(aMinimalProperty());
-      final Property p2 = make(aMinimalProperty());
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action a1 = make(aMinimalAction().withPub(p1));
       final Action a2 = make(aMinimalAction().withPub(p2));
@@ -324,8 +373,8 @@ public class ActionProvisionTest {
 
     @Test
     public void includeProvidingActions() {
-      final Property p1 = make(aMinimalProperty());
-      final Property p2 = make(aMinimalProperty());
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action provider1 = make(aMinimalAction().withPub(p1));
       final Action provider2 = make(aMinimalAction().withPub(p2));
@@ -381,8 +430,8 @@ public class ActionProvisionTest {
 
     @Test
     public void returnRequestedProperties() {
-      final Property p1 = make(aMinimalProperty());
-      final Property p2 = make(aMinimalProperty());
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action request = make(aMinimalAction()
           .withPre(aPropositionSet().withFilled(p1, p2)));

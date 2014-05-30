@@ -10,6 +10,9 @@ package vsr.cobalt.testing.maker;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Erik Wienhold
@@ -20,6 +23,14 @@ public class CollectionValue<T> implements Value<Collection<T>> {
 
   public boolean isEmpty() {
     return values.isEmpty();
+  }
+
+  public List<T> asList() {
+    return new ArrayList<>(get());
+  }
+
+  public Set<T> asSet() {
+    return new HashSet<>(get());
   }
 
   @Override

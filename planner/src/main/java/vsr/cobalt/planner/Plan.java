@@ -7,9 +7,10 @@
 
 package vsr.cobalt.planner;
 
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
@@ -68,7 +69,7 @@ public final class Plan {
 
     assertInitialLevel(il);
 
-    ImmutableSet<Action> actions = ImmutableSet.of();
+    Set<Action> actions = Collections.emptySet();
 
     for (final ExtensionLevel xl : graph.getExtensionLevels()) {
       assertRequestedActions(xl);
@@ -95,7 +96,7 @@ public final class Plan {
     }
   }
 
-  private static void assertRequiredActions(final Level level, final ImmutableSet<Action> requestedActions) {
+  private static void assertRequiredActions(final Level level, final Set<Action> requestedActions) {
     for (final Action a : level.getRequiredActions()) {
       if (!requestedActions.contains(a)) {
         if (!a.getPreConditions().isEmpty()) {

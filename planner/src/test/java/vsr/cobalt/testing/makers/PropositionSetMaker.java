@@ -9,7 +9,6 @@ package vsr.cobalt.testing.makers;
 
 import java.util.Collection;
 
-import com.google.common.collect.ImmutableSet;
 import vsr.cobalt.planner.models.Property;
 import vsr.cobalt.planner.models.PropositionSet;
 import vsr.cobalt.testing.maker.CollectionValue;
@@ -30,9 +29,7 @@ public class PropositionSetMaker implements Maker<PropositionSet> {
 
   @Override
   public PropositionSet make() {
-    return new PropositionSet(
-        ImmutableSet.copyOf(cleared.get()),
-        ImmutableSet.copyOf(filled.get()));
+    return new PropositionSet(cleared.asSet(), filled.asSet());
   }
 
   public PropositionSetMaker withCleared(final Collection<Property> properties) {

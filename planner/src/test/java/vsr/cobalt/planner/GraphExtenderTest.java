@@ -22,7 +22,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.testing.Utilities.emptySet;
-import static vsr.cobalt.testing.Utilities.immutableSetOf;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
@@ -60,7 +59,7 @@ public class GraphExtenderTest {
       final Goal g = make(aGoal().withTask(t1, t2));
 
       final Repository r = mock(Repository.class);
-      when(r.realizeCompatibleTasks(t1)).thenReturn(immutableSetOf(tp));
+      when(r.realizeCompatibleTasks(t1)).thenReturn(setOf(tp));
       when(r.realizeCompatibleTasks(t2)).thenReturn(emptySet(TaskProvision.class));
 
       final GraphExtender gx = new GraphExtender(r);
@@ -99,8 +98,8 @@ public class GraphExtenderTest {
       final Goal goal = make(aGoal().withTask(t1, t2));
 
       final Repository r = mock(Repository.class);
-      when(r.realizeCompatibleTasks(t1)).thenReturn(immutableSetOf(tp1, tp3));
-      when(r.realizeCompatibleTasks(t2)).thenReturn(immutableSetOf(tp2, tp4));
+      when(r.realizeCompatibleTasks(t1)).thenReturn(setOf(tp1, tp3));
+      when(r.realizeCompatibleTasks(t2)).thenReturn(setOf(tp2, tp4));
 
       final GraphExtender gx = new GraphExtender(r);
       final Graph g = gx.createGraph(goal);
@@ -197,8 +196,8 @@ public class GraphExtenderTest {
 
       // mock a repository returning the appropriate actions
       final Repository r = mock(Repository.class);
-      when(r.findPrecursors(a1)).thenReturn(immutableSetOf(a3));
-      when(r.findPrecursors(a2)).thenReturn(immutableSetOf(a4, a5));
+      when(r.findPrecursors(a1)).thenReturn(setOf(a3));
+      when(r.findPrecursors(a2)).thenReturn(setOf(a4, a5));
 
       final GraphExtender gx = new GraphExtender(r);
 
@@ -209,7 +208,7 @@ public class GraphExtenderTest {
 
       // the desired extension level
       final ExtensionLevel xxl = new ExtensionLevel(
-          immutableSetOf(
+          setOf(
               make(anActionProvision()
                   .withPrecursor(a3)
                   .withRequest(a1)),
@@ -264,8 +263,8 @@ public class GraphExtenderTest {
           .withRequest(p1));
 
       final Repository r = mock(Repository.class);
-      when(r.findPrecursors(a1)).thenReturn(immutableSetOf(a2));
-      when(r.provideCompatibleProperties(p1)).thenReturn(immutableSetOf(pp));
+      when(r.findPrecursors(a1)).thenReturn(setOf(a2));
+      when(r.provideCompatibleProperties(p1)).thenReturn(setOf(pp));
 
       final GraphExtender gx = new GraphExtender(r);
 
@@ -276,7 +275,7 @@ public class GraphExtenderTest {
 
       // the desired extension level
       final ExtensionLevel xxl = new ExtensionLevel(
-          immutableSetOf(
+          setOf(
               make(anActionProvision()
                   .withPrecursor(a2)
                   .withRequest(a1)
@@ -321,8 +320,8 @@ public class GraphExtenderTest {
                   .withRequest(t))));
 
       final Repository r = mock(Repository.class);
-      when(r.findPrecursors(a1)).thenReturn(immutableSetOf(a3));
-      when(r.findPrecursors(a2)).thenReturn(immutableSetOf(a3));
+      when(r.findPrecursors(a1)).thenReturn(setOf(a3));
+      when(r.findPrecursors(a2)).thenReturn(setOf(a3));
       when(r.provideCompatibleProperties(p1)).thenReturn(emptySet(PropertyProvision.class));
 
       final GraphExtender gx = new GraphExtender(r);
@@ -334,7 +333,7 @@ public class GraphExtenderTest {
 
       // the desired extension level
       final ExtensionLevel xxl = new ExtensionLevel(
-          immutableSetOf(
+          setOf(
               make(anActionProvision()
                   .withPrecursor(a3)
                   .withRequest(a2))
@@ -371,7 +370,7 @@ public class GraphExtenderTest {
 
       final Repository r = mock(Repository.class);
       when(r.findPrecursors(a1)).thenReturn(emptySet(Action.class));
-      when(r.provideCompatibleProperties(p)).thenReturn(immutableSetOf(pp));
+      when(r.provideCompatibleProperties(p)).thenReturn(setOf(pp));
 
       final GraphExtender gx = new GraphExtender(r);
 
@@ -382,7 +381,7 @@ public class GraphExtenderTest {
 
       // the desired extension level
       final ExtensionLevel xxl = new ExtensionLevel(
-          immutableSetOf(
+          setOf(
               make(anActionProvision()
                   .withRequest(a1)
                   .withProvision(pp))
@@ -436,8 +435,8 @@ public class GraphExtenderTest {
 
       final Repository r = mock(Repository.class);
       when(r.findPrecursors(a1)).thenReturn(emptySet(Action.class));
-      when(r.provideCompatibleProperties(p1)).thenReturn(immutableSetOf(pp1, pp2));
-      when(r.provideCompatibleProperties(p2)).thenReturn(immutableSetOf(pp3));
+      when(r.provideCompatibleProperties(p1)).thenReturn(setOf(pp1, pp2));
+      when(r.provideCompatibleProperties(p2)).thenReturn(setOf(pp3));
 
       final GraphExtender gx = new GraphExtender(r);
 

@@ -9,7 +9,6 @@ package vsr.cobalt.testing.makers;
 
 import java.util.Collection;
 
-import com.google.common.collect.ImmutableSet;
 import vsr.cobalt.planner.models.EffectSet;
 import vsr.cobalt.planner.models.Property;
 import vsr.cobalt.testing.maker.CollectionValue;
@@ -30,9 +29,7 @@ public class EffectSetMaker implements Maker<EffectSet> {
 
   @Override
   public EffectSet make() {
-    return new EffectSet(
-        ImmutableSet.copyOf(toClear.get()),
-        ImmutableSet.copyOf(toFill.get()));
+    return new EffectSet(toClear.asSet(), toFill.asSet());
   }
 
   public EffectSetMaker withToClear(final Collection<Property> properties) {

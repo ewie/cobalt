@@ -9,7 +9,6 @@ package vsr.cobalt.testing.makers;
 
 import java.util.Collection;
 
-import com.google.common.collect.ImmutableSet;
 import vsr.cobalt.planner.models.Action;
 import vsr.cobalt.planner.models.EffectSet;
 import vsr.cobalt.planner.models.Property;
@@ -56,8 +55,8 @@ public class ActionMaker implements Maker<Action> {
         widget.get(),
         pre.get(),
         effects.get(),
-        ImmutableSet.copyOf(pubs.get()),
-        ImmutableSet.copyOf(tasks.get()));
+        pubs.asSet(),
+        tasks.asSet());
   }
 
   public ActionMaker withWidget(final Widget widget) {

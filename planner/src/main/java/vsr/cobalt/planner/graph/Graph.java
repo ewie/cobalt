@@ -7,10 +7,10 @@
 
 package vsr.cobalt.planner.graph;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.UnmodifiableIterator;
 
@@ -202,7 +202,7 @@ public abstract class Graph {
      */
     @Override
     public Iterable<ExtensionLevel> getExtensionLevels() {
-      return ImmutableList.of();
+      return Collections.emptyList();
     }
 
     @Override

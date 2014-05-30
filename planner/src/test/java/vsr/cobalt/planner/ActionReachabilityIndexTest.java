@@ -18,8 +18,8 @@ import vsr.cobalt.planner.models.Task;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.testing.Utilities.make;
-import static vsr.cobalt.testing.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.testing.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.testing.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.testing.makers.ExtensionLevelMaker.anExtensionLevel;
 import static vsr.cobalt.testing.makers.GraphMaker.aGraph;
@@ -90,12 +90,12 @@ public class ActionReachabilityIndexTest {
       // a non-enabled precursor action for a1
       final Action a2 = make(aMinimalAction()
           .withPre(aPropositionSet().withCleared(p1))
-          .withEffects(anEffectSet().withFilled(p1)));
+          .withEffects(anEffectSet().withToFill(p1)));
 
       // a non-enabled precursor action for a1
       final Action a3 = make(aMinimalAction()
           .withPre(aPropositionSet().withCleared(p2))
-          .withEffects(anEffectSet().withFilled(p1)));
+          .withEffects(anEffectSet().withToFill(p1)));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
@@ -129,7 +129,7 @@ public class ActionReachabilityIndexTest {
 
       // an enabled precursor action for request
       final Action precursor = make(aMinimalAction()
-          .withEffects(anEffectSet().withFilled(p1)));
+          .withEffects(anEffectSet().withToFill(p1)));
 
       // an enabled providing action for request
       final Action provider = make(aMinimalAction().withPub(p2));
@@ -173,7 +173,7 @@ public class ActionReachabilityIndexTest {
       // a non-enabled precursor action for request
       final Action precursor = make(aMinimalAction()
           .withPre(aPropositionSet().withCleared(p))
-          .withEffects(anEffectSet().withFilled(p)));
+          .withEffects(anEffectSet().withToFill(p)));
 
       // cannot be enabled because of the precursor action
       final ActionProvision ap = make(anActionProvision()

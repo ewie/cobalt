@@ -7,7 +7,6 @@
 
 package vsr.cobalt.testing.makers;
 
-import com.google.common.collect.ImmutableSet;
 import vsr.cobalt.planner.Goal;
 import vsr.cobalt.planner.models.Task;
 import vsr.cobalt.testing.maker.CollectionValue;
@@ -26,7 +25,7 @@ public class GoalMaker implements Maker<Goal> {
 
   @Override
   public Goal make() {
-    return new Goal(ImmutableSet.copyOf(tasks.get()));
+    return new Goal(tasks.asSet());
   }
 
   public GoalMaker withTask(final Maker<Task> maker) {

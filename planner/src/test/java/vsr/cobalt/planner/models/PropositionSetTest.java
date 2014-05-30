@@ -8,6 +8,7 @@
 package vsr.cobalt.planner.models;
 
 import java.util.Objects;
+import java.util.Set;
 
 import org.testng.annotations.Test;
 
@@ -15,6 +16,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
+import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 import static vsr.cobalt.testing.makers.PropertyMaker.aMinimalProperty;
@@ -30,9 +32,23 @@ public class PropositionSetTest {
         expectedExceptionsMessageRegExp = "expecting cleared and filled properties to be disjoint sets")
     public void rejectWhenClearedAndFilledPropertiesAreNotDisjoint() {
       final Property p = make(aMinimalProperty());
-      make(aPropositionSet()
-          .withCleared(p)
-          .withFilled(p));
+      new PropositionSet(setOf(p), setOf(p));
+    }
+
+    @Test
+    public void preventModificationOfPropertiesToClear() {
+      final Set<Property> ps = emptySet();
+      final PropositionSet pps = new PropositionSet(ps, emptySet(Property.class));
+      ps.add(null);
+      assertNotEquals(pps.getClearedProperties(), ps);
+    }
+
+    @Test
+    public void preventModificationOfPropertiesToFill() {
+      final Set<Property> ps = emptySet();
+      final PropositionSet pps = new PropositionSet(emptySet(Property.class), ps);
+      ps.add(null);
+      assertNotEquals(pps.getFilledProperties(), ps);
     }
 
   }

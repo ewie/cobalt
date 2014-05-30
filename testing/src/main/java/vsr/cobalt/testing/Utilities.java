@@ -7,16 +7,11 @@
 
 package vsr.cobalt.testing;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
 import vsr.cobalt.testing.maker.Maker;
-
-import static org.testng.Assert.fail;
 
 /**
  * @author Erik Wienhold
@@ -28,21 +23,16 @@ public abstract class Utilities {
   }
 
   @SafeVarargs
-  public static <E> ImmutableSet<E> immutableSetOf(final E... elements) {
-    return ImmutableSet.of(elements);
-  }
-
-  @SafeVarargs
   public static <E> Set<E> setOf(final E... elements) {
     return new HashSet<>(Arrays.asList(elements));
   }
 
-  public static <E> ImmutableSet<E> emptySet() {
-    return ImmutableSet.of();
+  public static <E> Set<E> emptySet() {
+    return new HashSet<>();
   }
 
-  public static <E> ImmutableSet<E> emptySet(final Class<E> unused) {
-    return ImmutableSet.of();
+  public static <E> Set<E> emptySet(final Class<E> unused) {
+    return emptySet();
   }
 
 }

@@ -8,12 +8,12 @@
 package vsr.cobalt.planner;
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
@@ -235,7 +235,7 @@ public class PlanIterator extends ProbingIterator<Plan> {
     return true;
   }
 
-  private ImmutableList<ExtensionLevel> getExtensionLevels() {
+  private List<ExtensionLevel> getExtensionLevels() {
     // the number of extension levels is known, because there is one level per extension frame
     final ExtensionLevel[] xls = new ExtensionLevel[extensionFrames.size()];
 
@@ -245,7 +245,7 @@ public class PlanIterator extends ProbingIterator<Plan> {
       xls[--i] = xf.getLevel();
     }
 
-    return ImmutableList.of(xls);
+    return Arrays.asList(xls);
   }
 
   private static abstract class Frame<L extends Level, P> {
@@ -261,7 +261,7 @@ public class PlanIterator extends ProbingIterator<Plan> {
       this.provisionCombinations = provisionCombinations.iterator();
     }
 
-    protected abstract L createLevel(ImmutableSet<P> provisions);
+    protected abstract L createLevel(Set<P> provisions);
 
     public final boolean hasLevel() {
       return level != null;
@@ -286,7 +286,7 @@ public class PlanIterator extends ProbingIterator<Plan> {
      */
     public void createNextLevel() {
       if (provisionCombinations.hasNext()) {
-        level = createLevel(ImmutableSet.copyOf(provisionCombinations.next()));
+        level = createLevel(provisionCombinations.next());
       } else {
         level = null;
       }
@@ -301,7 +301,7 @@ public class PlanIterator extends ProbingIterator<Plan> {
     }
 
     @Override
-    protected InitialLevel createLevel(final ImmutableSet<TaskProvision> provisions) {
+    protected InitialLevel createLevel(final Set<TaskProvision> provisions) {
       return new InitialLevel(provisions);
     }
 
@@ -326,20 +326,20 @@ public class PlanIterator extends ProbingIterator<Plan> {
      * @param level   the original extension level
      * @param actions actions required by the previous level
      */
-    public ExtensionFrame(final ExtensionLevel level, final ImmutableSet<Action> actions) {
+    public ExtensionFrame(final ExtensionLevel level, final Set<Action> actions) {
       super(level, createCombinations(level, actions));
     }
 
     @Override
-    protected ExtensionLevel createLevel(final ImmutableSet<ActionProvision> provisions) {
+    protected ExtensionLevel createLevel(final Set<ActionProvision> provisions) {
       return new ExtensionLevel(provisions);
     }
 
     private static ProductSet<ActionProvision> createCombinations(final ExtensionLevel level,
-                                                                  final ImmutableSet<Action> actions) {
+                                                                  final Set<Action> actions) {
       final Set<Set<ActionProvision>> apss = new HashSet<>();
       for (final Action a : actions) {
-        final ImmutableSet<ActionProvision> aps = level.getActionProvisionsByRequestedAction(a);
+        final Set<ActionProvision> aps = level.getActionProvisionsByRequestedAction(a);
         if (!aps.isEmpty()) {
           apss.add(aps);
         }

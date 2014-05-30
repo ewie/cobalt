@@ -21,11 +21,11 @@ import static vsr.cobalt.testing.makers.PropertyMaker.aMinimalProperty;
  */
 public class PropertyProvisionMaker implements Maker<PropertyProvision> {
 
-  private final AtomicValue<Action> action = new AtomicValue<>();
+  private final AtomicValue<Property> request = new AtomicValue<>();
 
   private final AtomicValue<Property> offer = new AtomicValue<>();
 
-  private final AtomicValue<Property> request = new AtomicValue<>();
+  private final AtomicValue<Action> action = new AtomicValue<>();
 
   public static PropertyProvisionMaker aPropertyProvision() {
     return new PropertyProvisionMaker();
@@ -42,18 +42,16 @@ public class PropertyProvisionMaker implements Maker<PropertyProvision> {
 
   @Override
   public PropertyProvision make() {
-    return new PropertyProvision(
-        request.get(), offer.get(), action.get()
-    );
+    return new PropertyProvision(request.get(), offer.get(), action.get());
   }
 
-  public PropertyProvisionMaker withProvidingAction(final Maker<Action> maker) {
-    action.set(maker);
+  public PropertyProvisionMaker withRequest(final Maker<Property> maker) {
+    request.set(maker);
     return this;
   }
 
-  public PropertyProvisionMaker withProvidingAction(final Action action) {
-    this.action.set(action);
+  public PropertyProvisionMaker withRequest(final Property property) {
+    request.set(property);
     return this;
   }
 
@@ -67,13 +65,13 @@ public class PropertyProvisionMaker implements Maker<PropertyProvision> {
     return this;
   }
 
-  public PropertyProvisionMaker withRequest(final Maker<Property> maker) {
-    request.set(maker);
+  public PropertyProvisionMaker withProvidingAction(final Maker<Action> maker) {
+    action.set(maker);
     return this;
   }
 
-  public PropertyProvisionMaker withRequest(final Property property) {
-    request.set(property);
+  public PropertyProvisionMaker withProvidingAction(final Action action) {
+    this.action.set(action);
     return this;
   }
 

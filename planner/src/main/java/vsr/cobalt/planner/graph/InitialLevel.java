@@ -7,7 +7,9 @@
 
 package vsr.cobalt.planner.graph;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 import vsr.cobalt.planner.models.Action;
@@ -30,26 +32,26 @@ public final class InitialLevel implements Level {
    *
    * @param taskProvisions a non-empty set of task provisions
    */
-  public InitialLevel(final ImmutableSet<TaskProvision> taskProvisions) {
+  public InitialLevel(final Set<TaskProvision> taskProvisions) {
     if (taskProvisions.isEmpty()) {
       throw new IllegalArgumentException("expecting one or more task provisions");
     }
-    this.taskProvisions = taskProvisions;
+    this.taskProvisions = ImmutableSet.copyOf(taskProvisions);
   }
 
   /**
    * @return the set of task provisions
    */
-  public ImmutableSet<TaskProvision> getTaskProvisions() {
+  public Set<TaskProvision> getTaskProvisions() {
     return taskProvisions;
   }
 
-  public ImmutableSet<Task> getRequestedTasks() {
-    final ImmutableSet.Builder<Task> ts = ImmutableSet.builder();
+  public Set<Task> getRequestedTasks() {
+    final Set<Task> ts = new HashSet<>();
     for (final TaskProvision tp : taskProvisions) {
       ts.add(tp.getRequest());
     }
-    return ts.build();
+    return ts;
   }
 
   /**
@@ -59,26 +61,26 @@ public final class InitialLevel implements Level {
    *
    * @return a set of task provisions with the requested task
    */
-  public ImmutableSet<TaskProvision> getTaskProvisionsByRequestedTask(final Task task) {
-    final ImmutableSet.Builder<TaskProvision> tps = ImmutableSet.builder();
+  public Set<TaskProvision> getTaskProvisionsByRequestedTask(final Task task) {
+    final Set<TaskProvision> tps = new HashSet<>();
     for (final TaskProvision tp : taskProvisions) {
       if (tp.getRequest().equals(task)) {
         tps.add(tp);
       }
     }
-    return tps.build();
+    return tps;
   }
 
   /**
    * @return the set of required actions provided by all task provisions
    */
   @Override
-  public ImmutableSet<Action> getRequiredActions() {
-    final ImmutableSet.Builder<Action> as = ImmutableSet.builder();
+  public Set<Action> getRequiredActions() {
+    final Set<Action> as = new HashSet<>();
     for (final TaskProvision tp : taskProvisions) {
       as.add(tp.getProvidingAction());
     }
-    return as.build();
+    return as;
   }
 
   @Override

@@ -7,6 +7,7 @@
 
 package vsr.cobalt.planner;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
@@ -20,8 +21,8 @@ import vsr.cobalt.planner.graph.Level;
 import vsr.cobalt.planner.models.Action;
 
 /**
- * Records which actions are reachable, i.e. the actions whose pre-conditions are empty or satisfied by some
- * reachable actions in the previous level.
+ * Records which actions are reachable, i.e. the actions whose pre-conditions are empty or satisfied by some reachable
+ * actions in the previous level.
  *
  * @author Erik Wienhold
  */
@@ -45,7 +46,7 @@ class ActionReachabilityIndex {
    * Check if an actions is reachable in a given level.
    *
    * @param action an action to check
-   * @param level a level containing the given action
+   * @param level  a level containing the given action
    *
    * @return true when reachable, false otherwise
    */
@@ -80,7 +81,7 @@ class ActionReachabilityIndex {
   }
 
   private static Set<Action> getCombinedEnabledActions(final Level level, final Set<Action> enabledActions) {
-    final Set<Action> as = Sets.newHashSet();
+    final Set<Action> as = new HashSet<>();
     for (final Action a : level.getRequiredActions()) {
       if (a.isEnabled()) {
         as.add(a);
@@ -90,7 +91,7 @@ class ActionReachabilityIndex {
   }
 
   private static Set<Action> getEnabledTargetActions(final ExtensionLevel level, final Set<Action> enabledActions) {
-    final Set<Action> as = Sets.newHashSet();
+    final Set<Action> as = new HashSet<>();
     for (final ActionProvision ap : level.getActionProvisions()) {
       if (isEnabled(ap, enabledActions)) {
         as.add(ap.getRequestedAction());

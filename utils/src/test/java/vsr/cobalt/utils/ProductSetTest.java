@@ -7,13 +7,13 @@
 
 package vsr.cobalt.utils;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Set;
+
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static vsr.cobalt.testing.Utilities.emptySet;
-import static vsr.cobalt.testing.Utilities.immutableSetOf;
 import static vsr.cobalt.testing.Utilities.setOf;
 
 @Test
@@ -35,8 +35,7 @@ public class ProductSetTest {
 
     @Test
     public void returnIterator() {
-      final ImmutableSet<ImmutableSet<Integer>> s = immutableSetOf(
-          immutableSetOf(0, 1), immutableSetOf(2, 3));
+      final Set<Set<Integer>> s = setOf(setOf(0, 1), setOf(2, 3));
 
       final ProductSet<Integer> ps = new ProductSet<>(s);
 

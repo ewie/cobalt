@@ -7,6 +7,8 @@
 
 package vsr.cobalt.planner.graph;
 
+import java.util.Set;
+
 import org.testng.annotations.Test;
 import vsr.cobalt.planner.models.Action;
 import vsr.cobalt.planner.models.Property;
@@ -19,7 +21,6 @@ import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.testing.Assert.assertEmpty;
 import static vsr.cobalt.testing.Utilities.emptySet;
-import static vsr.cobalt.testing.Utilities.immutableSetOf;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
@@ -43,6 +44,15 @@ public class ExtensionLevelTest {
         expectedExceptionsMessageRegExp = "expecting one or more provisions")
     public void rejectEmptySet() {
       new ExtensionLevel(emptySet(ActionProvision.class));
+    }
+
+    @Test
+    public void preventModificationOfActionProvisions() {
+      final ActionProvision ap = make(aMinimalActionProvision());
+      final Set<ActionProvision> aps = setOf(ap);
+      final ExtensionLevel xl = new ExtensionLevel(aps);
+      aps.add(null);
+      assertNotEquals(xl.getActionProvisions(), aps);
     }
 
   }
@@ -192,7 +202,7 @@ public class ExtensionLevelTest {
               .withPrecursor(precursor)));
 
       final Level l = mock(Level.class);
-      when(l.getRequiredActions()).thenReturn(immutableSetOf(request));
+      when(l.getRequiredActions()).thenReturn(setOf(request));
 
       assertTrue(xl.canExtendOn(l));
     }
@@ -213,7 +223,7 @@ public class ExtensionLevelTest {
               .withPrecursor(precursor)));
 
       final Level l = mock(Level.class);
-      when(l.getRequiredActions()).thenReturn(immutableSetOf(make(aMinimalAction())));
+      when(l.getRequiredActions()).thenReturn(setOf(make(aMinimalAction())));
 
       assertFalse(xl.canExtendOn(l));
     }
@@ -289,20 +299,20 @@ public class ExtensionLevelTest {
 
     @Test
     public void useHashCodeOfActionProvisionSet() {
-      final ExtensionLevel xl = new ExtensionLevel(immutableSetOf(make(aMinimalActionProvision())));
+      final ExtensionLevel xl = new ExtensionLevel(setOf(make(aMinimalActionProvision())));
       assertEquals(xl.hashCode(), xl.getActionProvisions().hashCode());
     }
 
     @Test
     public void returnTrueWhenActionProvisionSetsAreEqual() {
-      final ExtensionLevel xl1 = new ExtensionLevel(immutableSetOf(make(aMinimalActionProvision())));
-      final ExtensionLevel xl2 = new ExtensionLevel(immutableSetOf(make(aMinimalActionProvision())));
+      final ExtensionLevel xl1 = new ExtensionLevel(setOf(make(aMinimalActionProvision())));
+      final ExtensionLevel xl2 = new ExtensionLevel(setOf(make(aMinimalActionProvision())));
       assertEquals(xl1, xl2);
     }
 
     @Test
     public void returnFalseWhenComparedWithNonExtensionLevel() {
-      final ExtensionLevel xl = new ExtensionLevel(immutableSetOf(make(aMinimalActionProvision())));
+      final ExtensionLevel xl = new ExtensionLevel(setOf(make(aMinimalActionProvision())));
       final Object x = new Object();
       assertNotEquals(xl, x);
     }
@@ -323,8 +333,8 @@ public class ExtensionLevelTest {
 
       final ActionProvision ap2 = make(aMinimalActionProvision());
 
-      final ExtensionLevel xl1 = new ExtensionLevel(immutableSetOf(ap1));
-      final ExtensionLevel xl2 = new ExtensionLevel(immutableSetOf(ap2));
+      final ExtensionLevel xl1 = new ExtensionLevel(setOf(ap1));
+      final ExtensionLevel xl2 = new ExtensionLevel(setOf(ap2));
 
       assertNotEquals(xl1, xl2);
     }

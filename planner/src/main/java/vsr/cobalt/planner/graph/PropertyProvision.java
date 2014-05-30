@@ -11,8 +11,8 @@ import vsr.cobalt.planner.models.Action;
 import vsr.cobalt.planner.models.Property;
 
 /**
- * A property provision specifies how a requested property can be satisfied via a providing action offering a
- * matching property through publication.
+ * A property provision specifies how a requested property can be satisfied via a providing action offering a matching
+ * property through publication.
  *
  * @author Erik Wienhold
  */

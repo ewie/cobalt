@@ -7,15 +7,16 @@
 
 package vsr.cobalt.planner;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Set;
+
 import org.testng.annotations.Test;
-import vsr.cobalt.planner.Goal;
 import vsr.cobalt.planner.models.Task;
 
-import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 import static vsr.cobalt.testing.Utilities.emptySet;
-import static vsr.cobalt.testing.Utilities.immutableSetOf;
 import static vsr.cobalt.testing.Utilities.make;
+import static vsr.cobalt.testing.Utilities.setOf;
 import static vsr.cobalt.testing.makers.TaskMaker.aMinimalTask;
 
 @Test
@@ -30,6 +31,15 @@ public class GoalTest {
       new Goal(emptySet(Task.class));
     }
 
+    @Test
+    public void preventModificationOfTaskProvisions() {
+      final Task t = make(aMinimalTask());
+      final Set<Task> ts = setOf(t);
+      final Goal g = new Goal(ts);
+      ts.add(null);
+      assertNotEquals(g.getTasks(), ts);
+    }
+
   }
 
   @Test
@@ -38,9 +48,9 @@ public class GoalTest {
     @Test
     public void returnTheTasks() {
       final Task t = make(aMinimalTask());
-      final ImmutableSet<Task> ts = immutableSetOf(t);
+      final Set<Task> ts = setOf(t);
       final Goal g = new Goal(ts);
-      assertSame(g.getTasks(), ts);
+      assertEquals(g.getTasks(), ts);
     }
 
   }

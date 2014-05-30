@@ -21,11 +21,11 @@ import static vsr.cobalt.testing.makers.TaskMaker.aMinimalTask;
  */
 public class TaskProvisionMaker implements Maker<TaskProvision> {
 
-  private final AtomicValue<Action> action = new AtomicValue<>();
+  private final AtomicValue<Task> request = new AtomicValue<>();
 
   private final AtomicValue<Task> offer = new AtomicValue<>();
 
-  private final AtomicValue<Task> request = new AtomicValue<>();
+  private final AtomicValue<Action> action = new AtomicValue<>();
 
   public static TaskProvisionMaker aTaskProvision() {
     return new TaskProvisionMaker();
@@ -45,13 +45,13 @@ public class TaskProvisionMaker implements Maker<TaskProvision> {
     return new TaskProvision(request.get(), offer.get(), action.get());
   }
 
-  public TaskProvisionMaker withProvidingAction(final Maker<Action> maker) {
-    action.set(maker);
+  public TaskProvisionMaker withRequest(final Maker<Task> maker) {
+    request.set(maker);
     return this;
   }
 
-  public TaskProvisionMaker withProvidingAction(final Action action) {
-    this.action.set(action);
+  public TaskProvisionMaker withRequest(final Task task) {
+    request.set(task);
     return this;
   }
 
@@ -65,13 +65,13 @@ public class TaskProvisionMaker implements Maker<TaskProvision> {
     return this;
   }
 
-  public TaskProvisionMaker withRequest(final Maker<Task> maker) {
-    request.set(maker);
+  public TaskProvisionMaker withProvidingAction(final Maker<Action> maker) {
+    action.set(maker);
     return this;
   }
 
-  public TaskProvisionMaker withRequest(final Task task) {
-    request.set(task);
+  public TaskProvisionMaker withProvidingAction(final Action action) {
+    this.action.set(action);
     return this;
   }
 

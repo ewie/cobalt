@@ -7,6 +7,8 @@
 
 package vsr.cobalt.planner.graph;
 
+import java.util.Set;
+
 import org.testng.annotations.Test;
 import vsr.cobalt.planner.models.Action;
 import vsr.cobalt.planner.models.Task;
@@ -14,8 +16,9 @@ import vsr.cobalt.planner.models.Task;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static vsr.cobalt.testing.Assert.assertEmpty;
-import static vsr.cobalt.testing.Utilities.immutableSetOf;
+import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
+import static vsr.cobalt.testing.Utilities.setOf;
 import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.testing.makers.InitialLevelMaker.aMinimalInitialLevel;
 import static vsr.cobalt.testing.makers.InitialLevelMaker.anInitialLevel;
@@ -23,8 +26,6 @@ import static vsr.cobalt.testing.makers.TaskMaker.aMinimalTask;
 import static vsr.cobalt.testing.makers.TaskMaker.aTask;
 import static vsr.cobalt.testing.makers.TaskProvisionMaker.aMinimalTaskProvision;
 import static vsr.cobalt.testing.makers.TaskProvisionMaker.aTaskProvision;
-import static vsr.cobalt.testing.Utilities.emptySet;
-import static vsr.cobalt.testing.Utilities.setOf;
 
 @Test
 public class InitialLevelTest {
@@ -36,6 +37,15 @@ public class InitialLevelTest {
         expectedExceptionsMessageRegExp = "expecting one or more task provisions")
     public void rejectEmptySetOfTaskProvisions() {
       new InitialLevel(emptySet(TaskProvision.class));
+    }
+
+    @Test
+    public void preventModificationOfTaskProvisions() {
+      final TaskProvision tp = make(aMinimalTaskProvision());
+      final Set<TaskProvision> tps = setOf(tp);
+      final InitialLevel il = new InitialLevel(tps);
+      tps.add(null);
+      assertNotEquals(il.getTaskProvisions(), tps);
     }
 
   }
@@ -137,20 +147,20 @@ public class InitialLevelTest {
 
     @Test
     public void useHashCodeOfTaskProvisionSet() {
-      final InitialLevel il = new InitialLevel(immutableSetOf(make(aMinimalTaskProvision())));
+      final InitialLevel il = new InitialLevel(setOf(make(aMinimalTaskProvision())));
       assertEquals(il.hashCode(), il.getTaskProvisions().hashCode());
     }
 
     @Test
     public void returnTrueWhenTaskProvisionSetsAreEqual() {
-      final InitialLevel il1 = new InitialLevel(immutableSetOf(make(aMinimalTaskProvision())));
-      final InitialLevel il2 = new InitialLevel(immutableSetOf(make(aMinimalTaskProvision())));
+      final InitialLevel il1 = new InitialLevel(setOf(make(aMinimalTaskProvision())));
+      final InitialLevel il2 = new InitialLevel(setOf(make(aMinimalTaskProvision())));
       assertEquals(il1, il2);
     }
 
     @Test
     public void returnFalseWhenComparedWithNonInitialLevel() {
-      final InitialLevel il = new InitialLevel(immutableSetOf(make(aMinimalTaskProvision())));
+      final InitialLevel il = new InitialLevel(setOf(make(aMinimalTaskProvision())));
       final Object x = new Object();
       assertNotEquals(il, x);
     }
@@ -168,8 +178,8 @@ public class InitialLevelTest {
 
       final TaskProvision tp2 = make(aMinimalTaskProvision());
 
-      final InitialLevel il1 = new InitialLevel(immutableSetOf(tp1));
-      final InitialLevel il2 = new InitialLevel(immutableSetOf(tp2));
+      final InitialLevel il1 = new InitialLevel(setOf(tp1));
+      final InitialLevel il2 = new InitialLevel(setOf(tp2));
 
       assertNotEquals(il1, il2);
     }

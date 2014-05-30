@@ -1,6 +1,7 @@
 package vsr.cobalt.planner;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Set;
+
 import vsr.cobalt.planner.graph.PropertyProvision;
 import vsr.cobalt.planner.graph.TaskProvision;
 import vsr.cobalt.planner.models.Action;
@@ -21,7 +22,7 @@ public interface Repository {
    *
    * @return a set of zero or more task provisions
    */
-  public ImmutableSet<TaskProvision> realizeCompatibleTasks(Task task);
+  Set<TaskProvision> realizeCompatibleTasks(Task task);
 
   /**
    * Get precursor actions for the given action.
@@ -32,7 +33,7 @@ public interface Repository {
    *
    * @see Action#canBePrecursorOf(Action)
    */
-  public ImmutableSet<Action> findPrecursors(Action action);
+  Set<Action> findPrecursors(Action action);
 
   /**
    * Get property provisions satisfying a requested property.
@@ -41,6 +42,6 @@ public interface Repository {
    *
    * @return a set of zero or more property provisions
    */
-  public ImmutableSet<PropertyProvision> provideCompatibleProperties(Property property);
+  Set<PropertyProvision> provideCompatibleProperties(Property property);
 
 }

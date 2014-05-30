@@ -7,7 +7,6 @@
 
 package vsr.cobalt.testing.makers;
 
-import com.google.common.collect.ImmutableSet;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.PropertyProvision;
 import vsr.cobalt.planner.models.Action;
@@ -50,11 +49,10 @@ public class ActionProvisionMaker implements Maker<ActionProvision> {
   public ActionProvision make() {
     final Action r = request.get();
     final Action p = precursor.get();
-    final ImmutableSet<PropertyProvision> pps = ImmutableSet.copyOf(provisions.get());
     if (p == null) {
-      return ActionProvision.createWithoutPrecursor(r, pps);
+      return ActionProvision.createWithoutPrecursor(r, provisions.asSet());
     }
-    return ActionProvision.createWithPrecursor(r, p, pps);
+    return ActionProvision.createWithPrecursor(r, p, provisions.asSet());
   }
 
   public ActionProvisionMaker withRequest(final Action request) {

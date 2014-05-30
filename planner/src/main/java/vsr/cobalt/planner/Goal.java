@@ -1,5 +1,7 @@
 package vsr.cobalt.planner;
 
+import java.util.Set;
+
 import com.google.common.collect.ImmutableSet;
 import vsr.cobalt.planner.models.Task;
 
@@ -13,24 +15,24 @@ public final class Goal {
   /**
    * A non-empty set of tasks to be realized by a UI mashup.
    */
-  private final ImmutableSet<Task> tasks;
+  private final Set<Task> tasks;
 
   /**
    * Create a new goal.
    *
    * @param tasks a non-empty set of tasks to be realized by a UI mashup
    */
-  public Goal(final ImmutableSet<Task> tasks) {
+  public Goal(final Set<Task> tasks) {
     if (tasks.isEmpty()) {
       throw new IllegalArgumentException("expecting one or more tasks");
     }
-    this.tasks = tasks;
+    this.tasks = ImmutableSet.copyOf(tasks);
   }
 
   /**
    * @return the non-empty set of tasks to be realized by a UI mashup
    */
-  public ImmutableSet<Task> getTasks() {
+  public Set<Task> getTasks() {
     return tasks;
   }
 

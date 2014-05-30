@@ -9,7 +9,6 @@ package vsr.cobalt.planner;
 
 import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
 import org.testng.annotations.Test;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.Graph;
@@ -22,7 +21,6 @@ import vsr.cobalt.utils.ProbingIterator;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 import static vsr.cobalt.testing.Assert.assertSubClass;
-import static vsr.cobalt.testing.Utilities.immutableSetOf;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
@@ -109,7 +107,7 @@ public class PlanIteratorTest {
     }
 
     @Test
-    public void considerAllProvisions() {
+    public void considerAllTaskProvisions() {
       final Task t1 = make(aMinimalTask().withIdentifier("t1"));
       final Task t2 = make(aMinimalTask().withIdentifier("t2"));
 
@@ -141,7 +139,7 @@ public class PlanIteratorTest {
 
       final PlanIterator pi = new PlanIterator(g);
 
-      final ImmutableSet<Plan> xps = immutableSetOf(new Plan(g1), new Plan(g2));
+      final Set<Plan> xps = setOf(new Plan(g1), new Plan(g2));
       final Set<Plan> ps = setOf();
 
       ps.add(pi.probeNextValue());
@@ -189,7 +187,7 @@ public class PlanIteratorTest {
 
       final PlanIterator pi = new PlanIterator(g);
 
-      final ImmutableSet<Plan> xps = immutableSetOf(new Plan(g));
+      final Set<Plan> xps = setOf(new Plan(g));
       final Set<Plan> ps = setOf();
 
       ps.add(pi.probeNextValue());
@@ -250,7 +248,7 @@ public class PlanIteratorTest {
 
       final PlanIterator pi = new PlanIterator(g1);
 
-      final ImmutableSet<Plan> xps = immutableSetOf(new Plan(g2));
+      final Set<Plan> xps = setOf(new Plan(g2));
       final Set<Plan> ps = setOf();
 
       ps.add(pi.probeNextValue());
@@ -298,7 +296,7 @@ public class PlanIteratorTest {
 
       final PlanIterator pi = new PlanIterator(g1, 2, 2);
 
-      final ImmutableSet<Plan> xps = immutableSetOf(new Plan(g2));
+      final Set<Plan> xps = setOf(new Plan(g2));
       final Set<Plan> ps = setOf();
 
       ps.add(pi.probeNextValue());

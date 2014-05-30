@@ -7,14 +7,11 @@
 
 package vsr.cobalt.planner;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
@@ -71,19 +68,19 @@ public class GraphExtender {
   }
 
   private InitialLevel createInitialLevel(final Goal goal) throws PlanningException {
-    final ImmutableSet.Builder<TaskProvision> builder = ImmutableSet.builder();
+    final Set<TaskProvision> tps = new HashSet<>();
 
     for (final Task t : goal.getTasks()) {
-      final Set<TaskProvision> tps = repository.realizeCompatibleTasks(t);
-      if (tps.isEmpty()) {
+      final Set<TaskProvision> tps2 = repository.realizeCompatibleTasks(t);
+      if (tps2.isEmpty()) {
         // Every goal task is equally required, so failing to find realizing actions for any single task is a failure.
         throw new PlanningException("cannot realize some goal task");
       } else {
-        builder.addAll(tps);
+        tps.addAll(tps2);
       }
     }
 
-    return new InitialLevel(builder.build());
+    return new InitialLevel(tps);
   }
 
   private ExtensionLevel createExtensionLevel(final Graph graph) throws PlanningException {
@@ -91,14 +88,13 @@ public class GraphExtender {
       throw new PlanningException("graph has no unsatisfied actions");
     }
 
-    final ImmutableSet<Action> as = graph.getLastLevel().getRequiredActions();
-    final ImmutableSet.Builder<ActionProvision> b = ImmutableSet.builder();
+    final Set<Action> as = graph.getLastLevel().getRequiredActions();
+    final Set<ActionProvision> aps = new HashSet<>();
 
     for (final Action a : as) {
-      b.addAll(createActionProvisions(a));
+      aps.addAll(createActionProvisions(a));
     }
 
-    final ImmutableSet<ActionProvision> aps = b.build();
     if (aps.isEmpty()) {
       throw new PlanningException("cannot enable any action required by the graph");
     }
@@ -130,27 +126,26 @@ public class GraphExtender {
     return aps;
   }
 
-  private Collection<ActionProvision> createActionProvisionsWithPrecursor(final Action request,
-                                                                          final Action precursor) {
+  private Set<ActionProvision> createActionProvisionsWithPrecursor(final Action request, final Action precursor) {
     final Set<Property> ps = request.getFilledPropertiesNotSatisfiedByPrecursor(precursor);
 
     if (ps.isEmpty()) {
       // The precursor is sufficient enough to enable the action.
-      return ImmutableList.of(ActionProvision.createWithPrecursor(request, precursor));
+      return Sets.newHashSet(ActionProvision.createWithPrecursor(request, precursor));
     } else {
       final ProductSet<PropertyProvision> ppps = findPropertyProvisions(ps);
       if (ppps == null) {
         return Collections.emptySet();
       }
-      final Collection<ActionProvision> aps = new ArrayList<>();
+      final Set<ActionProvision> aps = new HashSet<>();
       for (final Set<PropertyProvision> pps : ppps) {
-        aps.add(ActionProvision.createWithPrecursor(request, precursor, ImmutableSet.copyOf(pps)));
+        aps.add(ActionProvision.createWithPrecursor(request, precursor, pps));
       }
       return aps;
     }
   }
 
-  private Collection<ActionProvision> createActionProvisionsWithoutPrecursor(final Action request) {
+  private Set<ActionProvision> createActionProvisionsWithoutPrecursor(final Action request) {
     final Set<Property> ps = request.getPreConditions().getFilledProperties();
 
     if (ps.isEmpty()) {
@@ -160,20 +155,20 @@ public class GraphExtender {
       if (ppps == null) {
         return Collections.emptySet();
       }
-      final Collection<ActionProvision> aps = new ArrayList<>();
+      final Set<ActionProvision> aps = new HashSet<>();
       for (final Set<PropertyProvision> pps : ppps) {
-        aps.add(ActionProvision.createWithoutPrecursor(request, ImmutableSet.copyOf(pps)));
+        aps.add(ActionProvision.createWithoutPrecursor(request, pps));
       }
       return aps;
     }
   }
 
   private ProductSet<PropertyProvision> findPropertyProvisions(final Set<Property> ps) {
-    final ImmutableSet.Builder<ImmutableSet<PropertyProvision>> ppss = ImmutableSet.builder();
+    final Set<Set<PropertyProvision>> ppss = new HashSet<>();
 
     // Find provisions for each required property.
     for (final Property p : ps) {
-      final ImmutableSet<PropertyProvision> pps = repository.provideCompatibleProperties(p);
+      final Set<PropertyProvision> pps = repository.provideCompatibleProperties(p);
 
       // There must be at least one provision per required property, otherwise an action cannot be enabled.
       if (pps.isEmpty()) {
@@ -183,7 +178,7 @@ public class GraphExtender {
       ppss.add(pps);
     }
 
-    return new ProductSet<>(ppss.build());
+    return new ProductSet<>(ppss);
   }
 
 }

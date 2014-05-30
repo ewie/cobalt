@@ -7,7 +7,10 @@
 
 package vsr.cobalt.planner.models;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -21,7 +24,9 @@ import static java.util.Collections.disjoint;
  */
 public final class EffectSet {
 
-  private static final EffectSet EMPTY = new EffectSet(ImmutableSet.<Property>of(), ImmutableSet.<Property>of());
+  private static final Set<Property> EMPTY_PROPERTIES = Collections.emptySet();
+
+  private static final EffectSet EMPTY = new EffectSet(EMPTY_PROPERTIES, EMPTY_PROPERTIES);
 
   /**
    * The set of properties to clear.
@@ -40,12 +45,12 @@ public final class EffectSet {
    * @param toClear a set of properties to clear
    * @param toFill  a set of properties to fill
    */
-  public EffectSet(final ImmutableSet<Property> toClear, final ImmutableSet<Property> toFill) {
+  public EffectSet(final Set<Property> toClear, final Set<Property> toFill) {
     if (!disjoint(toClear, toFill)) {
       throw new IllegalArgumentException("expecting properties to clear and fill to be disjoint sets");
     }
-    this.toClear = toClear;
-    this.toFill = toFill;
+    this.toClear = ImmutableSet.copyOf(toClear);
+    this.toFill = ImmutableSet.copyOf(toFill);
   }
 
   /**
@@ -60,12 +65,12 @@ public final class EffectSet {
    *
    * @return an effect set with only properties to clear
    */
-  public static EffectSet clear(final ImmutableSet<Property> properties) {
-    return new EffectSet(properties, ImmutableSet.<Property>of());
+  public static EffectSet clear(final Set<Property> properties) {
+    return new EffectSet(properties, EMPTY_PROPERTIES);
   }
 
   /**
-   * @see #clear(ImmutableSet)
+   * @see #clear(Set)
    */
   public static EffectSet clear(final Property... properties) {
     return clear(ImmutableSet.of(properties));
@@ -76,12 +81,12 @@ public final class EffectSet {
    *
    * @return an effect set with only properties to fill
    */
-  public static EffectSet fill(final ImmutableSet<Property> properties) {
-    return new EffectSet(ImmutableSet.<Property>of(), properties);
+  public static EffectSet fill(final Set<Property> properties) {
+    return new EffectSet(EMPTY_PROPERTIES, properties);
   }
 
   /**
-   * @see #fill(ImmutableSet)
+   * @see #fill(Set)
    */
   public static EffectSet fill(final Property... properties) {
     return fill(ImmutableSet.of(properties));
@@ -90,14 +95,14 @@ public final class EffectSet {
   /**
    * @return the set of properties to clear
    */
-  public ImmutableSet<Property> getPropertiesToClear() {
+  public Set<Property> getPropertiesToClear() {
     return toClear;
   }
 
   /**
    * @return the set of properties to fill
    */
-  public ImmutableSet<Property> getPropertiesToFill() {
+  public Set<Property> getPropertiesToFill() {
     return toFill;
   }
 
@@ -109,13 +114,13 @@ public final class EffectSet {
    * @return a proposition set specifying the derived post-conditions
    */
   public PropositionSet createPostConditions(final PropositionSet preConditions) {
-    final ImmutableSet.Builder<Property> cleared = ImmutableSet.builder();
-    final ImmutableSet.Builder<Property> filled = ImmutableSet.builder();
+    final Set<Property> cleared = new HashSet<>();
+    final Set<Property> filled = new HashSet<>();
     cleared.addAll(toClear);
     filled.addAll(toFill);
     cleared.addAll(difference(preConditions.getClearedProperties(), toFill));
     filled.addAll(difference(preConditions.getFilledProperties(), toClear));
-    return new PropositionSet(cleared.build(), filled.build());
+    return new PropositionSet(cleared, filled);
   }
 
   @Override

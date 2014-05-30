@@ -8,15 +8,14 @@
 package vsr.cobalt.planner.models;
 
 import java.util.Objects;
+import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotEquals;
-import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
@@ -34,6 +33,41 @@ import static vsr.cobalt.testing.makers.WidgetMaker.aWidget;
 public class ActionTest {
 
   @Test
+  public static class New {
+
+    private final Widget w = make(aMinimalWidget());
+
+    private final PropositionSet pre = make(aPropositionSet());
+
+    private final EffectSet ef = make(anEffectSet());
+
+    private Set<Property> ps;
+
+    private Set<Task> ts;
+
+    @BeforeMethod
+    public void setUp() {
+      ps = emptySet();
+      ts = emptySet();
+    }
+
+    @Test
+    public void preventModificationOfPublishedProperties() {
+      final Action a = new Action(w, pre, ef, ps, ts);
+      ps.add(null);
+      assertNotEquals(a.getPublishedProperties(), ps);
+    }
+
+    @Test
+    public void preventModificationOfRealizedTasks() {
+      final Action a = new Action(w, pre, ef, ps, ts);
+      ts.add(null);
+      assertNotEquals(a.getRealizedTasks(), ts);
+    }
+
+  }
+
+  @Test
   public static class Getters {
 
     private Action action;
@@ -44,9 +78,9 @@ public class ActionTest {
 
     private EffectSet effects;
 
-    private ImmutableSet<Property> published;
+    private Set<Property> published;
 
-    private ImmutableSet<Task> tasks;
+    private Set<Task> tasks;
 
     @BeforeMethod
     public void setUp() {
@@ -67,17 +101,17 @@ public class ActionTest {
     @Test
     public void getWidget()
         throws Exception {
-      assertSame(action.getWidget(), widget);
+      assertEquals(action.getWidget(), widget);
     }
 
     @Test
     public void getPreConditions() {
-      assertSame(action.getPreConditions(), pre);
+      assertEquals(action.getPreConditions(), pre);
     }
 
     @Test
     public void getEffects() {
-      assertSame(action.getEffects(), effects);
+      assertEquals(action.getEffects(), effects);
     }
 
     @Test
@@ -87,12 +121,12 @@ public class ActionTest {
 
     @Test
     public void getPublishedProperties() {
-      assertSame(action.getPublishedProperties(), published);
+      assertEquals(action.getPublishedProperties(), published);
     }
 
     @Test
     public void getRealizedTasks() {
-      assertSame(action.getRealizedTasks(), tasks);
+      assertEquals(action.getRealizedTasks(), tasks);
     }
 
   }
@@ -254,7 +288,7 @@ public class ActionTest {
           .withEffects(anEffectSet()
               .withToClear(p1, p2)));
 
-      final ImmutableSet<Property> ps = target.getFilledPropertiesNotSatisfiedByPrecursor(precursor);
+      final Set<Property> ps = target.getFilledPropertiesNotSatisfiedByPrecursor(precursor);
 
       assertEquals(ps, setOf(p1));
     }

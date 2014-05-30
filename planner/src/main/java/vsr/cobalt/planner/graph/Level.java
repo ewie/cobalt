@@ -7,7 +7,8 @@
 
 package vsr.cobalt.planner.graph;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Set;
+
 import vsr.cobalt.planner.models.Action;
 
 /**
@@ -20,6 +21,6 @@ public interface Level {
   /**
    * @return a set of actions required in this level
    */
-  public ImmutableSet<Action> getRequiredActions();
+  Set<Action> getRequiredActions();
 
 }

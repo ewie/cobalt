@@ -7,7 +7,6 @@
 
 package vsr.cobalt.testing.makers;
 
-import com.google.common.collect.ImmutableList;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
@@ -36,15 +35,10 @@ public class GraphMaker implements Maker<Graph> {
 
   @Override
   public Graph make() {
-//    Graph g = Graph.create(initial.get());
-//    for (final ExtensionLevel x : extensions.get()) {
-//      g = g.extendWith(x);
-//    }
-//    return g;
     if (extensions.isEmpty()) {
       return Graph.create(initial.get());
     } else {
-      return Graph.create(initial.get(), ImmutableList.copyOf(extensions.get()));
+      return Graph.create(initial.get(), extensions.asList());
     }
   }
 

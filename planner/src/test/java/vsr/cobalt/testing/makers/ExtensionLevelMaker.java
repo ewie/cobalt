@@ -7,7 +7,6 @@
 
 package vsr.cobalt.testing.makers;
 
-import com.google.common.collect.ImmutableSet;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.testing.maker.CollectionValue;
@@ -32,7 +31,7 @@ public class ExtensionLevelMaker implements Maker<ExtensionLevel> {
 
   @Override
   public ExtensionLevel make() {
-    return new ExtensionLevel(ImmutableSet.copyOf(provisions.get()));
+    return new ExtensionLevel(provisions.asSet());
   }
 
   public ExtensionLevelMaker withProvision(final Maker<ActionProvision> provision) {

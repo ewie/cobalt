@@ -1,6 +1,9 @@
 package vsr.cobalt.planner.models;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -47,16 +50,16 @@ public final class Action {
    * @param widget              the owning widget
    * @param preConditions       the pre-conditions
    * @param effects             the effects
-   * @param publishedProperties the set of published properties
-   * @param realizedTasks       the set of realized tasks
+   * @param publishedProperties a set of published properties
+   * @param realizedTasks       a set of realized tasks
    */
   public Action(final Widget widget, final PropositionSet preConditions, final EffectSet effects,
-                final ImmutableSet<Property> publishedProperties, final ImmutableSet<Task> realizedTasks) {
+                final Set<Property> publishedProperties, final Set<Task> realizedTasks) {
     this.widget = widget;
     this.preConditions = preConditions;
     this.effects = effects;
-    this.publishedProperties = publishedProperties;
-    this.realizedTasks = realizedTasks;
+    this.publishedProperties = ImmutableSet.copyOf(publishedProperties);
+    this.realizedTasks = ImmutableSet.copyOf(realizedTasks);
     postConditions = effects.createPostConditions(preConditions);
   }
 
@@ -68,8 +71,8 @@ public final class Action {
    * @param effects       the effects
    */
   public Action(final Widget widget, final PropositionSet preConditions, final EffectSet effects,
-                final ImmutableSet<Property> publishedProperties) {
-    this(widget, preConditions, effects, publishedProperties, ImmutableSet.<Task>of());
+                final Set<Property> publishedProperties) {
+    this(widget, preConditions, effects, publishedProperties, Collections.<Task>emptySet());
   }
 
   /**
@@ -80,7 +83,7 @@ public final class Action {
    * @param effects       the effects
    */
   public Action(final Widget widget, final PropositionSet preConditions, final EffectSet effects) {
-    this(widget, preConditions, effects, ImmutableSet.<Property>of());
+    this(widget, preConditions, effects, Collections.<Property>emptySet());
   }
 
   /**
@@ -99,7 +102,7 @@ public final class Action {
    * @param widget the owning widget
    */
   public Action(final Widget widget) {
-    this(widget, PropositionSet.empty(), EffectSet.empty());
+    this(widget, PropositionSet.empty());
   }
 
   /**
@@ -133,14 +136,14 @@ public final class Action {
   /**
    * @return a set of zero or more published properties
    */
-  public ImmutableSet<Property> getPublishedProperties() {
+  public Set<Property> getPublishedProperties() {
     return publishedProperties;
   }
 
   /**
    * @return a set of zero or more realized tasks
    */
-  public ImmutableSet<Task> getRealizedTasks() {
+  public Set<Task> getRealizedTasks() {
     return realizedTasks;
   }
 
@@ -185,7 +188,7 @@ public final class Action {
    */
   public boolean canBePrecursorOf(final Action other) {
     if (isSameWidget(other)) {
-      final ImmutableSet<Property> ps = other.preConditions.getClearedProperties();
+      final Set<Property> ps = other.preConditions.getClearedProperties();
       for (final Property p : ps) {
         if (!postConditions.isCleared(p)) {
           return false;
@@ -212,17 +215,17 @@ public final class Action {
    *
    * @return a set of properties whose values cannot be provided
    */
-  public ImmutableSet<Property> getFilledPropertiesNotSatisfiedByPrecursor(final Action precursor) {
+  public Set<Property> getFilledPropertiesNotSatisfiedByPrecursor(final Action precursor) {
     if (!isSameWidget(precursor)) {
       throw new IllegalArgumentException("expecting an action of the same widget");
     }
-    final ImmutableSet.Builder<Property> ps = ImmutableSet.builder();
+    final Set<Property> ps = new HashSet<>();
     for (final Property p : preConditions.getFilledProperties()) {
       if (!precursor.postConditions.isFilled(p)) {
         ps.add(p);
       }
     }
-    return ps.build();
+    return ps;
   }
 
   @Override

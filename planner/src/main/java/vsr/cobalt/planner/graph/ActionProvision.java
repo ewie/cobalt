@@ -7,11 +7,13 @@
 
 package vsr.cobalt.planner.graph;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import vsr.cobalt.planner.models.Action;
 import vsr.cobalt.planner.models.Property;
 
@@ -49,7 +51,7 @@ public final class ActionProvision {
    * @param propertyProvisions a set of property provisions
    */
   private ActionProvision(final Action requestedAction, final Action precursorAction,
-                          final ImmutableSet<PropertyProvision> propertyProvisions) {
+                          final Set<PropertyProvision> propertyProvisions) {
     if (precursorAction == null) {
       assertWithoutPrecursor(requestedAction, propertyProvisions);
     } else {
@@ -58,7 +60,7 @@ public final class ActionProvision {
     assertProvisions(propertyProvisions);
     this.requestedAction = requestedAction;
     this.precursorAction = precursorAction;
-    this.propertyProvisions = propertyProvisions;
+    this.propertyProvisions = ImmutableSet.copyOf(propertyProvisions);
   }
 
   /**
@@ -73,7 +75,7 @@ public final class ActionProvision {
    * @return a new action provision
    */
   public static ActionProvision createWithPrecursor(final Action requestedAction, final Action precursorAction,
-                                                    final ImmutableSet<PropertyProvision> propertyProvisions) {
+                                                    final Set<PropertyProvision> propertyProvisions) {
     return new ActionProvision(requestedAction, precursorAction, propertyProvisions);
   }
 
@@ -85,10 +87,10 @@ public final class ActionProvision {
    *
    * @return a new action provision
    *
-   * @see #createWithPrecursor(Action, Action, ImmutableSet)
+   * @see #createWithPrecursor(Action, Action, Set)
    */
   public static ActionProvision createWithPrecursor(final Action requestedAction, final Action precursorAction) {
-    return createWithPrecursor(requestedAction, precursorAction, ImmutableSet.<PropertyProvision>of());
+    return createWithPrecursor(requestedAction, precursorAction, Collections.<PropertyProvision>emptySet());
   }
 
   /**
@@ -101,7 +103,7 @@ public final class ActionProvision {
    * @return a new action provision
    */
   public static ActionProvision createWithoutPrecursor(final Action requestedAction,
-                                                       final ImmutableSet<PropertyProvision> provisions) {
+                                                       final Set<PropertyProvision> provisions) {
     return new ActionProvision(requestedAction, null, provisions);
   }
 
@@ -126,7 +128,7 @@ public final class ActionProvision {
    *
    * @return the set of zero or more property provisions
    */
-  public ImmutableSet<PropertyProvision> getPropertyProvisions() {
+  public Set<PropertyProvision> getPropertyProvisions() {
     return propertyProvisions;
   }
 
@@ -139,13 +141,12 @@ public final class ActionProvision {
    *
    * @see #getProvidingActions()
    */
-  public ImmutableSet<Action> getRequiredActions() {
-    final ImmutableSet.Builder<Action> b = ImmutableSet.builder();
+  public Set<Action> getRequiredActions() {
+    final Set<Action> as = getProvidingActions();
     if (precursorAction != null) {
-      b.add(precursorAction);
+      as.add(precursorAction);
     }
-    b.addAll(getProvidingActions());
-    return b.build();
+    return as;
   }
 
   /**
@@ -153,12 +154,12 @@ public final class ActionProvision {
    *
    * @return the set of providing actions
    */
-  public ImmutableSet<Action> getProvidingActions() {
-    final ImmutableSet.Builder<Action> as = ImmutableSet.builder();
+  public Set<Action> getProvidingActions() {
+    final Set<Action> as = new HashSet<>();
     for (final PropertyProvision pp : propertyProvisions) {
       as.add(pp.getProvidingAction());
     }
-    return as.build();
+    return as;
   }
 
   /**
@@ -166,17 +167,17 @@ public final class ActionProvision {
    *
    * @return the set of requested properties
    */
-  public ImmutableSet<Property> getRequestedProperties() {
-    final ImmutableSet.Builder<Property> ps = ImmutableSet.builder();
+  public Set<Property> getRequestedProperties() {
+    final Set<Property> ps = new HashSet<>();
     for (final PropertyProvision pp : propertyProvisions) {
       ps.add(pp.getRequest());
     }
-    return ps.build();
+    return ps;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(requestedAction, getPrecursorAction(), getPropertyProvisions());
+    return Objects.hash(requestedAction, precursorAction, propertyProvisions);
   }
 
   @Override
@@ -189,11 +190,11 @@ public final class ActionProvision {
   private boolean equals(final ActionProvision other) {
     return Objects.equals(precursorAction, other.precursorAction)
         && Objects.equals(requestedAction, other.requestedAction)
-        && Objects.equals(getPropertyProvisions(), other.getPropertyProvisions());
+        && Objects.equals(propertyProvisions, other.propertyProvisions);
   }
 
-  private static void assertWithoutPrecursor(final Action requestedAction, final ImmutableSet<PropertyProvision>
-      provisions) {
+  private static void assertWithoutPrecursor(final Action requestedAction,
+                                             final Collection<PropertyProvision> provisions) {
     if (requestedAction.requiresPrecursor()) {
       throw new IllegalArgumentException("requested action requires a precursor");
     }
@@ -213,14 +214,13 @@ public final class ActionProvision {
   }
 
   private static void assertWithPrecursor(final Action requestedAction, final Action precursorAction,
-                                          final ImmutableSet<PropertyProvision> provisions) {
+                                          final Collection<PropertyProvision> provisions) {
     if (!precursorAction.canBePrecursorOf(requestedAction)) {
       throw new IllegalArgumentException("expecting a satisfying precursor to the requested action");
     }
 
-    final ImmutableSet<Property> required = requestedAction.getPreConditions().getFilledProperties();
-    final ImmutableSet<Property> unsatisfied = requestedAction.getFilledPropertiesNotSatisfiedByPrecursor
-        (precursorAction);
+    final Set<Property> required = requestedAction.getPreConditions().getFilledProperties();
+    final Set<Property> unsatisfied = requestedAction.getFilledPropertiesNotSatisfiedByPrecursor(precursorAction);
 
     if (unsatisfied.size() == required.size()) {
       // the precursor does not satisfy any property required filled
@@ -238,8 +238,8 @@ public final class ActionProvision {
     }
   }
 
-  private static void assertProvisions(final ImmutableSet<PropertyProvision> provisions) {
-    final Set<Property> ps = Sets.newHashSet();
+  private static void assertProvisions(final Collection<PropertyProvision> provisions) {
+    final Set<Property> ps = new HashSet<>();
     for (final PropertyProvision pp : provisions) {
       final Property p = pp.getRequest();
       if (ps.contains(p)) {

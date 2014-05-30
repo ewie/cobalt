@@ -7,7 +7,9 @@
 
 package vsr.cobalt.planner.graph;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 import vsr.cobalt.planner.models.Action;
@@ -29,17 +31,17 @@ public final class ExtensionLevel implements Level {
    *
    * @param actionProvisions a non-empty set of action provisions
    */
-  public ExtensionLevel(final ImmutableSet<ActionProvision> actionProvisions) {
+  public ExtensionLevel(final Set<ActionProvision> actionProvisions) {
     if (actionProvisions.isEmpty()) {
       throw new IllegalArgumentException("expecting one or more provisions");
     }
-    this.actionProvisions = actionProvisions;
+    this.actionProvisions = ImmutableSet.copyOf(actionProvisions);
   }
 
   /**
    * @return the set of all action provisions
    */
-  public ImmutableSet<ActionProvision> getActionProvisions() {
+  public Set<ActionProvision> getActionProvisions() {
     return actionProvisions;
   }
 
@@ -47,8 +49,8 @@ public final class ExtensionLevel implements Level {
    * @return the set of precursor actions provided by all action provisions
    */
   @Override
-  public ImmutableSet<Action> getRequiredActions() {
-    final ImmutableSet.Builder<Action> as = ImmutableSet.builder();
+  public Set<Action> getRequiredActions() {
+    final Set<Action> as = new HashSet<>();
     for (final ActionProvision ap : actionProvisions) {
       as.addAll(ap.getProvidingActions());
       final Action a = ap.getPrecursorAction();
@@ -56,18 +58,18 @@ public final class ExtensionLevel implements Level {
         as.add(a);
       }
     }
-    return as.build();
+    return as;
   }
 
   /**
    * @return the set of requested actions provided by all action provisions
    */
-  public ImmutableSet<Action> getRequestedActions() {
-    final ImmutableSet.Builder<Action> as = ImmutableSet.builder();
+  public Set<Action> getRequestedActions() {
+    final Set<Action> as = new HashSet<>();
     for (final ActionProvision ap : actionProvisions) {
       as.add(ap.getRequestedAction());
     }
-    return as.build();
+    return as;
   }
 
   /**
@@ -77,14 +79,14 @@ public final class ExtensionLevel implements Level {
    *
    * @return a set of provisions with the given requested action
    */
-  public ImmutableSet<ActionProvision> getActionProvisionsByRequestedAction(final Action action) {
-    final ImmutableSet.Builder<ActionProvision> aes = ImmutableSet.builder();
+  public Set<ActionProvision> getActionProvisionsByRequestedAction(final Action action) {
+    final Set<ActionProvision> aes = new HashSet<>();
     for (final ActionProvision ap : actionProvisions) {
       if (action.equals(ap.getRequestedAction())) {
         aes.add(ap);
       }
     }
-    return aes.build();
+    return aes;
   }
 
   /**
@@ -97,8 +99,8 @@ public final class ExtensionLevel implements Level {
    * @return true when extension is possible, false otherwise
    */
   public boolean canExtendOn(final Level other) {
-    final ImmutableSet<Action> requests = getRequestedActions();
-    final ImmutableSet<Action> precursors = other.getRequiredActions();
+    final Set<Action> requests = getRequestedActions();
+    final Set<Action> precursors = other.getRequiredActions();
     for (final Action request : requests) {
       if (!precursors.contains(request)) {
         return false;
