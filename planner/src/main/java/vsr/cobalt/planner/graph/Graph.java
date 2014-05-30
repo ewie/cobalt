@@ -7,7 +7,6 @@
 
 package vsr.cobalt.planner.graph;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,11 +15,10 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.UnmodifiableIterator;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyIterator;
 
 /**
- * A graph is a non-empty sequence of levels, starting with an initial level. The graph can be extended level by
- * level to satisfy actions required by the last level.
+ * A graph is a non-empty sequence of levels, starting with an initial level. The graph can be extended level by level
+ * to satisfy actions required by the last level.
  *
  * @author Erik Wienhold
  */
@@ -44,7 +42,7 @@ public abstract class Graph {
   /**
    * Create a graph with an initial level and a sequence of extension levels.
    *
-   * @param initialLevel the initial level
+   * @param initialLevel    the initial level
    * @param extensionLevels a sequence of extension levels
    *
    * @return a new graph
@@ -204,12 +202,7 @@ public abstract class Graph {
      */
     @Override
     public Iterable<ExtensionLevel> getExtensionLevels() {
-      return new Iterable<ExtensionLevel>() {
-        @Override
-        public Iterator<ExtensionLevel> iterator() {
-          return emptyIterator();
-        }
-      };
+      return ImmutableList.of();
     }
 
     @Override
