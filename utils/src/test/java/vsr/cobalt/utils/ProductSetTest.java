@@ -9,11 +9,10 @@ package vsr.cobalt.utils;
 
 import java.util.Set;
 
+import com.google.common.collect.Iterators;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static vsr.cobalt.testing.Utilities.emptySet;
+import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.testing.Utilities.setOf;
 
 @Test
@@ -31,12 +30,7 @@ public class ProductSetTest {
       final ProductSetIterator<Integer> psi = ps.iterator();
       final ProductSetIterator<Integer> xpsi = new ProductSetIterator<>(s);
 
-      while (psi.hasNext() && xpsi.hasNext()) {
-        assertEquals(psi.next(), xpsi.next());
-      }
-
-      assertFalse(psi.hasNext());
-      assertFalse(psi.hasNext());
+      assertTrue(Iterators.elementsEqual(psi, xpsi));
     }
 
   }
