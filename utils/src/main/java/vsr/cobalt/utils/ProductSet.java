@@ -24,11 +24,6 @@ public class ProductSet<E> implements Iterable<Set<E>> {
    * @param sets a set of sets
    */
   public ProductSet(final Set<? extends Set<E>> sets) {
-    for (final Set<E> set : sets) {
-      if (set.isEmpty()) {
-        throw new IllegalArgumentException("expecting a set of non-empty sets");
-      }
-    }
     this.sets = sets;
   }
 

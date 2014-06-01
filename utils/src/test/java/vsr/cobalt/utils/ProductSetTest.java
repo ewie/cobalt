@@ -20,17 +20,6 @@ import static vsr.cobalt.testing.Utilities.setOf;
 public class ProductSetTest {
 
   @Test
-  public static class New {
-
-    @Test(expectedExceptions = IllegalArgumentException.class,
-        expectedExceptionsMessageRegExp = "expecting a set of non-empty sets")
-    public void rejectEmptySets() {
-      new ProductSet<>(setOf(emptySet()));
-    }
-
-  }
-
-  @Test
   public static class Iterator {
 
     @Test
