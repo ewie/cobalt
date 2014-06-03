@@ -196,6 +196,13 @@ public abstract class Action {
     return true;
   }
 
+  /**
+   * Test if this actions represents a given action, i.e. it realizes the same interface as the given action.
+   *
+   * @param action an action
+   *
+   * @return true when this action represents the other action, false otherwise
+   */
   public boolean represents(final Action action) {
     return equals(action);
   }

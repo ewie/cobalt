@@ -15,6 +15,7 @@ import vsr.cobalt.planner.models.Action;
 import vsr.cobalt.planner.models.Property;
 import vsr.cobalt.planner.models.Task;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anySetOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -40,10 +41,28 @@ import static vsr.cobalt.testing.makers.TaskProvisionMaker.aTaskProvision;
 @Test
 public class GraphExtenderTest {
 
-  private static PropertyProvisionProvider emptyPropertyProvider() {
+  private static final PrecursorActionProvider NO_PRECURSORS = emptyPrecursorActionProvider();
+
+  private static final PropertyProvisionProvider NO_PROPERTIES = emptyPropertyProvisionProvider();
+
+  private static final CyclicDependencyDetector NO_CYCLES = defaultCyclicDependencyDetector();
+
+  private static PrecursorActionProvider emptyPrecursorActionProvider() {
+    final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
+    when(pap.getPrecursorActionsFor(any(Action.class))).thenReturn(emptySet(Action.class));
+    return pap;
+  }
+
+  private static PropertyProvisionProvider emptyPropertyProvisionProvider() {
     final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
     when(ppr.getProvisionsFor(anySetOf(Property.class))).thenReturn(emptySet(PropertyProvision.class));
     return ppr;
+  }
+
+  private static CyclicDependencyDetector defaultCyclicDependencyDetector() {
+    final CyclicDependencyDetector cdd = mock(CyclicDependencyDetector.class);
+    when(cdd.createsCyclicDependencyVia(any(Action.class), any(Action.class), any(Graph.class))).thenReturn(false);
+    return cdd;
   }
 
   @Test
@@ -53,7 +72,7 @@ public class GraphExtenderTest {
         expectedExceptionsMessageRegExp = "cannot extend satisfied graph")
     public void rejectSatisfiedGraph() throws Exception {
       final Graph g = make(aMinimalGraph());
-      final GraphExtender gx = new GraphExtender(null, null);
+      final GraphExtender gx = new GraphExtender(NO_PRECURSORS, NO_PROPERTIES, NO_CYCLES);
       gx.extendGraph(g);
     }
 
@@ -83,9 +102,7 @@ public class GraphExtenderTest {
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
       when(pap.getPrecursorActionsFor(a2)).thenReturn(emptySet(Action.class));
 
-      final PropertyProvisionProvider ppr = emptyPropertyProvider();
-
-      final GraphExtender gx = new GraphExtender(pap, ppr);
+      final GraphExtender gx = new GraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
 
       try {
         gx.extendGraph(g);
@@ -116,9 +133,7 @@ public class GraphExtenderTest {
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
       when(pap.getPrecursorActionsFor(a)).thenReturn(emptySet(Action.class));
 
-      final PropertyProvisionProvider ppr = emptyPropertyProvider();
-
-      final GraphExtender gx = new GraphExtender(pap, ppr);
+      final GraphExtender gx = new GraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
 
       gx.extendGraph(g);
     }
@@ -144,9 +159,7 @@ public class GraphExtenderTest {
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
       when(pap.getPrecursorActionsFor(a)).thenReturn(emptySet(Action.class));
 
-      final PropertyProvisionProvider ppr = emptyPropertyProvider();
-
-      final GraphExtender gx = new GraphExtender(pap, ppr);
+      final GraphExtender gx = new GraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
 
       gx.extendGraph(g);
     }
@@ -175,9 +188,7 @@ public class GraphExtenderTest {
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
       when(pap.getPrecursorActionsFor(a1)).thenReturn(setOf(a2));
 
-      final PropertyProvisionProvider ppr = emptyPropertyProvider();
-
-      final GraphExtender gx = new GraphExtender(pap, ppr);
+      final GraphExtender gx = new GraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
       final Graph xg = gx.extendGraph(g);
 
       final ExtensionLevel xl = make(anExtensionLevel()
@@ -220,7 +231,7 @@ public class GraphExtenderTest {
       final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
       when(ppr.getProvisionsFor(setOf(p))).thenReturn(setOf(pp));
 
-      final GraphExtender gx = new GraphExtender(pap, ppr);
+      final GraphExtender gx = new GraphExtender(pap, ppr, NO_CYCLES);
       final Graph xg = gx.extendGraph(g);
 
       final ExtensionLevel xl = make(anExtensionLevel()
@@ -270,7 +281,7 @@ public class GraphExtenderTest {
       final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
       when(ppr.getProvisionsFor(setOf(p2))).thenReturn(setOf(pp));
 
-      final GraphExtender gx = new GraphExtender(pap, ppr);
+      final GraphExtender gx = new GraphExtender(pap, ppr, NO_CYCLES);
       final Graph xg = gx.extendGraph(g);
 
       final ExtensionLevel xl = make(anExtensionLevel()
@@ -325,7 +336,7 @@ public class GraphExtenderTest {
       final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
       when(ppr.getProvisionsFor(setOf(p1, p2))).thenReturn(setOf(pp1, pp2, pp3));
 
-      final GraphExtender gx = new GraphExtender(pap, ppr);
+      final GraphExtender gx = new GraphExtender(pap, ppr, NO_CYCLES);
       final Graph xg = gx.extendGraph(g);
 
       final ExtensionLevel xl = make(anExtensionLevel()
@@ -397,7 +408,7 @@ public class GraphExtenderTest {
       final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
       when(ppr.getProvisionsFor(setOf(p1, p2))).thenReturn(setOf(pp1, pp2, pp3, pp4));
 
-      final GraphExtender gx = new GraphExtender(pap, ppr);
+      final GraphExtender gx = new GraphExtender(pap, ppr, NO_CYCLES);
       final Graph xg = gx.extendGraph(g);
 
       final ExtensionLevel xl = make(anExtensionLevel()
@@ -450,9 +461,7 @@ public class GraphExtenderTest {
       when(pap.getPrecursorActionsFor(a1)).thenReturn(emptySet(Action.class));
       when(pap.getPrecursorActionsFor(a2)).thenReturn(setOf(a3));
 
-      final PropertyProvisionProvider ppr = emptyPropertyProvider();
-
-      final GraphExtender gx = new GraphExtender(pap, ppr);
+      final GraphExtender gx = new GraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
 
       final Graph xg = gx.extendGraph(g);
 
@@ -499,9 +508,7 @@ public class GraphExtenderTest {
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
       when(pap.getPrecursorActionsFor(a1)).thenReturn(setOf(a2, a3));
 
-      final PropertyProvisionProvider ppr = emptyPropertyProvider();
-
-      final GraphExtender gx = new GraphExtender(pap, ppr);
+      final GraphExtender gx = new GraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
 
       final Graph xg = gx.extendGraph(g);
 
@@ -509,6 +516,103 @@ public class GraphExtenderTest {
           .withProvision(anActionProvision()
               .withRequest(a1)
               .withPrecursor(a2)));
+
+      assertEquals(xg.getLastLevel(), xl);
+    }
+
+    @Test
+    public void ignorePrecursorActionCausingCyclicDependency() throws Exception {
+      final Task t = make(aMinimalTask());
+
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+
+      final Action a1 = make(aMinimalAction()
+          .withTask(t)
+          .withPre(aPropositionSet()
+              .withCleared(p1)));
+
+      final Action a2 = make(aMinimalAction()
+          .withEffects(anEffectSet()
+              .withToClear(p1)));
+
+      // will cause cyclic dependency with a1
+      final Action a3 = Action.compose(a1, make(aMinimalAction()
+          .withPre(aPropositionSet()
+              .withCleared(p2))));
+
+      final Graph g = make(aGraph()
+          .withInitialLevel(anInitialLevel()
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a1))));
+
+      final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
+      when(pap.getPrecursorActionsFor(a1)).thenReturn(setOf(a2, a3));
+
+      final CyclicDependencyDetector cdd = mock(CyclicDependencyDetector.class);
+      when(cdd.createsCyclicDependencyVia(a3, a1, g)).thenReturn(true);
+
+      final GraphExtender gx = new GraphExtender(pap, NO_PROPERTIES, cdd);
+
+      final Graph xg = gx.extendGraph(g);
+
+      final ExtensionLevel xl = make(anExtensionLevel()
+          .withProvision(anActionProvision()
+              .withRequest(a1)
+              .withPrecursor(a2)));
+
+      assertEquals(xg.getLastLevel(), xl);
+    }
+
+    @Test
+    public void ignoreProvidingActionCausingCyclicDependency() throws Exception {
+      final Task t = make(aMinimalTask());
+
+      final Property p = make(aMinimalProperty());
+
+      final Action a1 = make(aMinimalAction()
+          .withTask(t)
+          .withPre(aPropositionSet()
+              .withFilled(p)));
+
+      final Action a2 = make(aMinimalAction().withPub(p));
+
+      // will cause cyclic dependency with a1
+      final Action a3 = Action.compose(a1, make(aMinimalAction().withPub(p)));
+
+      final PropertyProvision pp1 = make(aPropertyProvision()
+          .withRequest(p)
+          .withOffer(p)
+          .withProvidingAction(a2));
+
+      final PropertyProvision pp2 = make(aPropertyProvision()
+          .withRequest(p)
+          .withOffer(p)
+          .withProvidingAction(a3));
+
+      final Graph g = make(aGraph()
+          .withInitialLevel(anInitialLevel()
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a1))));
+
+      final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
+      when(ppr.getProvisionsFor(setOf(p))).thenReturn(setOf(pp1, pp2));
+
+      final CyclicDependencyDetector cdd = mock(CyclicDependencyDetector.class);
+      when(cdd.createsCyclicDependencyVia(a3, a1, g)).thenReturn(true);
+
+      final GraphExtender gx = new GraphExtender(NO_PRECURSORS, ppr, cdd);
+
+      final Graph xg = gx.extendGraph(g);
+
+      final ExtensionLevel xl = make(anExtensionLevel()
+          .withProvision(anActionProvision()
+              .withRequest(a1)
+              .withProvision(pp1)));
 
       assertEquals(xg.getLastLevel(), xl);
     }

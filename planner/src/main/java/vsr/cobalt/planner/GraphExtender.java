@@ -33,14 +33,19 @@ public class GraphExtender {
 
   private final PropertyProvisionProvider propertyProvisionProvider;
 
+  private final CyclicDependencyDetector cyclicDependencyDetector;
+
   /**
    * @param precursorActionProvider   a provider of precursor actions
    * @param propertyProvisionProvider a provider of property provisions
+   * @param cyclicDependencyDetector  a detector of cyclic dependencies between actions
    */
   public GraphExtender(final PrecursorActionProvider precursorActionProvider,
-                       final PropertyProvisionProvider propertyProvisionProvider) {
+                       final PropertyProvisionProvider propertyProvisionProvider,
+                       final CyclicDependencyDetector cyclicDependencyDetector) {
     this.precursorActionProvider = precursorActionProvider;
     this.propertyProvisionProvider = propertyProvisionProvider;
+    this.cyclicDependencyDetector = cyclicDependencyDetector;
   }
 
   /**
@@ -59,11 +64,12 @@ public class GraphExtender {
       throw new IllegalArgumentException("cannot extend satisfied graph");
     }
 
-    final Collection<Candidate> cs = findCandidates(as);
+    final Collection<Candidate> cs = findCandidates(as, graph);
     final Set<ActionProvision> aps = createActionProvisions(cs,
         indexPropertyProvisions(
             provideCompatibleProperties(
-                collectRequiredProperties(cs))));
+                collectRequiredProperties(cs))),
+        graph);
 
     if (aps.isEmpty()) {
       throw new PlanningException("cannot satisfy any action");
@@ -79,7 +85,7 @@ public class GraphExtender {
    *
    * @return a collection of candidates for any required action
    */
-  private Collection<Candidate> findCandidates(final Set<Action> requiredActions) {
+  private Collection<Candidate> findCandidates(final Set<Action> requiredActions, final Graph graph) {
     final Collection<Candidate> candidates = new ArrayList<>();
     for (final Action ra : requiredActions) {
       final Set<Action> precursors = providePrecursorActions(ra);
@@ -89,11 +95,59 @@ public class GraphExtender {
         }
       } else {
         for (final Action pa : precursors) {
-          candidates.add(new Candidate(ra, pa));
+          if (!createsCyclicDependency(pa, ra, graph)) {
+            candidates.add(new Candidate(ra, pa));
+          }
         }
       }
     }
     return candidates;
+  }
+
+  /**
+   * Create action provisions for each candidate and combination of applicable property provisions.
+   *
+   * @param candidates a collection of candidates
+   * @param index      an index of property provisions
+   *
+   * @return a set of action provisions
+   */
+  private Set<ActionProvision> createActionProvisions(final Collection<Candidate> candidates,
+                                                      final Index index, final Graph graph) {
+    final Set<ActionProvision> aps = new HashSet<>();
+
+    for (final Candidate c : candidates) {
+      if (c.requiresProperties()) {
+        aps.add(createActionProvision(c));
+      } else {
+        for (final Set<PropertyProvision> combination : index.getCombinations(c.requiredProperties)) {
+          if (!createsCyclicDependency(combination, c.request, graph)) {
+            aps.add(createActionProvision(c, combination));
+          }
+        }
+      }
+    }
+
+    return aps;
+  }
+
+  /**
+   * Test if any providing action from a set of property provisions causes a cyclic dependency via dependent action,
+   * e.g. a candidate's requested action.
+   *
+   * @param provisions a set of property provisions
+   * @param dependent  a dependent action
+   *
+   * @return true when any providing action causes a cyclic dependency, false otherwise
+   */
+  private boolean createsCyclicDependency(final Set<PropertyProvision> provisions, final Action dependent,
+                                          final Graph graph) {
+    for (final PropertyProvision pp : provisions) {
+      if (createsCyclicDependency(pp.getProvidingAction(), dependent, graph)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private Set<Action> providePrecursorActions(final Action action) {
@@ -102,6 +156,10 @@ public class GraphExtender {
 
   private Set<PropertyProvision> provideCompatibleProperties(final Set<Property> properties) {
     return propertyProvisionProvider.getProvisionsFor(properties);
+  }
+
+  private boolean createsCyclicDependency(final Action support, final Action dependent, final Graph graph) {
+    return cyclicDependencyDetector.createsCyclicDependencyVia(support, dependent, graph);
   }
 
   /**
@@ -134,31 +192,6 @@ public class GraphExtender {
       }
     }
     return as;
-  }
-
-  /**
-   * Create action provisions for each candidate and combination of applicable property provisions.
-   *
-   * @param candidates a collection of candidates
-   * @param index      an index of property provisions
-   *
-   * @return a set of action provisions
-   */
-  private static Set<ActionProvision> createActionProvisions(final Collection<Candidate> candidates,
-                                                             final Index index) {
-    final Set<ActionProvision> aps = new HashSet<>();
-
-    for (final Candidate c : candidates) {
-      if (c.requiresProperties()) {
-        aps.add(createActionProvision(c));
-      } else {
-        for (final Set<PropertyProvision> combination : index.getCombinations(c.requiredProperties)) {
-          aps.add(createActionProvision(c, combination));
-        }
-      }
-    }
-
-    return aps;
   }
 
   private static ActionProvision createActionProvision(final Candidate candidate) {
