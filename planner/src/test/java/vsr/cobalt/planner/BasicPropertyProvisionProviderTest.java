@@ -24,7 +24,7 @@ import static vsr.cobalt.testing.makers.PropertyProvisionMaker.aPropertyProvisio
 public class BasicPropertyProvisionProviderTest {
 
   @Test
-  public void returnAllTaskProvisionsReturnedByRepository() {
+  public void returnAllPropertyProvisionsReturnedByRepository() {
     final Property p1 = make(aMinimalProperty().withName("p1"));
     final Property p2 = make(aMinimalProperty().withName("p2"));
 
