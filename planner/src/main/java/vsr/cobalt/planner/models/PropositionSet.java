@@ -37,7 +37,8 @@ public final class PropositionSet {
   private final ImmutableSet<Property> filled;
 
   /**
-   * Create a proposition set with two disjoint set of properties, specifying either the absence or the presence of each
+   * Create a proposition set with two disjoint set of properties, specifying either the absence or the presence of
+   * each
    * property's value.
    *
    * @param cleared a set of properties with no value
@@ -56,6 +57,42 @@ public final class PropositionSet {
    */
   public static PropositionSet empty() {
     return EMPTY;
+  }
+
+  /**
+   * Create a proposition set with only cleared properties.
+   *
+   * @param properties a set of properties
+   *
+   * @return a proposition set with only cleared properties
+   */
+  public static PropositionSet cleared(final Set<Property> properties) {
+    return new PropositionSet(properties, EMPTY_PROPERTIES);
+  }
+
+  /**
+   * @see #cleared(Set)
+   */
+  public static PropositionSet cleared(final Property... properties) {
+    return cleared(ImmutableSet.of(properties));
+  }
+
+  /**
+   * Create a proposition set with only filled properties.
+   *
+   * @param properties a set of properties
+   *
+   * @return a proposition set with only filled properties
+   */
+  public static PropositionSet filled(final Set<Property> properties) {
+    return new PropositionSet(EMPTY_PROPERTIES, properties);
+  }
+
+  /**
+   * @see #filled(Set)
+   */
+  public static PropositionSet filled(final Property... properties) {
+    return filled(ImmutableSet.of(properties));
   }
 
   /**

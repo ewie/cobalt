@@ -7,51 +7,40 @@
 
 package vsr.cobalt.planner;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.SetMultimap;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
-import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.planner.graph.TaskProvision;
 import vsr.cobalt.planner.models.Action;
 import vsr.cobalt.planner.models.Property;
-import vsr.cobalt.planner.models.Task;
 import vsr.cobalt.utils.ProductSet;
 
 /**
- * A graph extender extends an unsatisfied graph by one level.
+ * A graph extender takes a not fully satisfied graph and extends its by one level at a time.
  *
  * @author Erik Wienhold
  */
 public class GraphExtender {
 
-  private final Repository repository;
+  private final PrecursorActionProvider precursorActionProvider;
+
+  private final PropertyProvisionProvider propertyProvisionProvider;
 
   /**
-   * Create a new graph extender.
-   *
-   * @param repository a repository providing information on how to satisfy certain requirements
+   * @param precursorActionProvider   a provider of precursor actions
+   * @param propertyProvisionProvider a provider of property provisions
    */
-  public GraphExtender(final Repository repository) {
-    this.repository = repository;
-  }
-
-  /**
-   * Create an initial planning graph from a given goal.
-   *
-   * @param goal a goal
-   *
-   * @return an initial planning graph
-   *
-   * @throws PlanningException when the goal cannot be fully satisfied
-   */
-  public Graph createGraph(final Goal goal) throws PlanningException {
-    return Graph.create(createInitialLevel(goal));
+  public GraphExtender(final PrecursorActionProvider precursorActionProvider,
+                       final PropertyProvisionProvider propertyProvisionProvider) {
+    this.precursorActionProvider = precursorActionProvider;
+    this.propertyProvisionProvider = propertyProvisionProvider;
   }
 
   /**
@@ -64,121 +53,219 @@ public class GraphExtender {
    * @throws PlanningException when the last level cannot be satisfied
    */
   public Graph extendGraph(final Graph graph) throws PlanningException {
-    return graph.extendWith(createExtensionLevel(graph));
-  }
+    final Set<Action> as = selectUnsatisfiedRequiredActions(graph);
 
-  private InitialLevel createInitialLevel(final Goal goal) throws PlanningException {
-    final Set<TaskProvision> tps = new HashSet<>();
-
-    for (final Task t : goal.getTasks()) {
-      final Set<TaskProvision> tps2 = repository.realizeCompatibleTasks(t);
-      if (tps2.isEmpty()) {
-        // Every goal task is equally required, so failing to find realizing actions for any single task is a failure.
-        throw new PlanningException("cannot realize some goal task");
-      } else {
-        tps.addAll(tps2);
-      }
+    if (as.isEmpty()) {
+      throw new IllegalArgumentException("cannot extend satisfied graph");
     }
 
-    return new InitialLevel(tps);
-  }
-
-  private ExtensionLevel createExtensionLevel(final Graph graph) throws PlanningException {
-    if (isSatisfied(graph)) {
-      throw new PlanningException("graph has no unsatisfied actions");
-    }
-
-    final Set<Action> as = graph.getLastLevel().getRequiredActions();
-    final Set<ActionProvision> aps = new HashSet<>();
-
-    for (final Action a : as) {
-      aps.addAll(createActionProvisions(a));
-    }
+    final Collection<Candidate> cs = findCandidates(as);
+    final Set<ActionProvision> aps = createActionProvisions(cs,
+        indexPropertyProvisions(
+            provideCompatibleProperties(
+                collectRequiredProperties(cs))));
 
     if (aps.isEmpty()) {
-      throw new PlanningException("cannot enable any action required by the graph");
+      throw new PlanningException("cannot satisfy any action");
     }
 
-    return new ExtensionLevel(aps);
+    return graph.extendWith(new ExtensionLevel(aps));
   }
 
-  private boolean isSatisfied(final Graph graph) {
-    for (final Action a : graph.getLastLevel().getRequiredActions()) {
-      if (!a.getPreConditions().isEmpty()) {
-        return false;
+  /**
+   * Find candidates for a set of required actions.
+   *
+   * @param requiredActions a set of required actions
+   *
+   * @return a collection of candidates for any required action
+   */
+  private Collection<Candidate> findCandidates(final Set<Action> requiredActions) {
+    final Collection<Candidate> candidates = new ArrayList<>();
+    for (final Action ra : requiredActions) {
+      final Set<Action> precursors = providePrecursorActions(ra);
+      if (precursors.isEmpty()) {
+        if (!ra.requiresPrecursor()) {
+          candidates.add(new Candidate(ra));
+        }
+      } else {
+        for (final Action pa : precursors) {
+          candidates.add(new Candidate(ra, pa));
+        }
       }
     }
-    return true;
+    return candidates;
   }
 
-  private Set<ActionProvision> createActionProvisions(final Action action) {
-    final Set<ActionProvision> aps = new HashSet<>();
-    final Set<Action> precursors = repository.findPrecursors(action);
+  private Set<Action> providePrecursorActions(final Action action) {
+    return precursorActionProvider.getPrecursorActionsFor(action);
+  }
 
-    if (precursors.isEmpty()) {
-      aps.addAll(createActionProvisionsWithoutPrecursor(action));
-    } else {
-      for (final Action precursor : precursors) {
-        aps.addAll(createActionProvisionsWithPrecursor(action, precursor));
+  private Set<PropertyProvision> provideCompatibleProperties(final Set<Property> properties) {
+    return propertyProvisionProvider.getProvisionsFor(properties);
+  }
+
+  /**
+   * Collection the required properties among all candidates.
+   *
+   * @param candidates a collection of candidates
+   *
+   * @return a set of required properties
+   */
+  private static Set<Property> collectRequiredProperties(final Collection<Candidate> candidates) {
+    final Set<Property> properties = new HashSet<>();
+    for (final Candidate c : candidates) {
+      properties.addAll(c.requiredProperties);
+    }
+    return properties;
+  }
+
+  /**
+   * Select all actions required by a graph's last level which are not already satisfied.
+   *
+   * @param graph a graph
+   *
+   * @return a set of unsatisfied actions
+   */
+  private static Set<Action> selectUnsatisfiedRequiredActions(final Graph graph) {
+    final Set<Action> as = new HashSet<>();
+    for (final Action a : graph.getLastLevel().getRequiredActions()) {
+      if (!a.isEnabled()) {
+        as.add(a);
+      }
+    }
+    return as;
+  }
+
+  /**
+   * Create action provisions for each candidate and combination of applicable property provisions.
+   *
+   * @param candidates a collection of candidates
+   * @param index      an index of property provisions
+   *
+   * @return a set of action provisions
+   */
+  private static Set<ActionProvision> createActionProvisions(final Collection<Candidate> candidates,
+                                                             final Index index) {
+    final Set<ActionProvision> aps = new HashSet<>();
+
+    for (final Candidate c : candidates) {
+      if (c.requiresProperties()) {
+        aps.add(createActionProvision(c));
+      } else {
+        for (final Set<PropertyProvision> combination : index.getCombinations(c.requiredProperties)) {
+          aps.add(createActionProvision(c, combination));
+        }
       }
     }
 
     return aps;
   }
 
-  private Set<ActionProvision> createActionProvisionsWithPrecursor(final Action request, final Action precursor) {
-    final Set<Property> ps = request.getFilledPropertiesNotSatisfiedByPrecursor(precursor);
-
-    if (ps.isEmpty()) {
-      // The precursor is sufficient enough to enable the action.
-      return Sets.newHashSet(ActionProvision.createWithPrecursor(request, precursor));
-    } else {
-      final ProductSet<PropertyProvision> ppps = findPropertyProvisions(ps);
-      if (ppps == null) {
-        return Collections.emptySet();
-      }
-      final Set<ActionProvision> aps = new HashSet<>();
-      for (final Set<PropertyProvision> pps : ppps) {
-        aps.add(ActionProvision.createWithPrecursor(request, precursor, pps));
-      }
-      return aps;
-    }
+  private static ActionProvision createActionProvision(final Candidate candidate) {
+    return ActionProvision.createWithPrecursor(candidate.request, candidate.precursor);
   }
 
-  private Set<ActionProvision> createActionProvisionsWithoutPrecursor(final Action request) {
-    final Set<Property> ps = request.getPreConditions().getFilledProperties();
-
-    if (ps.isEmpty()) {
-      return Collections.emptySet();
-    } else {
-      final ProductSet<PropertyProvision> ppps = findPropertyProvisions(ps);
-      if (ppps == null) {
-        return Collections.emptySet();
-      }
-      final Set<ActionProvision> aps = new HashSet<>();
-      for (final Set<PropertyProvision> pps : ppps) {
-        aps.add(ActionProvision.createWithoutPrecursor(request, pps));
-      }
-      return aps;
-    }
+  private static ActionProvision createActionProvision(final Candidate candidate,
+                                                       final Set<PropertyProvision> propertyProvisions) {
+    return ActionProvision.createWithPrecursor(candidate.request, candidate.precursor, propertyProvisions);
   }
 
-  private ProductSet<PropertyProvision> findPropertyProvisions(final Set<Property> ps) {
-    final Set<Set<PropertyProvision>> ppss = new HashSet<>();
+  private static Index indexPropertyProvisions(final Set<PropertyProvision> propertyProvisions) {
+    return new Index(propertyProvisions);
+  }
 
-    // Find provisions for each required property.
-    for (final Property p : ps) {
-      final Set<PropertyProvision> pps = repository.provideCompatibleProperties(p);
+  /**
+   * A potential action provision.
+   */
+  private static class Candidate {
 
-      // There must be at least one provision per required property, otherwise an action cannot be enabled.
-      if (pps.isEmpty()) {
-        return null;
-      }
+    /**
+     * An action requiring enabling.
+     */
+    public final Action request;
 
-      ppss.add(pps);
+    /**
+     * An optional precursor action for {@link #request}. When absent {@link #request} does not require a precursor.
+     */
+    public final Action precursor;
+
+    /**
+     * The additionally required properties when {@link #request} should be enabled by {@link #precursor}.
+     */
+    public final Set<Property> requiredProperties;
+
+    /**
+     * @param request            a requested action
+     * @param precursor          an optional precursor action
+     * @param requiredProperties a set of required properties
+     */
+    private Candidate(final Action request, final Action precursor, final Set<Property> requiredProperties) {
+      this.request = request;
+      this.precursor = precursor;
+      this.requiredProperties = requiredProperties;
     }
 
-    return new ProductSet<>(ppss);
+    /**
+     * Create a candidate using a precursor action.
+     *
+     * @param request   a requested action
+     * @param precursor a precursor action
+     */
+    public Candidate(final Action request, final Action precursor) {
+      this(request, precursor, request.getFilledPropertiesNotSatisfiedByPrecursor(precursor));
+    }
+
+    /**
+     * Create a candidate not requiring a precursor action.
+     *
+     * @param request a requested action
+     */
+    public Candidate(final Action request) {
+      this(request, null, request.getPreConditions().getFilledProperties());
+    }
+
+    public boolean requiresProperties() {
+      return requiredProperties.isEmpty();
+    }
+
+  }
+
+  /**
+   * Indexes a set of property provisions by their requested properties.
+   */
+  private static class Index {
+
+    private final SetMultimap<Property, PropertyProvision> index = HashMultimap.create();
+
+    /**
+     * @param propertyProvisions a set of property provisions
+     */
+    public Index(final Set<PropertyProvision> propertyProvisions) {
+      for (final PropertyProvision pp : propertyProvisions) {
+        index.put(pp.getRequest(), pp);
+      }
+    }
+
+    /**
+     * Get all combination of property provisions having a set of requested properties.
+     *
+     * @param properties a set of properties
+     *
+     * @return an iterable of all matching combinations
+     */
+    public ProductSet<PropertyProvision> getCombinations(final Set<Property> properties) {
+      final Set<Set<PropertyProvision>> ppss = new HashSet<>(properties.size());
+      for (final Property p : properties) {
+        final Set<PropertyProvision> pps = index.get(p);
+        // the combinations must comprise all given properties
+        if (pps.isEmpty()) {
+          return ProductSet.empty();
+        }
+        ppss.add(pps);
+      }
+      return new ProductSet<>(ppss);
+    }
+
   }
 
 }

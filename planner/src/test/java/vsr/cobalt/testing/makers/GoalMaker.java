@@ -12,6 +12,8 @@ import vsr.cobalt.planner.models.Task;
 import vsr.cobalt.testing.maker.CollectionValue;
 import vsr.cobalt.testing.maker.Maker;
 
+import static vsr.cobalt.testing.makers.TaskMaker.aMinimalTask;
+
 /**
  * @author Erik Wienhold
  */
@@ -21,6 +23,10 @@ public class GoalMaker implements Maker<Goal> {
 
   public static GoalMaker aGoal() {
     return new GoalMaker();
+  }
+
+  public static GoalMaker aMinimalGoal() {
+    return aGoal().withTask(aMinimalTask());
   }
 
   @Override

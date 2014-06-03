@@ -28,7 +28,7 @@ public class ProvisionTest {
 
   private static class DummyProvision extends Provision<Object> {
 
-    public DummyProvision(final Action providingAction, final Object offer, final Object request) {
+    public DummyProvision(final Object request, final Object offer, final Action providingAction) {
       super(request, offer, providingAction);
     }
 
@@ -55,7 +55,7 @@ public class ProvisionTest {
       offer = new Object();
       request = new Object();
       action = make(aMinimalAction());
-      provision = new DummyProvision(action, offer, request);
+      provision = new DummyProvision(request, offer, action);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class ProvisionTest {
       final Action a = make(aMinimalAction());
       final Object o = new Object();
       final Object r = new Object();
-      final DummyProvision provision = new DummyProvision(a, o, r);
+      final DummyProvision provision = new DummyProvision(r, o, a);
       assertEquals(provision.hashCode(), Objects.hash(a, o, r));
     }
 
@@ -93,8 +93,8 @@ public class ProvisionTest {
       final Object o = new Object();
       final Object r = new Object();
 
-      final DummyProvision p1 = new DummyProvision(a, o, r);
-      final DummyProvision p2 = new DummyProvision(a, o, r);
+      final DummyProvision p1 = new DummyProvision(r, o, a);
+      final DummyProvision p2 = new DummyProvision(r, o, a);
 
       assertEquals(p1, p2);
     }
@@ -105,7 +105,7 @@ public class ProvisionTest {
       final Object o = new Object();
       final Object r = new Object();
 
-      final DummyProvision p = new DummyProvision(a, o, r);
+      final DummyProvision p = new DummyProvision(r, o, a);
       final Object x = new Object();
 
       assertNotEquals(p, x);
@@ -117,7 +117,7 @@ public class ProvisionTest {
       final Object o = new Object();
       final Object r = new Object();
 
-      final DummyProvision p1 = new DummyProvision(a, o, r);
+      final DummyProvision p1 = new DummyProvision(r, o, a);
       final DummyProvision p2 = mock(DummyProvision.class);
 
       when(p2.canEqual(any())).thenReturn(false);
@@ -136,8 +136,8 @@ public class ProvisionTest {
       final Object o = new Object();
       final Object r = new Object();
 
-      final DummyProvision p1 = new DummyProvision(a1, o, r);
-      final DummyProvision p2 = new DummyProvision(a2, o, r);
+      final DummyProvision p1 = new DummyProvision(r, o, a1);
+      final DummyProvision p2 = new DummyProvision(r, o, a2);
 
       assertNotEquals(p1, p2);
     }
@@ -150,8 +150,8 @@ public class ProvisionTest {
       final Object o2 = new Object();
       final Object r = new Object();
 
-      final DummyProvision p1 = new DummyProvision(a, o1, r);
-      final DummyProvision p2 = new DummyProvision(a, o2, r);
+      final DummyProvision p1 = new DummyProvision(r, o1, a);
+      final DummyProvision p2 = new DummyProvision(r, o2, a);
 
       assertNotEquals(p1, p2);
     }
@@ -164,8 +164,8 @@ public class ProvisionTest {
       final Object r1 = new Object();
       final Object r2 = new Object();
 
-      final DummyProvision p1 = new DummyProvision(a, o, r1);
-      final DummyProvision p2 = new DummyProvision(a, o, r2);
+      final DummyProvision p1 = new DummyProvision(r1, o, a);
+      final DummyProvision p2 = new DummyProvision(r2, o, a);
 
       assertNotEquals(p1, p2);
     }

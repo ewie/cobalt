@@ -51,7 +51,7 @@ public class ActionMaker implements Maker<Action> {
 
   @Override
   public Action make() {
-    return new Action(
+    return Action.create(
         widget.get(),
         pre.get(),
         effects.get(),

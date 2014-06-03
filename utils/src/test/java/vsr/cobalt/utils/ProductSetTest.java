@@ -9,6 +9,7 @@ package vsr.cobalt.utils;
 
 import java.util.Set;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import org.testng.annotations.Test;
 
@@ -17,6 +18,17 @@ import static vsr.cobalt.testing.Utilities.setOf;
 
 @Test
 public class ProductSetTest {
+
+  @Test
+  public static class Empty {
+
+    @Test
+    public void returnEmptyProductSet() {
+      final ProductSet<?> ps = ProductSet.empty();
+      assertTrue(Iterables.isEmpty(ps));
+    }
+
+  }
 
   @Test
   public static class Iterator {

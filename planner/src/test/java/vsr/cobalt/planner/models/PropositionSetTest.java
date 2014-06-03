@@ -16,6 +16,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
+import static vsr.cobalt.testing.Assert.assertEmpty;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
@@ -49,6 +50,42 @@ public class PropositionSetTest {
       final PropositionSet pps = new PropositionSet(emptySet(Property.class), ps);
       ps.add(null);
       assertNotEquals(pps.getFilledProperties(), ps);
+    }
+
+  }
+
+  @Test
+  public static class Empty {
+
+    @Test
+    public void createEmptyPropositions() {
+      final PropositionSet e = PropositionSet.empty();
+      assertEmpty(e.getClearedProperties());
+      assertEmpty(e.getFilledProperties());
+    }
+
+  }
+
+  @Test
+  public static class Clear {
+
+    @Test
+    public void createPropositionsWithOnlyClearedProperties() {
+      final Property p = make(aMinimalProperty());
+      final PropositionSet e = PropositionSet.cleared(p);
+      assertEquals(e.getClearedProperties(), setOf(p));
+    }
+
+  }
+
+  @Test
+  public static class Fill {
+
+    @Test
+    public void createPropositionsWithOnlyFilledProperties() {
+      final Property p = make(aMinimalProperty());
+      final PropositionSet e = PropositionSet.filled(p);
+      assertEquals(e.getFilledProperties(), setOf(p));
     }
 
   }

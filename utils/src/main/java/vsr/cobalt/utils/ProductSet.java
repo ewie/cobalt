@@ -7,6 +7,7 @@
 
 package vsr.cobalt.utils;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -15,6 +16,9 @@ import java.util.Set;
  * @author Erik Wienhold
  */
 public class ProductSet<E> implements Iterable<Set<E>> {
+
+  @SuppressWarnings("unchecked")
+  private static final ProductSet<?> EMPTY = new ProductSet<>(Collections.EMPTY_SET);
 
   private final Set<? extends Set<E>> sets;
 
@@ -25,6 +29,11 @@ public class ProductSet<E> implements Iterable<Set<E>> {
    */
   public ProductSet(final Set<? extends Set<E>> sets) {
     this.sets = sets;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <E> ProductSet<E> empty() {
+    return (ProductSet<E>) EMPTY;
   }
 
   @Override

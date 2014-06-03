@@ -16,7 +16,7 @@ import vsr.cobalt.planner.models.Action;
  *
  * @author Erik Wienhold
  */
-abstract class Provision<T> {
+public abstract class Provision<T> {
 
   private final T request;
 
@@ -24,7 +24,12 @@ abstract class Provision<T> {
 
   private final Action action;
 
-  Provision(final T request, final T offer, final Action action) {
+  /**
+   * @param request a requested subject
+   * @param offer   a subject offered by a providing action
+   * @param action  a providing action
+   */
+  public Provision(final T request, final T offer, final Action action) {
     this.request = request;
     this.offer = offer;
     this.action = action;

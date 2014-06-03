@@ -7,6 +7,7 @@ import vsr.cobalt.planner.graph.TaskProvision;
 import vsr.cobalt.planner.models.Action;
 import vsr.cobalt.planner.models.Property;
 import vsr.cobalt.planner.models.Task;
+import vsr.cobalt.planner.models.Widget;
 
 /**
  * A repository serves as the knowledge base for the planning algorithm.
@@ -16,24 +17,22 @@ import vsr.cobalt.planner.models.Task;
 public interface Repository {
 
   /**
+   * Get all actions which belong to a given widget.
+   *
+   * @param widget a widget
+   *
+   * @return a set of all actions belonging to the given widget
+   */
+  Set<Action> getWidgetActions(Widget widget);
+
+  /**
    * Get task provisions satisfying a requested task.
    *
    * @param task the requested task
    *
    * @return a set of zero or more task provisions
    */
-  Set<TaskProvision> realizeCompatibleTasks(Task task);
-
-  /**
-   * Get precursor actions for the given action.
-   *
-   * @param action an action
-   *
-   * @return a set of zero or more precursor actions
-   *
-   * @see Action#canBePrecursorOf(Action)
-   */
-  Set<Action> findPrecursors(Action action);
+  Set<TaskProvision> findCompatibleTasks(Task task);
 
   /**
    * Get property provisions satisfying a requested property.
@@ -42,6 +41,6 @@ public interface Repository {
    *
    * @return a set of zero or more property provisions
    */
-  Set<PropertyProvision> provideCompatibleProperties(Property property);
+  Set<PropertyProvision> findCompatibleProperties(Property property);
 
 }

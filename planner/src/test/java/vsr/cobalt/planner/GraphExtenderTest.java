@@ -11,14 +11,14 @@ import org.testng.annotations.Test;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.planner.graph.TaskProvision;
 import vsr.cobalt.planner.models.Action;
 import vsr.cobalt.planner.models.Property;
 import vsr.cobalt.planner.models.Task;
-import vsr.cobalt.planner.models.Widget;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anySetOf;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.testing.Utilities.emptySet;
@@ -28,107 +28,77 @@ import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.testing.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.testing.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.testing.makers.ExtensionLevelMaker.anExtensionLevel;
-import static vsr.cobalt.testing.makers.GoalMaker.aGoal;
 import static vsr.cobalt.testing.makers.GraphMaker.aGraph;
 import static vsr.cobalt.testing.makers.GraphMaker.aMinimalGraph;
 import static vsr.cobalt.testing.makers.InitialLevelMaker.anInitialLevel;
 import static vsr.cobalt.testing.makers.PropertyMaker.aMinimalProperty;
-import static vsr.cobalt.testing.makers.PropertyMaker.aProperty;
 import static vsr.cobalt.testing.makers.PropertyProvisionMaker.aPropertyProvision;
 import static vsr.cobalt.testing.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.testing.makers.TaskMaker.aMinimalTask;
-import static vsr.cobalt.testing.makers.TaskMaker.aTask;
-import static vsr.cobalt.testing.makers.TaskProvisionMaker.aMinimalTaskProvision;
 import static vsr.cobalt.testing.makers.TaskProvisionMaker.aTaskProvision;
-import static vsr.cobalt.testing.makers.WidgetMaker.aWidget;
 
 @Test
 public class GraphExtenderTest {
 
-  @Test
-  public static class CreateGraph {
-
-    @Test(expectedExceptions = PlanningException.class,
-        expectedExceptionsMessageRegExp = "cannot realize some goal task")
-    public void throwWhenAnyTaskCannotBeRealized() throws Exception {
-      final Task t1 = make(aMinimalTask().withIdentifier("t1"));
-      final Task t2 = make(aMinimalTask().withIdentifier("t2"));
-
-      final TaskProvision tp = make(aMinimalTaskProvision());
-
-      final Goal g = make(aGoal().withTask(t1, t2));
-
-      final Repository r = mock(Repository.class);
-      when(r.realizeCompatibleTasks(t1)).thenReturn(setOf(tp));
-      when(r.realizeCompatibleTasks(t2)).thenReturn(emptySet(TaskProvision.class));
-
-      final GraphExtender gx = new GraphExtender(r);
-      gx.createGraph(g);
-    }
-
-    @Test
-    public void initializeWithActionsRealizingAnyGoalTasks() throws Exception {
-      final Task t1 = make(aTask().withIdentifier("t1"));
-      final Task t2 = make(aTask().withIdentifier("t2"));
-
-      final Action a1 = make(aMinimalAction().withTask(t1));
-      final Action a2 = make(aMinimalAction().withTask(t2));
-      final Action a3 = make(aMinimalAction().withTask(t1, t2));
-
-      final TaskProvision tp1 = make(aTaskProvision()
-          .withProvidingAction(a1)
-          .withOffer(t1)
-          .withRequest(t1));
-
-      final TaskProvision tp2 = make(aTaskProvision()
-          .withProvidingAction(a2)
-          .withOffer(t2)
-          .withRequest(t2));
-
-      final TaskProvision tp3 = make(aTaskProvision()
-          .withProvidingAction(a3)
-          .withOffer(t1)
-          .withRequest(t1));
-
-      final TaskProvision tp4 = make(aTaskProvision()
-          .withProvidingAction(a3)
-          .withOffer(t2)
-          .withRequest(t2));
-
-      final Goal goal = make(aGoal().withTask(t1, t2));
-
-      final Repository r = mock(Repository.class);
-      when(r.realizeCompatibleTasks(t1)).thenReturn(setOf(tp1, tp3));
-      when(r.realizeCompatibleTasks(t2)).thenReturn(setOf(tp2, tp4));
-
-      final GraphExtender gx = new GraphExtender(r);
-      final Graph g = gx.createGraph(goal);
-
-      assertEquals(g.getInitialLevel().getTaskProvisions(), setOf(tp1, tp2, tp3, tp4));
-    }
-
+  private static PropertyProvisionProvider emptyPropertyProvider() {
+    final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
+    when(ppr.getProvisionsFor(anySetOf(Property.class))).thenReturn(emptySet(PropertyProvision.class));
+    return ppr;
   }
 
   @Test
-  public static class ExtendPlanningGraph {
+  public static class ExtendGraph {
 
-    @Test(expectedExceptions = PlanningException.class,
-        expectedExceptionsMessageRegExp = "graph has no unsatisfied actions")
-    public void rejectGraphWhenAlreadySatisfied() throws Exception {
+    @Test(expectedExceptions = IllegalArgumentException.class,
+        expectedExceptionsMessageRegExp = "cannot extend satisfied graph")
+    public void rejectSatisfiedGraph() throws Exception {
       final Graph g = make(aMinimalGraph());
-
-      final Repository r = mock(Repository.class);
-      when(r.findPrecursors(any(Action.class))).thenReturn(emptySet(Action.class));
-
-      final GraphExtender gx = new GraphExtender(r);
+      final GraphExtender gx = new GraphExtender(null, null);
       gx.extendGraph(g);
     }
 
-    @Test(expectedExceptions = PlanningException.class,
-        expectedExceptionsMessageRegExp = "cannot enable any action required by the graph")
-    public void throwWhenNoActionCanBeEnabled() throws Exception {
-      final Task t = make(aTask().withIdentifier("t"));
+    @Test
+    public void ignoreSatisfiedActions() {
+      final Task t = make(aMinimalTask());
+      final Property p = make(aMinimalProperty());
 
+      final Action a1 = make(aMinimalAction().withTask(t));
+
+      final Action a2 = make(aMinimalAction()
+          .withTask(t)
+          .withPre(aPropositionSet()
+              .withCleared(p)));
+
+      final Graph g = make(aGraph()
+          .withInitialLevel(anInitialLevel()
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a1))
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a2))));
+
+      final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
+      when(pap.getPrecursorActionsFor(a2)).thenReturn(emptySet(Action.class));
+
+      final PropertyProvisionProvider ppr = emptyPropertyProvider();
+
+      final GraphExtender gx = new GraphExtender(pap, ppr);
+
+      try {
+        gx.extendGraph(g);
+      } catch (final PlanningException ignored) {
+      }
+
+      verify(pap, never()).getPrecursorActionsFor(a1);
+    }
+
+    @Test(expectedExceptions = PlanningException.class,
+        expectedExceptionsMessageRegExp = "cannot satisfy any action")
+    public void throwWhenNoActionCanBeEnabledWithPrecursor() throws Exception {
+      final Task t = make(aMinimalTask());
       final Property p = make(aMinimalProperty());
 
       final Action a = make(aMinimalAction()
@@ -139,264 +109,185 @@ public class GraphExtenderTest {
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
               .withTaskProvision(aTaskProvision()
-                  .withProvidingAction(a)
+                  .withRequest(t)
                   .withOffer(t)
-                  .withRequest(t))));
+                  .withProvidingAction(a))));
 
-      final Repository r = mock(Repository.class);
-      when(r.findPrecursors(any(Action.class))).thenReturn(emptySet(Action.class));
+      final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
+      when(pap.getPrecursorActionsFor(a)).thenReturn(emptySet(Action.class));
 
-      final GraphExtender gx = new GraphExtender(r);
+      final PropertyProvisionProvider ppr = emptyPropertyProvider();
+
+      final GraphExtender gx = new GraphExtender(pap, ppr);
+
+      gx.extendGraph(g);
+    }
+
+    @Test(expectedExceptions = PlanningException.class,
+        expectedExceptionsMessageRegExp = "cannot satisfy any action")
+    public void throwWhenNoActionCanBeEnabledWithProviders() throws Exception {
+      final Task t = make(aMinimalTask());
+      final Property p = make(aMinimalProperty());
+
+      final Action a = make(aMinimalAction()
+          .withTask(t)
+          .withPre(aPropositionSet()
+              .withFilled(p)));
+
+      final Graph g = make(aGraph()
+          .withInitialLevel(anInitialLevel()
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a))));
+
+      final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
+      when(pap.getPrecursorActionsFor(a)).thenReturn(emptySet(Action.class));
+
+      final PropertyProvisionProvider ppr = emptyPropertyProvider();
+
+      final GraphExtender gx = new GraphExtender(pap, ppr);
+
       gx.extendGraph(g);
     }
 
     @Test
-    public void extendWithEnablingActions() throws Exception {
-      final Task t1 = make(aTask().withIdentifier("t1"));
-      final Task t2 = make(aTask().withIdentifier("t2"));
-
-      final Property p1 = make(aMinimalProperty().withName("p1"));
-      final Property p2 = make(aMinimalProperty().withName("p2"));
-
-      // some initial actions
-      final Action a1 = make(aMinimalAction()
-          .withTask(t1)
-          .withPre(aPropositionSet()
-              .withFilled(p1)));
-
-      final Action a2 = make(aMinimalAction()
-          .withTask(t2)
-          .withPre(aPropositionSet()
-              .withFilled(p2)));
-
-      // actions for the first extension
-      final Action a3 = make(aMinimalAction()
-          .withEffects(anEffectSet()
-              .withToFill(p1)));
-
-      final Action a4 = make(aMinimalAction()
-          .withEffects(anEffectSet()
-              .withToFill(p2)));
-
-      final Action a5 = make(aMinimalAction()
-          .withEffects(anEffectSet()
-              .withToFill(p2)));
-
-      // create the initial graph
-      final Graph g1 = make(aGraph()
-          .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withProvidingAction(a1)
-                  .withOffer(t1)
-                  .withRequest(t1))
-              .withTaskProvision(aTaskProvision()
-                  .withProvidingAction(a2)
-                  .withOffer(t2)
-                  .withRequest(t2))));
-
-      // mock a repository returning the appropriate actions
-      final Repository r = mock(Repository.class);
-      when(r.findPrecursors(a1)).thenReturn(setOf(a3));
-      when(r.findPrecursors(a2)).thenReturn(setOf(a4, a5));
-
-      final GraphExtender gx = new GraphExtender(r);
-
-      final Graph g2 = gx.extendGraph(g1);
-
-      // the actual extension level
-      final ExtensionLevel xl = g2.getLastExtensionLevel();
-
-      // the desired extension level
-      final ExtensionLevel xxl = new ExtensionLevel(
-          setOf(
-              make(anActionProvision()
-                  .withPrecursor(a3)
-                  .withRequest(a1)),
-              make(anActionProvision()
-                  .withPrecursor(a4)
-                  .withRequest(a2)),
-              make(anActionProvision()
-                  .withPrecursor(a5)
-                  .withRequest(a2))
-          )
-      );
-
-      assertEquals(xl, xxl);
-    }
-
-    @Test
-    public void extendWithActionsProvidingRequiredProperties() throws Exception {
-      final Task t = make(aTask().withIdentifier("t"));
-
-      final Widget w = make(aWidget().withIdentifier("w"));
-
-      final Property p1 = make(aProperty().withName("p1"));
-      final Property p2 = make(aProperty().withName("p2"));
-      final Property p3 = make(aProperty().withName("p3"));
-
-      final Action a1 = make(aMinimalAction()
-          .withWidget(w)
-          .withTask(t)
-          .withPre(aPropositionSet()
-              .withCleared(p3)
-              .withFilled(p1)));
-
-      // the action which can be precursor of a1
-      final Action a2 = make(aMinimalAction()
-          .withWidget(w)
-          .withEffects(anEffectSet().withToClear(p3)));
-
-      // the action publishing a compatible property required by a1
-      final Action a3 = make(aMinimalAction().withPub(p2));
-
-      // create the initial graph
-      final Graph g1 = make(aGraph()
-          .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withProvidingAction(a1)
-                  .withOffer(t)
-                  .withRequest(t))));
-
-      final PropertyProvision pp = make(aPropertyProvision()
-          .withProvidingAction(a3)
-          .withOffer(p2)
-          .withRequest(p1));
-
-      final Repository r = mock(Repository.class);
-      when(r.findPrecursors(a1)).thenReturn(setOf(a2));
-      when(r.provideCompatibleProperties(p1)).thenReturn(setOf(pp));
-
-      final GraphExtender gx = new GraphExtender(r);
-
-      final Graph g2 = gx.extendGraph(g1);
-
-      // the actual extension level
-      final ExtensionLevel xl = g2.getLastExtensionLevel();
-
-      // the desired extension level
-      final ExtensionLevel xxl = new ExtensionLevel(
-          setOf(
-              make(anActionProvision()
-                  .withPrecursor(a2)
-                  .withRequest(a1)
-                  .withProvision(pp))
-          )
-      );
-
-      assertEquals(xl, xxl);
-    }
-
-    @Test
-    public void ignoreActionsWhoseRequiredPropertiesCannotBeProvided() throws Exception {
-      final Task t = make(aTask().withIdentifier("t"));
-
-      final Property p1 = make(aProperty().withName("p1"));
-      final Property p2 = make(aProperty().withName("p2"));
+    public void extendWithPrecursorActions() throws Exception {
+      final Task t = make(aMinimalTask());
+      final Property p = make(aMinimalProperty());
 
       final Action a1 = make(aMinimalAction()
           .withTask(t)
           .withPre(aPropositionSet()
-              .withFilled(p1)));
+              .withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
-          .withTask(t)
-          .withPre(aPropositionSet()
-              .withCleared(p2)));
-
-      // an action which can be source of a1 and a2
-      final Action a3 = make(aMinimalAction()
           .withEffects(anEffectSet()
-              .withToClear(p2)));
+              .withToClear(p)));
 
-      final Graph g1 = make(aGraph()
+      final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
               .withTaskProvision(aTaskProvision()
-                  .withProvidingAction(a1)
+                  .withRequest(t)
                   .withOffer(t)
-                  .withRequest(t))
-              .withTaskProvision(aTaskProvision()
-                  .withProvidingAction(a2)
-                  .withOffer(t)
-                  .withRequest(t))));
+                  .withProvidingAction(a1))));
 
-      final Repository r = mock(Repository.class);
-      when(r.findPrecursors(a1)).thenReturn(setOf(a3));
-      when(r.findPrecursors(a2)).thenReturn(setOf(a3));
-      when(r.provideCompatibleProperties(p1)).thenReturn(emptySet(PropertyProvision.class));
+      final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
+      when(pap.getPrecursorActionsFor(a1)).thenReturn(setOf(a2));
 
-      final GraphExtender gx = new GraphExtender(r);
+      final PropertyProvisionProvider ppr = emptyPropertyProvider();
 
-      final Graph g2 = gx.extendGraph(g1);
+      final GraphExtender gx = new GraphExtender(pap, ppr);
+      final Graph xg = gx.extendGraph(g);
 
-      // the actual extension level
-      final ExtensionLevel xl = g2.getLastExtensionLevel();
+      final ExtensionLevel xl = make(anExtensionLevel()
+          .withProvision(anActionProvision()
+              .withRequest(a1)
+              .withPrecursor(a2)));
 
-      // the desired extension level
-      final ExtensionLevel xxl = new ExtensionLevel(
-          setOf(
-              make(anActionProvision()
-                  .withPrecursor(a3)
-                  .withRequest(a2))
-          )
-      );
-
-      assertEquals(xl, xxl);
+      assertEquals(xg.getLastLevel(), xl);
     }
 
     @Test
-    public void createPrecursorLessActionProvisionWhenRepositoryReturnsNoPrecursors() throws Exception {
-      final Task t = make(aTask().withIdentifier("t"));
+    public void extendWithoutPrecursorActions() throws Exception {
+      final Task t = make(aMinimalTask());
 
-      final Property p = make(aProperty().withName("p"));
+      final Property p = make(aMinimalProperty());
 
       final Action a1 = make(aMinimalAction()
           .withTask(t)
           .withPre(aPropositionSet()
               .withFilled(p)));
 
+      // a property provider for a1
       final Action a2 = make(aMinimalAction().withPub(p));
 
-      final Graph g1 = make(aGraph()
+      final PropertyProvision pp = make(aPropertyProvision()
+          .withRequest(p)
+          .withOffer(p)
+          .withProvidingAction(a2));
+
+      final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
               .withTaskProvision(aTaskProvision()
-                  .withProvidingAction(a1)
+                  .withRequest(t)
                   .withOffer(t)
-                  .withRequest(t))));
+                  .withProvidingAction(a1))));
 
-      final PropertyProvision pp = make(aPropertyProvision()
-          .withProvidingAction(a2)
-          .withOffer(p)
-          .withRequest(p));
+      final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
+      when(pap.getPrecursorActionsFor(a1)).thenReturn(emptySet(Action.class));
 
-      final Repository r = mock(Repository.class);
-      when(r.findPrecursors(a1)).thenReturn(emptySet(Action.class));
-      when(r.provideCompatibleProperties(p)).thenReturn(setOf(pp));
+      final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
+      when(ppr.getProvisionsFor(setOf(p))).thenReturn(setOf(pp));
 
-      final GraphExtender gx = new GraphExtender(r);
+      final GraphExtender gx = new GraphExtender(pap, ppr);
+      final Graph xg = gx.extendGraph(g);
 
-      final Graph g2 = gx.extendGraph(g1);
+      final ExtensionLevel xl = make(anExtensionLevel()
+          .withProvision(anActionProvision()
+              .withRequest(a1)
+              .withProvision(pp)));
 
-      // the actual extension level
-      final ExtensionLevel xl = g2.getLastExtensionLevel();
-
-      // the desired extension level
-      final ExtensionLevel xxl = new ExtensionLevel(
-          setOf(
-              make(anActionProvision()
-                  .withRequest(a1)
-                  .withProvision(pp))
-          )
-      );
-
-      assertEquals(xl, xxl);
+      assertEquals(xg.getLastLevel(), xl);
     }
 
     @Test
-    public void createSeperateActionProvisionsForEachPropertyProvisionCombination() throws Exception {
-      final Task t = make(aTask().withIdentifier("t"));
+    public void provideFilledPropertiesNotSatisfiedByPrecursor() throws Exception {
+      final Task t = make(aMinimalTask());
 
-      final Property p1 = make(aProperty().withName("p1"));
-      final Property p2 = make(aProperty().withName("p2"));
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+
+      final Action a1 = make(aMinimalAction()
+          .withTask(t)
+          .withPre(aPropositionSet()
+              .withCleared(p1)
+              .withFilled(p2)));
+
+      // a precursor for a1
+      final Action a2 = make(aMinimalAction()
+          .withEffects(anEffectSet()
+              .withToClear(p1)));
+
+      // a property provider for a1
+      final Action a3 = make(aMinimalAction().withPub(p2));
+
+      final PropertyProvision pp = make(aPropertyProvision()
+          .withRequest(p2)
+          .withOffer(p2)
+          .withProvidingAction(a3));
+
+      final Graph g = make(aGraph()
+          .withInitialLevel(anInitialLevel()
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a1))));
+
+      final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
+      when(pap.getPrecursorActionsFor(a1)).thenReturn(setOf(a2));
+
+      final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
+      when(ppr.getProvisionsFor(setOf(p2))).thenReturn(setOf(pp));
+
+      final GraphExtender gx = new GraphExtender(pap, ppr);
+      final Graph xg = gx.extendGraph(g);
+
+      final ExtensionLevel xl = make(anExtensionLevel()
+          .withProvision(anActionProvision()
+              .withRequest(a1)
+              .withPrecursor(a2)
+              .withProvision(pp)));
+
+      assertEquals(xg.getLastLevel(), xl);
+    }
+
+    @Test
+    public void createActionProvisionForEachPropertyProvisionCombination() throws Exception {
+      final Task t = make(aMinimalTask());
+
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action a1 = make(aMinimalAction()
           .withTask(t)
@@ -404,49 +295,40 @@ public class GraphExtenderTest {
               .withFilled(p1, p2)));
 
       final Action a2 = make(aMinimalAction().withPub(p1));
+      final Action a3 = make(aMinimalAction().withPub(p1, p2));
 
-      final Action a3 = make(aMinimalAction()
-          .withWidget(aWidget().withIdentifier("w"))
-          .withPub(p1));
-
-      final Action a4 = make(aMinimalAction().withPub(p2));
-
-      final Graph g1 = make(aGraph()
+      final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
               .withTaskProvision(aTaskProvision()
-                  .withProvidingAction(a1)
+                  .withRequest(t)
                   .withOffer(t)
-                  .withRequest(t))));
+                  .withProvidingAction(a1))));
 
       final PropertyProvision pp1 = make(aPropertyProvision()
-          .withProvidingAction(a2)
+          .withRequest(p1)
           .withOffer(p1)
-          .withRequest(p1));
+          .withProvidingAction(a2));
 
       final PropertyProvision pp2 = make(aPropertyProvision()
-          .withProvidingAction(a3)
+          .withRequest(p1)
           .withOffer(p1)
-          .withRequest(p1));
+          .withProvidingAction(a3));
 
       final PropertyProvision pp3 = make(aPropertyProvision()
-          .withProvidingAction(a4)
+          .withRequest(p2)
           .withOffer(p2)
-          .withRequest(p2));
+          .withProvidingAction(a3));
 
-      final Repository r = mock(Repository.class);
-      when(r.findPrecursors(a1)).thenReturn(emptySet(Action.class));
-      when(r.provideCompatibleProperties(p1)).thenReturn(setOf(pp1, pp2));
-      when(r.provideCompatibleProperties(p2)).thenReturn(setOf(pp3));
+      final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
+      when(pap.getPrecursorActionsFor(a1)).thenReturn(emptySet(Action.class));
 
-      final GraphExtender gx = new GraphExtender(r);
+      final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
+      when(ppr.getProvisionsFor(setOf(p1, p2))).thenReturn(setOf(pp1, pp2, pp3));
 
-      final Graph g2 = gx.extendGraph(g1);
+      final GraphExtender gx = new GraphExtender(pap, ppr);
+      final Graph xg = gx.extendGraph(g);
 
-      // the actual extension level
-      final ExtensionLevel xl = g2.getLastExtensionLevel();
-
-      // the desired extension level
-      final ExtensionLevel xxl = make(anExtensionLevel()
+      final ExtensionLevel xl = make(anExtensionLevel()
           .withProvision(anActionProvision()
               .withRequest(a1)
               .withProvision(pp1, pp3))
@@ -454,7 +336,181 @@ public class GraphExtenderTest {
               .withRequest(a1)
               .withProvision(pp2, pp3)));
 
-      assertEquals(xl, xxl);
+      assertEquals(xg.getLastLevel(), xl);
+    }
+
+    @Test
+    public void collectAllRequiredProperties() throws Exception {
+      final Task t = make(aMinimalTask());
+
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+
+      final Action a1 = make(aMinimalAction()
+          .withTask(t)
+          .withPre(aPropositionSet().withFilled(p1)));
+
+      final Action a2 = make(aMinimalAction()
+          .withTask(t)
+          .withPre(aPropositionSet().withFilled(p2)));
+
+      final Action a3 = make(aMinimalAction().withPub(p1));
+
+      final Action a4 = make(aMinimalAction().withPub(p2));
+
+      final Action a5 = Action.compose(a3, a4);
+
+      final Graph g = make(aGraph()
+          .withInitialLevel(anInitialLevel()
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a1))
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a2))));
+
+      final PropertyProvision pp1 = make(aPropertyProvision()
+          .withRequest(p1)
+          .withOffer(p1)
+          .withProvidingAction(a3));
+
+      final PropertyProvision pp2 = make(aPropertyProvision()
+          .withRequest(p2)
+          .withOffer(p2)
+          .withProvidingAction(a4));
+
+      final PropertyProvision pp3 = make(aPropertyProvision()
+          .withRequest(p1)
+          .withOffer(p1)
+          .withProvidingAction(a5));
+
+      final PropertyProvision pp4 = make(aPropertyProvision()
+          .withRequest(p2)
+          .withOffer(p2)
+          .withProvidingAction(a5));
+
+      final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
+      when(pap.getPrecursorActionsFor(a1)).thenReturn(emptySet(Action.class));
+
+      final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
+      when(ppr.getProvisionsFor(setOf(p1, p2))).thenReturn(setOf(pp1, pp2, pp3, pp4));
+
+      final GraphExtender gx = new GraphExtender(pap, ppr);
+      final Graph xg = gx.extendGraph(g);
+
+      final ExtensionLevel xl = make(anExtensionLevel()
+          .withProvision(anActionProvision()
+              .withRequest(a1)
+              .withProvision(pp1))
+          .withProvision(anActionProvision()
+              .withRequest(a2)
+              .withProvision(pp2))
+          .withProvision(anActionProvision()
+              .withRequest(a1)
+              .withProvision(pp3))
+          .withProvision(anActionProvision()
+              .withRequest(a2)
+              .withProvision(pp4)));
+
+      assertEquals(xg.getLastLevel(), xl);
+    }
+
+    @Test
+    public void ignoreActionsWithoutPrecursor() throws Exception {
+      final Task t = make(aMinimalTask());
+
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+
+      final Action a1 = make(aMinimalAction()
+          .withTask(t)
+          .withPre(aPropositionSet().withCleared(p1)));
+
+      final Action a2 = make(aMinimalAction()
+          .withTask(t)
+          .withPre(aPropositionSet().withCleared(p2)));
+
+      final Action a3 = make(aMinimalAction()
+          .withEffects(anEffectSet().withToClear(p2)));
+
+      final Graph g = make(aGraph()
+          .withInitialLevel(anInitialLevel()
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a1))
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a2))));
+
+      final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
+      when(pap.getPrecursorActionsFor(a1)).thenReturn(emptySet(Action.class));
+      when(pap.getPrecursorActionsFor(a2)).thenReturn(setOf(a3));
+
+      final PropertyProvisionProvider ppr = emptyPropertyProvider();
+
+      final GraphExtender gx = new GraphExtender(pap, ppr);
+
+      final Graph xg = gx.extendGraph(g);
+
+      final ExtensionLevel xl = make(anExtensionLevel()
+          .withProvision(anActionProvision()
+              .withRequest(a2)
+              .withPrecursor(a3)));
+
+      assertEquals(xg.getLastLevel(), xl);
+    }
+
+    @Test
+    public void ignoreActionProvisionWhenAnyRequiredPropertyCannotBeProvided() throws Exception {
+      final Task t = make(aMinimalTask());
+
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+
+      final Action a1 = make(aMinimalAction()
+          .withTask(t)
+          .withPre(aPropositionSet()
+              .withCleared(p1)
+              .withFilled(p2)));
+
+      // a precursor action fully satisfying a1
+      final Action a2 = make(aMinimalAction()
+          .withEffects(anEffectSet()
+              .withToClear(p1)
+              .withToFill(p2)));
+
+      // a precursor action not fully satisfying a1
+      // because p2 cannot be provided otherwise, this precursor should be ignored
+      final Action a3 = make(aMinimalAction()
+          .withEffects(anEffectSet()
+              .withToClear(p1)));
+
+      final Graph g = make(aGraph()
+          .withInitialLevel(anInitialLevel()
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a1))));
+
+      final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
+      when(pap.getPrecursorActionsFor(a1)).thenReturn(setOf(a2, a3));
+
+      final PropertyProvisionProvider ppr = emptyPropertyProvider();
+
+      final GraphExtender gx = new GraphExtender(pap, ppr);
+
+      final Graph xg = gx.extendGraph(g);
+
+      final ExtensionLevel xl = make(anExtensionLevel()
+          .withProvision(anActionProvision()
+              .withRequest(a1)
+              .withPrecursor(a2)));
+
+      assertEquals(xg.getLastLevel(), xl);
     }
 
   }

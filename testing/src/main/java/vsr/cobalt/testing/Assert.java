@@ -10,6 +10,7 @@ package vsr.cobalt.testing;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 
 import static org.testng.Assert.fail;
 
@@ -55,6 +56,12 @@ public final class Assert {
     }
   }
 
+  public static void assertContainsAll(final Object obj, final Object x) {
+    if (!containsAll(obj, x)) {
+      fail("does not contain all: " + x + " " + obj);
+    }
+  }
+
   private static boolean empty(final Object obj) {
     final Method mth = getMethod(obj, "isEmpty");
     if (mth == null) {
@@ -84,6 +91,23 @@ public final class Assert {
       return (boolean) mth.invoke(obj, x);
     } catch (IllegalAccessException | InvocationTargetException ex) {
       fail("cannot invoke contains " + ex.getMessage(), ex);
+    }
+    // never reached
+    return false;
+  }
+
+  private static boolean containsAll(final Object obj, final Object x) {
+    final Method mth = getMethod(obj, "containsAll", Collection.class);
+    if (mth == null) {
+      fail("object has no method containsAll");
+    }
+    if (!returnsAny(mth, "boolean", "java.lang.Boolean")) {
+      fail("expecting containsAll to return boolean or java.lang.Boolean");
+    }
+    try {
+      return (boolean) mth.invoke(obj, x);
+    } catch (IllegalAccessException | InvocationTargetException ex) {
+      fail("cannot invoke containsAll " + ex.getMessage(), ex);
     }
     // never reached
     return false;
