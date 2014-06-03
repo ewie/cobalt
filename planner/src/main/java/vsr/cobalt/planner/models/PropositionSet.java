@@ -74,7 +74,7 @@ public final class PropositionSet {
    * @see #cleared(Set)
    */
   public static PropositionSet cleared(final Property... properties) {
-    return cleared(ImmutableSet.of(properties));
+    return cleared(ImmutableSet.copyOf(properties));
   }
 
   /**
@@ -92,7 +92,7 @@ public final class PropositionSet {
    * @see #filled(Set)
    */
   public static PropositionSet filled(final Property... properties) {
-    return filled(ImmutableSet.of(properties));
+    return filled(ImmutableSet.copyOf(properties));
   }
 
   /**

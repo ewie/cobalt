@@ -73,7 +73,7 @@ public final class EffectSet {
    * @see #clear(Set)
    */
   public static EffectSet clear(final Property... properties) {
-    return clear(ImmutableSet.of(properties));
+    return clear(ImmutableSet.copyOf(properties));
   }
 
   /**
@@ -89,7 +89,7 @@ public final class EffectSet {
    * @see #fill(Set)
    */
   public static EffectSet fill(final Property... properties) {
-    return fill(ImmutableSet.of(properties));
+    return fill(ImmutableSet.copyOf(properties));
   }
 
   /**
