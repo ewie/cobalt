@@ -30,4 +30,15 @@
     </plugins>
   </build>
 
+  <dependencies>
+
+    <dependency>
+      <groupId>vsr.cobalt</groupId>
+      <artifactId>cobalt-testing</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
 </project>
