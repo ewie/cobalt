@@ -334,9 +334,10 @@ public class ActionTest {
   public static class Represents {
 
     @Test
-    public void returnTrueWhenAtomicCalledWithSameAction() {
-      final Action a = make(aMinimalAction());
-      assertTrue(a.represents(a));
+    public void returnTrueWhenAtomicCalledWithEqualAction() {
+      final Action a1 = make(aMinimalAction());
+      final Action a2 = make(aMinimalAction());
+      assertTrue(a1.represents(a2));
     }
 
     @Test
