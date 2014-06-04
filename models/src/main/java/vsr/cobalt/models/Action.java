@@ -56,6 +56,11 @@ public abstract class Action {
   private final ImmutableSet<Task> realizedTasks;
 
   /**
+   * A set of tasks realized by this action.
+   */
+  private final ImmutableSet<Interaction> interactions;
+
+  /**
    * Create a new action.
    *
    * @param widget              the owning widget
@@ -63,19 +68,38 @@ public abstract class Action {
    * @param effects             the effects
    * @param publishedProperties a set of published properties
    * @param realizedTasks       a set of realized tasks
+   * @param interactions        a set of user interactions
    */
   private Action(final Widget widget, final PropositionSet preConditions, final EffectSet effects,
-                 final Set<Property> publishedProperties, final Set<Task> realizedTasks) {
+                 final Set<Property> publishedProperties, final Set<Task> realizedTasks,
+                 final Set<Interaction> interactions) {
     this.widget = widget;
     this.preConditions = preConditions;
     this.effects = effects;
     this.publishedProperties = ImmutableSet.copyOf(publishedProperties);
     this.realizedTasks = ImmutableSet.copyOf(realizedTasks);
+    this.interactions = ImmutableSet.copyOf(interactions);
     postConditions = effects.createPostConditions(preConditions);
   }
 
   /**
-   * Create an atomic action.
+   * Create a new action.
+   *
+   * @param widget              the owning widget
+   * @param preConditions       the pre-conditions
+   * @param effects             the effects
+   * @param publishedProperties a set of published properties
+   * @param realizedTasks       a set of realized tasks
+   * @param interactions        a set of user interactions
+   */
+  public static Action create(final Widget widget, final PropositionSet preConditions, final EffectSet effects,
+                              final Set<Property> publishedProperties, final Set<Task> realizedTasks,
+                              final Set<Interaction> interactions) {
+    return new AtomicAction(widget, preConditions, effects, publishedProperties, realizedTasks, interactions);
+  }
+
+  /**
+   * Create an atomic action without any user interactions.
    *
    * @param widget              the owning widget
    * @param preConditions       the pre-conditions
@@ -85,11 +109,11 @@ public abstract class Action {
    */
   public static Action create(final Widget widget, final PropositionSet preConditions, final EffectSet effects,
                               final Set<Property> publishedProperties, final Set<Task> realizedTasks) {
-    return new AtomicAction(widget, preConditions, effects, publishedProperties, realizedTasks);
+    return create(widget, preConditions, effects, publishedProperties, realizedTasks, ImmutableSet.<Interaction>of());
   }
 
   /**
-   * Create an atomic action publishing no properties and realizing no tasks.
+   * Create an atomic action realizing no tasks and having no user interactions.
    *
    * @param widget              the owning widget
    * @param preConditions       the pre-conditions
@@ -102,7 +126,7 @@ public abstract class Action {
   }
 
   /**
-   * Create an atomic action publishing no properties and realizing no tasks.
+   * Create an atomic action publishing no properties, realizing no tasks and having no user interactions.
    *
    * @param widget        the owning widget
    * @param preConditions the pre-conditions
@@ -113,7 +137,8 @@ public abstract class Action {
   }
 
   /**
-   * Create an atomic action publishing no properties and realizing no tasks.
+   * Create an atomic action without any effects, publishing no properties, realizing no tasks and having no user
+   * interactions.
    *
    * @param widget        the owning widget
    * @param preConditions the pre-conditions
@@ -123,7 +148,7 @@ public abstract class Action {
   }
 
   /**
-   * Create an atomic action without any pre-conditions, effects or realized tasks.
+   * Create an atomic action without any pre-conditions, effects, realized tasks or user interactions.
    *
    * @param widget the owning widget
    */
@@ -250,6 +275,13 @@ public abstract class Action {
   }
 
   /**
+   * @return a set of zero or more interactions
+   */
+  public Set<Interaction> getInteractions() {
+    return interactions;
+  }
+
+  /**
    * Check if this action is enabled by itself, i.e. it has no pre-conditions.
    *
    * @return true when enabled, false otherwise
@@ -266,6 +298,7 @@ public abstract class Action {
   public boolean isMaintenance() {
     return publishedProperties.isEmpty()
         && realizedTasks.isEmpty()
+        && interactions.isEmpty()
         && preConditions.equals(postConditions);
   }
 
@@ -350,7 +383,7 @@ public abstract class Action {
 
   @Override
   public int hashCode() {
-    return Objects.hash(widget, preConditions, postConditions, publishedProperties, realizedTasks);
+    return Objects.hash(widget, preConditions, postConditions, publishedProperties, realizedTasks, interactions);
   }
 
   private boolean equals(final Action other) {
@@ -358,7 +391,8 @@ public abstract class Action {
         && Objects.equals(preConditions, other.preConditions)
         && Objects.equals(postConditions, other.postConditions)
         && Objects.equals(publishedProperties, other.publishedProperties)
-        && Objects.equals(realizedTasks, other.realizedTasks);
+        && Objects.equals(realizedTasks, other.realizedTasks)
+        && Objects.equals(interactions, other.interactions);
   }
 
   private boolean belongsToSameWidget(final Action other) {
@@ -405,8 +439,9 @@ public abstract class Action {
   private static class AtomicAction extends Action {
 
     private AtomicAction(final Widget widget, final PropositionSet preConditions, final EffectSet effects,
-                         final Set<Property> publishedProperties, final Set<Task> realizedTasks) {
-      super(widget, preConditions, effects, publishedProperties, realizedTasks);
+                         final Set<Property> publishedProperties, final Set<Task> realizedTasks,
+                         final Set<Interaction> interactions) {
+      super(widget, preConditions, effects, publishedProperties, realizedTasks, interactions);
     }
 
   }
@@ -423,7 +458,8 @@ public abstract class Action {
           builder.getPreConditions(),
           builder.getEffects(),
           builder.getPublishedProperties(),
-          builder.getRealizedTasks());
+          builder.getRealizedTasks(),
+          builder.getInteractions());
       actions = builder.getActions();
     }
 
@@ -466,9 +502,11 @@ public abstract class Action {
 
       private final ImmutableSet.Builder<Property> toFill = ImmutableSet.builder();
 
-      private final ImmutableSet.Builder<Property> ps = ImmutableSet.builder();
+      private final ImmutableSet.Builder<Property> properties = ImmutableSet.builder();
 
-      private final ImmutableSet.Builder<Task> ts = ImmutableSet.builder();
+      private final ImmutableSet.Builder<Task> tasks = ImmutableSet.builder();
+
+      private final ImmutableSet.Builder<Interaction> interactions = ImmutableSet.builder();
 
       private Widget widget;
 
@@ -479,8 +517,9 @@ public abstract class Action {
 
         actions.add(action);
 
-        ps.addAll(action.getPublishedProperties());
-        ts.addAll(action.getRealizedTasks());
+        properties.addAll(action.getPublishedProperties());
+        tasks.addAll(action.getRealizedTasks());
+        interactions.addAll(action.getInteractions());
         addPreConditions(action.getPreConditions());
         addEffects(action.getEffects());
       }
@@ -502,11 +541,15 @@ public abstract class Action {
       }
 
       public ImmutableSet<Property> getPublishedProperties() {
-        return ps.build();
+        return properties.build();
       }
 
       public ImmutableSet<Task> getRealizedTasks() {
-        return ts.build();
+        return tasks.build();
+      }
+
+      public ImmutableSet<Interaction> getInteractions() {
+        return interactions.build();
       }
 
       private void addPreConditions(final PropositionSet pre) {

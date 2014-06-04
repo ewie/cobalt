@@ -11,6 +11,7 @@ import java.util.Collection;
 
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.EffectSet;
+import vsr.cobalt.models.Interaction;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PropositionSet;
 import vsr.cobalt.models.Task;
@@ -38,6 +39,8 @@ public class ActionMaker implements Maker<Action> {
 
   private final CollectionValue<Task> tasks = new CollectionValue<>();
 
+  private final CollectionValue<Interaction> interactions = new CollectionValue<>();
+
   public static ActionMaker anAction() {
     return new ActionMaker();
   }
@@ -56,7 +59,8 @@ public class ActionMaker implements Maker<Action> {
         pre.get(),
         effects.get(),
         pubs.asSet(),
-        tasks.asSet());
+        tasks.asSet(),
+        interactions.asSet());
   }
 
   public ActionMaker withWidget(final Widget widget) {
@@ -122,6 +126,22 @@ public class ActionMaker implements Maker<Action> {
 
   public ActionMaker withTask(final Task... tasks) {
     this.tasks.addValues(tasks);
+    return this;
+  }
+
+  public ActionMaker withInteractions(final Collection<Interaction> interactions) {
+    this.interactions.set(interactions);
+    return this;
+  }
+
+  @SafeVarargs
+  public final ActionMaker withInteraction(final Maker<Interaction>... makers) {
+    interactions.add(makers);
+    return this;
+  }
+
+  public ActionMaker withInteraction(final Interaction... interactions) {
+    this.interactions.addValues(interactions);
     return this;
   }
 

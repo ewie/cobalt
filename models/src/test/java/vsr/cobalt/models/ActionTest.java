@@ -22,6 +22,8 @@ import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
+import static vsr.cobalt.models.makers.InteractionMaker.aMinimalInteraction;
+import static vsr.cobalt.models.makers.InteractionMaker.anInteraction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
@@ -66,6 +68,21 @@ public class ActionTest {
     }
 
     @Test
+    public void preventModificationOfInteractions() {
+      final Widget w = make(aMinimalWidget());
+      final Property p = make(aMinimalProperty());
+      final PropositionSet pre = make(aPropositionSet().withCleared(p));
+      final EffectSet ef = make(anEffectSet().withToFill(p));
+      final Set<Property> pubs = emptySet();
+      final Set<Task> ts = emptySet();
+      final Interaction i = make(aMinimalInteraction());
+      final Set<Interaction> is = setOf(i);
+      final Action a = Action.create(w, pre, ef, pubs, ts, is);
+      is.add(null);
+      assertNotEquals(a.getInteractions(), is);
+    }
+
+    @Test
     public void derivePostConditionsFromPreConditionsAndEffects() {
       final Widget w = make(aMinimalWidget());
       final Property p = make(aMinimalProperty());
@@ -101,6 +118,13 @@ public class ActionTest {
       final Widget w = make(aMinimalWidget());
       final Action a = Action.create(w);
       assertEmpty(a.getRealizedTasks());
+    }
+
+    @Test
+    public void defaultToEmptyIteractions() {
+      final Widget w = make(aMinimalWidget());
+      final Action a = Action.create(w);
+      assertEmpty(a.getInteractions());
     }
 
   }
@@ -150,6 +174,10 @@ public class ActionTest {
 
       assertEquals(a3.getPublishedProperties(),
           Sets.union(a1.getPublishedProperties(), a2.getPublishedProperties()));
+
+      assertEquals(a3.getInteractions(),
+          Sets.union(a1.getInteractions(), a2.getInteractions()));
+
       assertEquals(a3.getPreConditions(), pre);
       assertEquals(a3.getPostConditions(), post);
     }
@@ -282,20 +310,18 @@ public class ActionTest {
 
     private Set<Task> tasks;
 
+    private Set<Interaction> interactions;
+
     @BeforeMethod
     public void setUp() {
       final Property p = make(aMinimalProperty());
       widget = make(aMinimalWidget());
       pre = make(aPropositionSet().withCleared(p));
       effects = make(anEffectSet().withToFill(p));
-      published = emptySet(Property.class);
-      tasks = emptySet(Task.class);
-      action = make(aMinimalAction()
-          .withWidget(widget)
-          .withPre(pre)
-          .withEffects(effects)
-          .withPubs(published)
-          .withTasks(tasks));
+      published = setOf(make(aMinimalProperty()));
+      tasks = setOf(make(aMinimalTask()));
+      interactions = setOf(make(aMinimalInteraction()));
+      action = Action.create(widget, pre, effects, published, tasks, interactions);
     }
 
     @Test
@@ -326,6 +352,11 @@ public class ActionTest {
     @Test
     public void getRealizedTasks() {
       assertEquals(action.getRealizedTasks(), tasks);
+    }
+
+    @Test
+    public void getInteractions() {
+      assertEquals(action.getInteractions(), interactions);
     }
 
   }
@@ -455,6 +486,13 @@ public class ActionTest {
     public void returnFalseWhenThereAreRealizedTasks() {
       final Action a = make(aMinimalAction()
           .withTask(aMinimalTask()));
+      assertFalse(a.isMaintenance());
+    }
+
+    @Test
+    public void returnFalseWhenThereAreInteractions() {
+      final Action a = make(aMinimalAction()
+          .withInteraction(aMinimalInteraction()));
       assertFalse(a.isMaintenance());
     }
 
@@ -695,6 +733,19 @@ public class ActionTest {
     }
 
     @Test
+    public void returnFalseWhenInteractionsDiffer() {
+      final Action a1 = make(aMinimalAction()
+          .withInteraction(anInteraction()
+              .withInstruction("i1")));
+
+      final Action a2 = make(aMinimalAction()
+          .withInteraction(anInteraction()
+              .withInstruction("i2")));
+
+      assertNotEquals(a1, a2);
+    }
+
+    @Test
     public void returnTrueWhenEqual() {
       final Action a1 = make(aMinimalAction());
       final Action a2 = make(aMinimalAction());
@@ -714,7 +765,8 @@ public class ActionTest {
           a.getPreConditions(),
           a.getPostConditions(),
           a.getPublishedProperties(),
-          a.getRealizedTasks());
+          a.getRealizedTasks(),
+          a.getInteractions());
       assertEquals(a.hashCode(), h);
     }
 
