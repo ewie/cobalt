@@ -7,8 +7,8 @@
 
 package vsr.cobalt.planner.graph;
 
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Property;
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Property;
 
 /**
  * A property provision specifies how a requested property can be satisfied via a providing action offering a matching

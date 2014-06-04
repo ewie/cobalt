@@ -8,15 +8,15 @@
 package vsr.cobalt.planner.graph;
 
 import org.testng.annotations.Test;
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Task;
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Task;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
+import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
 import static vsr.cobalt.testing.Assert.assertSubClass;
 import static vsr.cobalt.testing.Utilities.make;
-import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.testing.makers.TaskMaker.aMinimalTask;
 
 @Test
 public class TaskProvisionTest {

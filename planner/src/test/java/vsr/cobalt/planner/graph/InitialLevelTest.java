@@ -10,22 +10,22 @@ package vsr.cobalt.planner.graph;
 import java.util.Set;
 
 import org.testng.annotations.Test;
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Task;
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Task;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
+import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
+import static vsr.cobalt.models.makers.TaskMaker.aTask;
+import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.aMinimalInitialLevel;
+import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
+import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aMinimalTaskProvision;
+import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aTaskProvision;
 import static vsr.cobalt.testing.Assert.assertEmpty;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
-import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.testing.makers.InitialLevelMaker.aMinimalInitialLevel;
-import static vsr.cobalt.testing.makers.InitialLevelMaker.anInitialLevel;
-import static vsr.cobalt.testing.makers.TaskMaker.aMinimalTask;
-import static vsr.cobalt.testing.makers.TaskMaker.aTask;
-import static vsr.cobalt.testing.makers.TaskProvisionMaker.aMinimalTaskProvision;
-import static vsr.cobalt.testing.makers.TaskProvisionMaker.aTaskProvision;
 
 @Test
 public class InitialLevelTest {

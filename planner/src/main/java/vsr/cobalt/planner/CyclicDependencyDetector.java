@@ -7,8 +7,8 @@
 
 package vsr.cobalt.planner;
 
+import vsr.cobalt.models.Action;
 import vsr.cobalt.planner.graph.Graph;
-import vsr.cobalt.planner.models.Action;
 
 /**
  * Detects actions that would cause a cyclic dependency when used to extend a graph.

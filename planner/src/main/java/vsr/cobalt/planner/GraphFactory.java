@@ -10,10 +10,10 @@ package vsr.cobalt.planner;
 import java.util.HashSet;
 import java.util.Set;
 
+import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.TaskProvision;
-import vsr.cobalt.planner.models.Task;
 
 /**
  * A graph factory creates an initial graph from a goal.

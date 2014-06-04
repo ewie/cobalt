@@ -14,14 +14,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.Level;
 import vsr.cobalt.planner.graph.TaskProvision;
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Task;
 import vsr.cobalt.utils.ProbingIterator;
 import vsr.cobalt.utils.ProductSet;
 import vsr.cobalt.utils.ProductSetIterator;
@@ -58,7 +58,8 @@ public class PlanIterator extends ProbingIterator<Plan> {
    * Create a new plan iterator using a graph and depth range.
    * <p/>
    * Because the plan extraction usually happens after each graph extension, the constraining of the graph depth allows
-   * to ignore plans which have been extracted before, when the plan iterator had been used with a less extended version
+   * to ignore plans which have been extracted before, when the plan iterator had been used with a less extended
+   * version
    * of the given graph.
    *
    * @param graph    a graph to examine

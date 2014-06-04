@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
-import vsr.cobalt.planner.models.Action;
+import vsr.cobalt.models.Action;
 
 /**
  * A graph level representing an extension, i.e. it contains provisions for actions required by the previous level.

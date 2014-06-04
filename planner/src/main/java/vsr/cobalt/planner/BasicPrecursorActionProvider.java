@@ -10,8 +10,8 @@ package vsr.cobalt.planner;
 import java.util.HashSet;
 import java.util.Set;
 
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Widget;
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Widget;
 
 /**
  * Provides all precursor actions among the widget actions returned by a repository.

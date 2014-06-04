@@ -3,7 +3,7 @@ package vsr.cobalt.planner;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
-import vsr.cobalt.planner.models.Task;
+import vsr.cobalt.models.Task;
 
 /**
  * A goal specifies information about the UI mashup to be conceived by the planner.

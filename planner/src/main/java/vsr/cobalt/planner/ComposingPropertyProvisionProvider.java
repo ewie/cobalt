@@ -9,9 +9,9 @@ package vsr.cobalt.planner;
 
 import java.util.Set;
 
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Property;
 import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Property;
 
 /**
  * @author Erik Wienhold

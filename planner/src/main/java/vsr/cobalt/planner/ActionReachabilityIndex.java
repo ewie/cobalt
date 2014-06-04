@@ -13,12 +13,12 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Sets;
+import vsr.cobalt.models.Action;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.Level;
-import vsr.cobalt.planner.models.Action;
 
 /**
  * Records which actions are reachable, i.e. the actions whose pre-conditions are empty or satisfied by some reachable

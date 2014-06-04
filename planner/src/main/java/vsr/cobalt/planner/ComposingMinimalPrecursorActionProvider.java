@@ -10,10 +10,10 @@ package vsr.cobalt.planner;
 import java.util.HashSet;
 import java.util.Set;
 
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Property;
-import vsr.cobalt.planner.models.PropositionSet;
-import vsr.cobalt.planner.models.Widget;
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Property;
+import vsr.cobalt.models.PropositionSet;
+import vsr.cobalt.models.Widget;
 import vsr.cobalt.utils.OrderedPowerSetIterator;
 
 /**

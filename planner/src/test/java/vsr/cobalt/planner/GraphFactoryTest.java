@@ -10,24 +10,24 @@ package vsr.cobalt.planner;
 import java.util.Set;
 
 import org.testng.annotations.Test;
+import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.TaskProvision;
-import vsr.cobalt.planner.models.Task;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
+import static vsr.cobalt.models.makers.TaskMaker.aTask;
+import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
+import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aTaskProvision;
+import static vsr.cobalt.planner.makers.GoalMaker.aGoal;
+import static vsr.cobalt.planner.makers.GoalMaker.aMinimalGoal;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
-import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.testing.makers.GoalMaker.aGoal;
-import static vsr.cobalt.testing.makers.GoalMaker.aMinimalGoal;
-import static vsr.cobalt.testing.makers.InitialLevelMaker.anInitialLevel;
-import static vsr.cobalt.testing.makers.TaskMaker.aMinimalTask;
-import static vsr.cobalt.testing.makers.TaskMaker.aTask;
-import static vsr.cobalt.testing.makers.TaskProvisionMaker.aTaskProvision;
 
 @Test
 public class GraphFactoryTest {

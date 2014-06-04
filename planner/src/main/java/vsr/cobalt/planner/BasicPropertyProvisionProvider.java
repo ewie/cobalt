@@ -10,8 +10,8 @@ package vsr.cobalt.planner;
 import java.util.HashSet;
 import java.util.Set;
 
+import vsr.cobalt.models.Property;
 import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.planner.models.Property;
 
 /**
  * A property provision provider which simply delegates every property request to a repository and collects all found

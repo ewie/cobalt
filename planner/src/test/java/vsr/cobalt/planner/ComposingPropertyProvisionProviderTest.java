@@ -10,22 +10,22 @@ package vsr.cobalt.planner;
 import java.util.Set;
 
 import org.testng.annotations.Test;
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Property;
 import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Property;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
+import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
+import static vsr.cobalt.models.makers.PropertyMaker.aProperty;
+import static vsr.cobalt.planner.graph.makers.PropertyProvisionMaker.aPropertyProvision;
 import static vsr.cobalt.testing.Assert.assertSubClass;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
-import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.testing.makers.PropertyMaker.aMinimalProperty;
-import static vsr.cobalt.testing.makers.PropertyMaker.aProperty;
-import static vsr.cobalt.testing.makers.PropertyProvisionMaker.aPropertyProvision;
 
 @Test
 public class ComposingPropertyProvisionProviderTest {

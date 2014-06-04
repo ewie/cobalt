@@ -11,6 +11,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>models</module>
     <module>planner</module>
     <module>testing</module>
     <module>utils</module>

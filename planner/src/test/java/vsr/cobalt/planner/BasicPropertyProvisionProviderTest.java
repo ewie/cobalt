@@ -8,17 +8,17 @@
 package vsr.cobalt.planner;
 
 import org.testng.annotations.Test;
+import vsr.cobalt.models.Property;
 import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.planner.models.Property;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
+import static vsr.cobalt.planner.graph.makers.PropertyProvisionMaker.aPropertyProvision;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
-import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.testing.makers.PropertyMaker.aMinimalProperty;
-import static vsr.cobalt.testing.makers.PropertyProvisionMaker.aPropertyProvision;
 
 @Test
 public class BasicPropertyProvisionProviderTest {

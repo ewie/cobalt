@@ -10,14 +10,14 @@ package vsr.cobalt.planner;
 import java.util.Set;
 
 import org.testng.annotations.Test;
-import vsr.cobalt.planner.models.Task;
+import vsr.cobalt.models.Task;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
+import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
-import static vsr.cobalt.testing.makers.TaskMaker.aMinimalTask;
 
 @Test
 public class GoalTest {

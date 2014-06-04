@@ -14,9 +14,9 @@ import java.util.Set;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.UnmodifiableIterator;
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Widget;
 import vsr.cobalt.planner.graph.Provision;
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Widget;
 import vsr.cobalt.utils.OrderedPowerSetIterator;
 
 /**

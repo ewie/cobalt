@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import vsr.cobalt.planner.models.Action;
+import vsr.cobalt.models.Action;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -19,9 +19,9 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertSame;
+import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.PropertyMaker.aProperty;
 import static vsr.cobalt.testing.Utilities.make;
-import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.testing.makers.PropertyMaker.aProperty;
 
 @Test
 public class ProvisionTest {
@@ -76,7 +76,7 @@ public class ProvisionTest {
   }
 
   @Test
-  public class Equality {
+  public static class Equality {
 
     @Test
     public void returnHashValue() {

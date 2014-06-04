@@ -9,9 +9,9 @@ package vsr.cobalt.planner;
 
 import java.util.Set;
 
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.TaskProvision;
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Task;
 
 /**
  * @author Erik Wienhold

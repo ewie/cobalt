@@ -9,18 +9,18 @@ package vsr.cobalt.planner;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Property;
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Property;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
+import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
+import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.testing.Assert.assertContains;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
-import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.testing.makers.EffectSetMaker.anEffectSet;
-import static vsr.cobalt.testing.makers.PropertyMaker.aMinimalProperty;
-import static vsr.cobalt.testing.makers.PropositionSetMaker.aPropositionSet;
 
 @Test
 public class BasicPrecursorActionProviderTest {

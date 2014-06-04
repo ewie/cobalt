@@ -14,12 +14,12 @@ import java.util.Set;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Property;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Property;
 import vsr.cobalt.utils.ProductSet;
 
 /**

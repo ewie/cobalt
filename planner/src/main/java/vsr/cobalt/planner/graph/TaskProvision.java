@@ -7,8 +7,8 @@
 
 package vsr.cobalt.planner.graph;
 
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Task;
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Task;
 
 /**
  * A task provision specifies how a requested task can be satisfied via a providing action realizing a matching task.

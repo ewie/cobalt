@@ -12,20 +12,20 @@ import java.util.Set;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import org.testng.annotations.Test;
+import vsr.cobalt.models.Action;
 import vsr.cobalt.planner.graph.Provision;
-import vsr.cobalt.planner.models.Action;
 
 import static org.mockito.Matchers.anySetOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.TaskMaker.aTask;
+import static vsr.cobalt.models.makers.WidgetMaker.aWidget;
 import static vsr.cobalt.testing.Assert.assertContainsAll;
 import static vsr.cobalt.testing.Utilities.MOCKS_ABSTRACT_CLASS;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
-import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.testing.makers.TaskMaker.aTask;
-import static vsr.cobalt.testing.makers.WidgetMaker.aWidget;
 
 @Test
 public class ComposingProvisionProviderTest {

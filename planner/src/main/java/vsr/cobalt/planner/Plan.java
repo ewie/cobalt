@@ -11,12 +11,12 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.Level;
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Task;
 
 /**
  * A plan is the result of a planning process. It wraps a graph, resulting from the planning process, containing only

@@ -8,28 +8,28 @@
 package vsr.cobalt.planner;
 
 import org.testng.annotations.Test;
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Property;
+import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.TaskProvision;
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Property;
-import vsr.cobalt.planner.models.Task;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertSame;
+import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
+import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
+import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
+import static vsr.cobalt.models.makers.TaskMaker.aTask;
+import static vsr.cobalt.models.makers.WidgetMaker.aWidget;
+import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
+import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
+import static vsr.cobalt.planner.graph.makers.GraphMaker.aGraph;
+import static vsr.cobalt.planner.graph.makers.GraphMaker.aMinimalGraph;
+import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
+import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aTaskProvision;
 import static vsr.cobalt.testing.Utilities.make;
-import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.testing.makers.ActionProvisionMaker.anActionProvision;
-import static vsr.cobalt.testing.makers.EffectSetMaker.anEffectSet;
-import static vsr.cobalt.testing.makers.ExtensionLevelMaker.anExtensionLevel;
-import static vsr.cobalt.testing.makers.GraphMaker.aGraph;
-import static vsr.cobalt.testing.makers.GraphMaker.aMinimalGraph;
-import static vsr.cobalt.testing.makers.InitialLevelMaker.anInitialLevel;
-import static vsr.cobalt.testing.makers.PropertyMaker.aMinimalProperty;
-import static vsr.cobalt.testing.makers.PropositionSetMaker.aPropositionSet;
-import static vsr.cobalt.testing.makers.TaskMaker.aTask;
-import static vsr.cobalt.testing.makers.TaskProvisionMaker.aTaskProvision;
-import static vsr.cobalt.testing.makers.WidgetMaker.aWidget;
 
 @Test
 public class PlanTest {

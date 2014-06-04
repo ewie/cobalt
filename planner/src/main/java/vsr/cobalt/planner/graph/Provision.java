@@ -9,7 +9,7 @@ package vsr.cobalt.planner.graph;
 
 import java.util.Objects;
 
-import vsr.cobalt.planner.models.Action;
+import vsr.cobalt.models.Action;
 
 /**
  * Base class to represent provisions conforming to the request/offer/provider triple.

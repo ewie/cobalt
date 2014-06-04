@@ -12,10 +12,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
+import vsr.cobalt.models.Action;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
-import vsr.cobalt.planner.models.Action;
 
 /**
  * Checks if an action causes a cyclic dependency by searching a path, via precursor actions and providing actions,

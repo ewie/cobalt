@@ -9,7 +9,7 @@ package vsr.cobalt.planner.graph;
 
 import java.util.Set;
 
-import vsr.cobalt.planner.models.Action;
+import vsr.cobalt.models.Action;
 
 /**
  * A graph level.

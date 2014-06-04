@@ -9,8 +9,8 @@ package vsr.cobalt.planner;
 
 import java.util.Set;
 
+import vsr.cobalt.models.Property;
 import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.planner.models.Property;
 
 /**
  * Provides property provisions for a set of requested properties.

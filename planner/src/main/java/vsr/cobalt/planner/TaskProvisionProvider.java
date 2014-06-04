@@ -9,8 +9,8 @@ package vsr.cobalt.planner;
 
 import java.util.Set;
 
+import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.TaskProvision;
-import vsr.cobalt.planner.models.Task;
 
 /**
  * Provides task provisions for a set of requested tasks.

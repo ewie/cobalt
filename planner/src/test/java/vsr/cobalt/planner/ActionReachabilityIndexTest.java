@@ -8,27 +8,27 @@
 package vsr.cobalt.planner;
 
 import org.testng.annotations.Test;
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Property;
+import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.planner.models.Action;
-import vsr.cobalt.planner.models.Property;
-import vsr.cobalt.planner.models.Task;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
+import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
+import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
+import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
+import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
+import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
+import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
+import static vsr.cobalt.planner.graph.makers.GraphMaker.aGraph;
+import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
+import static vsr.cobalt.planner.graph.makers.PropertyProvisionMaker.aPropertyProvision;
+import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aTaskProvision;
 import static vsr.cobalt.testing.Utilities.make;
-import static vsr.cobalt.testing.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.testing.makers.ActionProvisionMaker.anActionProvision;
-import static vsr.cobalt.testing.makers.EffectSetMaker.anEffectSet;
-import static vsr.cobalt.testing.makers.ExtensionLevelMaker.anExtensionLevel;
-import static vsr.cobalt.testing.makers.GraphMaker.aGraph;
-import static vsr.cobalt.testing.makers.InitialLevelMaker.anInitialLevel;
-import static vsr.cobalt.testing.makers.PropertyMaker.aMinimalProperty;
-import static vsr.cobalt.testing.makers.PropertyProvisionMaker.aPropertyProvision;
-import static vsr.cobalt.testing.makers.PropositionSetMaker.aPropositionSet;
-import static vsr.cobalt.testing.makers.TaskMaker.aMinimalTask;
-import static vsr.cobalt.testing.makers.TaskProvisionMaker.aTaskProvision;
 
 @Test
 public class ActionReachabilityIndexTest {

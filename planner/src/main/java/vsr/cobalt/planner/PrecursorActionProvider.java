@@ -9,7 +9,7 @@ package vsr.cobalt.planner;
 
 import java.util.Set;
 
-import vsr.cobalt.planner.models.Action;
+import vsr.cobalt.models.Action;
 
 /**
  * Provides precursor actions for a requested action.
