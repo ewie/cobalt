@@ -28,6 +28,7 @@ import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
 import static vsr.cobalt.models.makers.TaskMaker.aTask;
 import static vsr.cobalt.models.makers.WidgetMaker.aMinimalWidget;
 import static vsr.cobalt.models.makers.WidgetMaker.aWidget;
+import static vsr.cobalt.testing.Assert.assertEmpty;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
@@ -39,6 +40,32 @@ public class ActionTest {
   public static class Create {
 
     @Test
+    public void preventModificationOfPublishedProperties() {
+      final Widget w = make(aMinimalWidget());
+      final Property p = make(aMinimalProperty());
+      final PropositionSet pre = make(aPropositionSet().withCleared(p));
+      final EffectSet ef = make(anEffectSet().withToFill(p));
+      final Set<Property> pubs = setOf(p);
+      final Action a = Action.create(w, pre, ef, pubs);
+      pubs.add(null);
+      assertNotEquals(a.getPublishedProperties(), pubs);
+    }
+
+    @Test
+    public void preventModificationOfRealizedTasks() {
+      final Widget w = make(aMinimalWidget());
+      final Property p = make(aMinimalProperty());
+      final PropositionSet pre = make(aPropositionSet().withCleared(p));
+      final EffectSet ef = make(anEffectSet().withToFill(p));
+      final Set<Property> pubs = emptySet();
+      final Task t = make(aMinimalTask());
+      final Set<Task> ts = setOf(t);
+      final Action a = Action.create(w, pre, ef, pubs, ts);
+      ts.add(null);
+      assertNotEquals(a.getRealizedTasks(), ts);
+    }
+
+    @Test
     public void derivePostConditionsFromPreConditionsAndEffects() {
       final Widget w = make(aMinimalWidget());
       final Property p = make(aMinimalProperty());
@@ -47,6 +74,39 @@ public class ActionTest {
       final Action a = Action.create(w, pre, ef);
       assertEquals(a.getPostConditions(), ef.createPostConditions(pre));
     }
+
+    @Test
+    public void defaultToEmptyPreConditions() {
+      final Widget w = make(aMinimalWidget());
+      final Action a = Action.create(w);
+      assertEquals(a.getPreConditions(), PropositionSet.empty());
+    }
+
+    @Test
+    public void defaultToEmptyEffects() {
+      final Widget w = make(aMinimalWidget());
+      final Action a = Action.create(w);
+      assertEquals(a.getEffects(), EffectSet.empty());
+    }
+
+    @Test
+    public void defaultToEmptyPublishedProperties() {
+      final Widget w = make(aMinimalWidget());
+      final Action a = Action.create(w);
+      assertEmpty(a.getPublishedProperties());
+    }
+
+    @Test
+    public void defaultToEmptyRealizedTasks() {
+      final Widget w = make(aMinimalWidget());
+      final Action a = Action.create(w);
+      assertEmpty(a.getRealizedTasks());
+    }
+
+  }
+
+  @Test
+  public static class Compose {
 
     @Test(expectedExceptions = IllegalArgumentException.class,
         expectedExceptionsMessageRegExp = "expecting one or more actions")
@@ -68,7 +128,8 @@ public class ActionTest {
     public void createCompositeAction() {
       final Action a1 = make(aMinimalAction());
       final Action a2 = make(aMinimalAction());
-      final Action a4 = Action.compose(a1, a2);
+
+      final Action a3 = Action.compose(a1, a2);
 
       final PropositionSet pre = make(aPropositionSet()
           .withCleared(Sets.union(a1.getPreConditions().getClearedProperties(),
@@ -82,15 +143,15 @@ public class ActionTest {
           .withFilled(Sets.union(a1.getPostConditions().getFilledProperties(),
               a2.getPostConditions().getFilledProperties())));
 
-      assertEquals(a4.getWidget(), a1.getWidget());
+      assertEquals(a3.getWidget(), a1.getWidget());
 
-      assertEquals(a4.getRealizedTasks(),
+      assertEquals(a3.getRealizedTasks(),
           Sets.union(a1.getRealizedTasks(), a2.getRealizedTasks()));
 
-      assertEquals(a4.getPublishedProperties(),
+      assertEquals(a3.getPublishedProperties(),
           Sets.union(a1.getPublishedProperties(), a2.getPublishedProperties()));
-      assertEquals(a4.getPreConditions(), pre);
-      assertEquals(a4.getPostConditions(), post);
+      assertEquals(a3.getPreConditions(), pre);
+      assertEquals(a3.getPostConditions(), post);
     }
 
     @Test
