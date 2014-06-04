@@ -8,7 +8,10 @@
 package vsr.cobalt.planner;
 
 import org.testng.annotations.Test;
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.PublishedProperty;
 import vsr.cobalt.models.Property;
+import vsr.cobalt.models.Repository;
 import vsr.cobalt.planner.graph.PropertyProvision;
 
 import static org.mockito.Mockito.mock;
@@ -28,23 +31,31 @@ public class BasicPropertyProvisionProviderTest {
     final Property p1 = make(aMinimalProperty().withName("p1"));
     final Property p2 = make(aMinimalProperty().withName("p2"));
 
-    final PropertyProvision pp1 = make(aPropertyProvision()
-        .withRequest(p1)
-        .withOffer(p1)
-        .withProvidingAction(aMinimalAction().withPub(p1)));
-
-    final PropertyProvision pp2 = make(aPropertyProvision()
-        .withRequest(p2)
-        .withOffer(p2)
-        .withProvidingAction(aMinimalAction().withPub(p2)));
+    final Action a1 = make(aMinimalAction().withPub(p1));
+    final Action a2 = make(aMinimalAction().withPub(p2));
 
     final Repository r = mock(Repository.class);
-    when(r.findCompatibleProperties(p1)).thenReturn(setOf(pp1));
-    when(r.findCompatibleProperties(p2)).thenReturn(setOf(pp2));
+    when(r.findCompatibleProperties(p1)).thenReturn(setOf(publishedProperty(p1, a1)));
+    when(r.findCompatibleProperties(p2)).thenReturn(setOf(publishedProperty(p2, a2)));
 
     final BasicPropertyProvisionProvider ppp = new BasicPropertyProvisionProvider(r);
 
+
+    final PropertyProvision pp1 = propertyProvision(p1, a1);
+    final PropertyProvision pp2 = propertyProvision(p2, a2);
+
     assertEquals(ppp.getProvisionsFor(setOf(p1, p2)), setOf(pp1, pp2));
+  }
+
+  private static PropertyProvision propertyProvision(final Property p, final Action a) {
+    return make(aPropertyProvision()
+        .withRequest(p)
+        .withOffer(p)
+        .withProvidingAction(a));
+  }
+
+  private static PublishedProperty publishedProperty(final Property p, final Action a) {
+    return new PublishedProperty(p, a);
   }
 
 }

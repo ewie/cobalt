@@ -9,9 +9,11 @@ package vsr.cobalt.planner.graph;
 
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.RealizedTask;
 import vsr.cobalt.models.Task;
 
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
@@ -35,6 +37,18 @@ public class TaskProvisionTest {
       final Action a = make(aMinimalAction());
       final Task t = make(aMinimalTask());
       new TaskProvision(null, t, a);
+    }
+
+    @Test
+    public void createFromRealizedTask() {
+      final Task r = make(aMinimalTask().withIdentifier("t1"));
+      final Task t = make(aMinimalTask().withIdentifier("t2"));
+      final Action a = make(aMinimalAction().withTask(t));
+      final RealizedTask rt = new RealizedTask(t, a);
+      final TaskProvision tp = new TaskProvision(r, rt);
+      assertSame(tp.getRequest(), r);
+      assertSame(tp.getOffer(), rt.getTask());
+      assertSame(tp.getProvidingAction(), rt.getAction());
     }
 
   }

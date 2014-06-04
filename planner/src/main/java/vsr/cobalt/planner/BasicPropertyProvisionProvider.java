@@ -7,10 +7,14 @@
 
 package vsr.cobalt.planner;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import vsr.cobalt.models.Property;
+import vsr.cobalt.models.PublishedProperty;
+import vsr.cobalt.models.Repository;
 import vsr.cobalt.planner.graph.PropertyProvision;
 
 /**
@@ -34,9 +38,22 @@ public class BasicPropertyProvisionProvider implements PropertyProvisionProvider
   public Set<PropertyProvision> getProvisionsFor(final Set<Property> properties) {
     final Set<PropertyProvision> pps = new HashSet<>();
     for (final Property p : properties) {
-      pps.addAll(repository.findCompatibleProperties(p));
+      pps.addAll(createProvisions(p, repository.findCompatibleProperties(p)));
     }
     return pps;
+  }
+
+  private Collection<PropertyProvision> createProvisions(final Property request,
+                                                         final Collection<PublishedProperty> publishedProperties) {
+    final Collection<PropertyProvision> provisions = new ArrayList<>(publishedProperties.size());
+    for (final PublishedProperty pp : publishedProperties) {
+      provisions.add(createProvision(request, pp));
+    }
+    return provisions;
+  }
+
+  private PropertyProvision createProvision(final Property request, final PublishedProperty published) {
+    return new PropertyProvision(request, published.getProperty(), published.getAction());
   }
 
 }

@@ -8,6 +8,9 @@
 package vsr.cobalt.planner;
 
 import org.testng.annotations.Test;
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.RealizedTask;
+import vsr.cobalt.models.Repository;
 import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.TaskProvision;
 
@@ -28,23 +31,30 @@ public class BasicTaskProvisionProviderTest {
     final Task t1 = make(aTask().withIdentifier("t1"));
     final Task t2 = make(aTask().withIdentifier("t2"));
 
-    final TaskProvision tp1 = make(aTaskProvision()
-        .withRequest(t1)
-        .withOffer(t1)
-        .withProvidingAction(aMinimalAction().withTask(t1)));
-
-    final TaskProvision tp2 = make(aTaskProvision()
-        .withRequest(t2)
-        .withOffer(t2)
-        .withProvidingAction(aMinimalAction().withTask(t2)));
+    final Action a1 = make(aMinimalAction().withTask(t1));
+    final Action a2 = make(aMinimalAction().withTask(t2));
 
     final Repository r = mock(Repository.class);
-    when(r.findCompatibleTasks(t1)).thenReturn(setOf(tp1));
-    when(r.findCompatibleTasks(t2)).thenReturn(setOf(tp2));
+    when(r.findCompatibleTasks(t1)).thenReturn(setOf(realizedTask(t1, a1)));
+    when(r.findCompatibleTasks(t2)).thenReturn(setOf(realizedTask(t2, a2)));
 
     final BasicTaskProvisionProvider tpp = new BasicTaskProvisionProvider(r);
 
+    final TaskProvision tp1 = taskProvision(t1, a1);
+    final TaskProvision tp2 = taskProvision(t2, a2);
+
     assertEquals(tpp.getProvisionsFor(setOf(t1, t2)), setOf(tp1, tp2));
+  }
+
+  private static TaskProvision taskProvision(final Task t, final Action a) {
+    return make(aTaskProvision()
+        .withRequest(t)
+        .withOffer(t)
+        .withProvidingAction(a));
+  }
+
+  private static RealizedTask realizedTask(final Task t, final Action a) {
+    return new RealizedTask(t, a);
   }
 
 }

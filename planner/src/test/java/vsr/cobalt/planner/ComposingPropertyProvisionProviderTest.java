@@ -12,18 +12,18 @@ import java.util.Set;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
+import vsr.cobalt.models.PublishedProperty;
+import vsr.cobalt.models.Repository;
 import vsr.cobalt.planner.graph.PropertyProvision;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropertyMaker.aProperty;
 import static vsr.cobalt.planner.graph.makers.PropertyProvisionMaker.aPropertyProvision;
 import static vsr.cobalt.testing.Assert.assertSubClass;
-import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 
@@ -35,19 +35,35 @@ public class ComposingPropertyProvisionProviderTest {
     assertSubClass(ComposingPropertyProvisionProvider.class, ComposingProvisionProvider.class);
   }
 
+  private static PropertyProvision propertyProvision(final Property p, final Action a) {
+    return make(aPropertyProvision()
+        .withRequest(p)
+        .withOffer(p)
+        .withProvidingAction(a));
+  }
+
+  private static PublishedProperty publishedProperty(final Property p, final Action a) {
+    return new PublishedProperty(p, a);
+  }
+
   @Test
   public static class FindProvisionsFor {
 
     @Test
     public void delegateToRepository() {
       final Property p = make(aMinimalProperty());
-      final Set<PropertyProvision> tps = emptySet();
+
+      final Action a = make(aMinimalAction().withPub(p));
+
+      final Set<PublishedProperty> pubs = setOf(publishedProperty(p, a));
+
+      final Set<PropertyProvision> pps = setOf(propertyProvision(p, a));
 
       final Repository r = mock(Repository.class);
-      when(r.findCompatibleProperties(p)).thenReturn(tps);
+      when(r.findCompatibleProperties(p)).thenReturn(pubs);
 
       final ComposingPropertyProvisionProvider ppp = new ComposingPropertyProvisionProvider(r);
-      assertSame(ppp.findProvisionsFor(p), tps);
+      assertEquals(ppp.findProvisionsFor(p), pps);
     }
 
   }

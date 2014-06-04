@@ -7,10 +7,13 @@
 
 package vsr.cobalt.planner;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
+import vsr.cobalt.models.PublishedProperty;
+import vsr.cobalt.models.Repository;
 import vsr.cobalt.planner.graph.PropertyProvision;
 
 /**
@@ -28,7 +31,7 @@ public class ComposingPropertyProvisionProvider
 
   @Override
   protected Set<PropertyProvision> findProvisionsFor(final Property request) {
-    return repository.findCompatibleProperties(request);
+    return createProvisions(request, repository.findCompatibleProperties(request));
   }
 
   @Override
@@ -39,6 +42,20 @@ public class ComposingPropertyProvisionProvider
   @Override
   protected Set<Property> getOffers(final Action action) {
     return action.getPublishedProperties();
+  }
+
+
+  private static Set<PropertyProvision> createProvisions(final Property request,
+                                                         final Set<PublishedProperty> publishedProperties) {
+    final Set<PropertyProvision> provisions = new HashSet<>(publishedProperties.size());
+    for (final PublishedProperty pp : publishedProperties) {
+      provisions.add(createProvision(request, pp));
+    }
+    return provisions;
+  }
+
+  private static PropertyProvision createProvision(final Property request, final PublishedProperty published) {
+    return new PropertyProvision(request, published.getProperty(), published.getAction());
   }
 
 }

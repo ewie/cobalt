@@ -7,9 +7,13 @@
 
 package vsr.cobalt.planner;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import vsr.cobalt.models.RealizedTask;
+import vsr.cobalt.models.Repository;
 import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.TaskProvision;
 
@@ -34,9 +38,22 @@ public class BasicTaskProvisionProvider implements TaskProvisionProvider {
   public Set<TaskProvision> getProvisionsFor(final Set<Task> tasks) {
     final Set<TaskProvision> tps = new HashSet<>();
     for (final Task t : tasks) {
-      tps.addAll(repository.findCompatibleTasks(t));
+      tps.addAll(createProvisions(t, repository.findCompatibleTasks(t)));
     }
     return tps;
+  }
+
+  private static Collection<TaskProvision> createProvisions(final Task request,
+                                                            final Collection<RealizedTask> realizedTasks) {
+    final Collection<TaskProvision> provisions = new ArrayList<>(realizedTasks.size());
+    for (final RealizedTask rt : realizedTasks) {
+      provisions.add(createProvision(request, rt));
+    }
+    return provisions;
+  }
+
+  private static TaskProvision createProvision(final Task request, final RealizedTask realized) {
+    return new TaskProvision(request, realized.getTask(), realized.getAction());
   }
 
 }

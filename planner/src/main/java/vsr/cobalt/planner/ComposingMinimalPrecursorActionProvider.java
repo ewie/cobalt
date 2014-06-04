@@ -13,6 +13,7 @@ import java.util.Set;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PropositionSet;
+import vsr.cobalt.models.Repository;
 import vsr.cobalt.models.Widget;
 import vsr.cobalt.utils.OrderedPowerSetIterator;
 

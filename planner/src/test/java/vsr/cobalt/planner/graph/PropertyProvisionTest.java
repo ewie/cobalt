@@ -10,11 +10,16 @@ package vsr.cobalt.planner.graph;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
+import vsr.cobalt.models.PublishedProperty;
+import vsr.cobalt.models.RealizedTask;
+import vsr.cobalt.models.Task;
 
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
+import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
 import static vsr.cobalt.testing.Assert.assertSubClass;
 import static vsr.cobalt.testing.Utilities.make;
 
@@ -35,6 +40,18 @@ public class PropertyProvisionTest {
       final Action action = make(aMinimalAction());
       final Property property = make(aMinimalProperty());
       new PropertyProvision(null, property, action);
+    }
+
+    @Test
+    public void createFromPublishedProperty() {
+      final Property r = make(aMinimalProperty().withName("p1"));
+      final Property p = make(aMinimalProperty().withName("p2"));
+      final Action a = make(aMinimalAction().withPub(p));
+      final PublishedProperty pub = new PublishedProperty(p, a);
+      final PropertyProvision pp = new PropertyProvision(r, pub);
+      assertSame(pp.getRequest(), r);
+      assertSame(pp.getOffer(), pub.getProperty());
+      assertSame(pp.getProvidingAction(), pub.getAction());
     }
 
   }

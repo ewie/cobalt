@@ -9,6 +9,7 @@ package vsr.cobalt.planner.graph;
 
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
+import vsr.cobalt.models.PublishedProperty;
 
 /**
  * A property provision specifies how a requested property can be satisfied via a providing action offering a matching
@@ -30,6 +31,16 @@ public final class PropertyProvision extends Provision<Property> {
     if (!action.publishes(offer)) {
       throw new IllegalArgumentException("expecting the offered property to be published by providing action");
     }
+  }
+
+  /**
+   * Create a new property provision.
+   *
+   * @param request           the requested property
+   * @param publishedProperty a published property
+   */
+  public PropertyProvision(final Property request, final PublishedProperty publishedProperty) {
+    this(request, publishedProperty.getProperty(), publishedProperty.getAction());
   }
 
   @Override
