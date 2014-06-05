@@ -8,6 +8,7 @@
 package vsr.cobalt.planner.graph.makers;
 
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.RealizedTask;
 import vsr.cobalt.models.Task;
 import vsr.cobalt.models.makers.ActionMaker;
 import vsr.cobalt.models.makers.TaskMaker;
@@ -44,7 +45,7 @@ public class TaskProvisionMaker implements Maker<TaskProvision> {
 
   @Override
   public TaskProvision make() {
-    return new TaskProvision(request.get(), offer.get(), action.get());
+    return new TaskProvision(request.get(), new RealizedTask(offer.get(), action.get()));
   }
 
   public TaskProvisionMaker withRequest(final Maker<Task> maker) {

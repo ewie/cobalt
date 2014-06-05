@@ -7,20 +7,23 @@
 
 package vsr.cobalt.models;
 
-import java.util.Objects;
-
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
-import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
+import static vsr.cobalt.testing.Assert.assertSubClass;
 import static vsr.cobalt.testing.Utilities.make;
 
 @Test
 public class PublishedPropertyTest {
+
+  @Test
+  public void extendsOffer() {
+    assertSubClass(PublishedProperty.class, Offer.class);
+  }
 
   @Test
   public static class New {
@@ -36,82 +39,26 @@ public class PublishedPropertyTest {
   }
 
   @Test
-  public static class Getters {
+  public static class CanEqual {
 
-    private Property p;
-
-    private Action a;
-
-    private PublishedProperty ap;
+    PublishedProperty pp;
 
     @BeforeMethod
     public void setUp() {
-      p = make(aMinimalProperty());
-      a = make(aMinimalAction().withPub(p));
-      ap = new PublishedProperty(p, a);
+      final Property p = make(aMinimalProperty());
+      final Action a = make(aMinimalAction().withPub(p));
+      pp = new PublishedProperty(p, a);
     }
 
     @Test
-    public void getProperty() {
-      assertSame(ap.getProperty(), p);
+    public void returnTrueWhenCalledWithPublishedProperty() {
+      assertTrue(pp.canEqual(pp));
     }
 
     @Test
-    public void getAction() {
-      assertSame(ap.getAction(), a);
-    }
-
-  }
-
-  @Test
-  public static class Equality {
-
-    private Property p;
-
-    private Action a;
-
-    @BeforeMethod
-    public void setUp() {
-      p = make(aMinimalProperty());
-      a = make(aMinimalAction().withPub(p));
-    }
-
-    @Test
-    public void generateHashCodeFromPropertyAndAction() {
-      final PublishedProperty ap = new PublishedProperty(p, a);
-      assertEquals(ap.hashCode(), Objects.hash(p, a));
-    }
-
-    @Test
-    public void notEqualToObjectOfDifferentClass() {
-      final PublishedProperty ap = new PublishedProperty(p, a);
+    public void returnFalseWhenCalledWithNonPublishedProperty() {
       final Object x = new Object();
-      assertNotEquals(ap, x);
-    }
-
-    @Test
-    public void notEqualWhenPropertyDiffers() {
-      final Property p2 = make(aMinimalProperty().withName("p2"));
-      final Action a2 = make(aMinimalAction().withPub(p2));
-      final PublishedProperty ap1 = new PublishedProperty(p, a);
-      final PublishedProperty ap2 = new PublishedProperty(p2, a2);
-      assertNotEquals(ap1, ap2);
-    }
-
-    @Test
-    public void notEqualWhenActionDiffers() {
-      final Property p2 = make(aMinimalProperty().withName("p2"));
-      final Action a2 = make(aMinimalAction().withPub(p, p2));
-      final PublishedProperty ap1 = new PublishedProperty(p, a);
-      final PublishedProperty ap2 = new PublishedProperty(p, a2);
-      assertNotEquals(ap1, ap2);
-    }
-
-    @Test
-    public void equalWhenPropertiesAndActionsEqual() {
-      final PublishedProperty ap1 = new PublishedProperty(p, a);
-      final PublishedProperty ap2 = new PublishedProperty(p, a);
-      assertEquals(ap1, ap2);
+      assertFalse(pp.canEqual(x));
     }
 
   }

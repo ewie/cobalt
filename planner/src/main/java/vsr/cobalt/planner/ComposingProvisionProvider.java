@@ -15,6 +15,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.UnmodifiableIterator;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Offer;
 import vsr.cobalt.models.Widget;
 import vsr.cobalt.planner.graph.Provision;
 import vsr.cobalt.utils.OrderedPowerSetIterator;
@@ -22,12 +23,13 @@ import vsr.cobalt.utils.OrderedPowerSetIterator;
 /**
  * A provision provider which composes providing actions when possible.
  *
- * @param <T> a provision subject type
+ * @param <T> a subject type
+ * @param <O> an offer type with subject type {@link T}
  * @param <P> a provision type with subject type {@link T}
  *
  * @author Erik Wienhold
  */
-abstract class ComposingProvisionProvider<T, P extends Provision<T>> {
+abstract class ComposingProvisionProvider<T, O extends Offer<T>, P extends Provision<T>> {
 
   /**
    * Get provisions matching any given request. The resulting provisions may have composite providing actions.
@@ -39,13 +41,15 @@ abstract class ComposingProvisionProvider<T, P extends Provision<T>> {
   public Set<P> getProvisionsFor(final Set<T> requests) {
     final Set<P> provisions = new HashSet<>();
 
-    // Get matching provisions for each request and add them to the result set.
-    for (final T r : requests) {
-      provisions.addAll(findProvisionsFor(r));
-    }
+    final Index index = new Index();
 
-    // Index the provisions to efficiently create provisions with composite providing actions.
-    final Index index = createIndex(provisions);
+    // Get offers for each request and index them to efficiently create provisions with composite providing actions.
+    for (final T r : requests) {
+      final Set<O> os = getOffersFor(r);
+      for (final O o : os) {
+        index.add(r, o);
+      }
+    }
 
     // Create composite actions and applicable provisions.
     for (final OrderedPowerSetIterator<Action> it : index.actionCombinations) {
@@ -61,37 +65,33 @@ abstract class ComposingProvisionProvider<T, P extends Provision<T>> {
   }
 
   /**
-   * Get provisions matching a single request.
+   * Get offers for a single request.
    *
    * @param request a request
    *
-   * @return a set of matching provisions
+   * @return a set of offers
    */
-  protected abstract Set<P> findProvisionsFor(T request);
+  protected abstract Set<O> getOffersFor(T request);
 
   /**
-   * Create a provision
+   * Create a provision.
    *
    * @param request a request
-   * @param offer   an offer
-   * @param action  an action providing <var>offer</var>
+   * @param subject an offered subject
+   * @param action  an action providing the subject
    *
    * @return a new provision
    */
-  protected abstract P createProvision(T request, T offer, Action action);
+  protected abstract P createProvision(T request, T subject, Action action);
 
   /**
-   * Get offering provided by an action.
+   * Get subjects offered by an action.
    *
    * @param action an action
    *
    * @return a set of offered subjects
    */
-  protected abstract Set<T> getOffers(Action action);
-
-  private Index createIndex(final Set<P> provisions) {
-    return new Index(provisions);
-  }
+  protected abstract Set<T> getOfferedSubjects(Action action);
 
   private class Index {
 
@@ -99,21 +99,33 @@ abstract class ComposingProvisionProvider<T, P extends Provision<T>> {
      * An iterable of action combinations for each widget.
      */
     public final Iterable<OrderedPowerSetIterator<Action>> actionCombinations = new CombinationsIterable();
-    /**
-     * Map requests to matching provisions.
-     */
-    private final SetMultimap<T, P> provisions = HashMultimap.create();
+
     /**
      * Map widgets to their actions.
      */
     private final SetMultimap<Widget, Action> actions = HashMultimap.create();
 
-    public Index(final Set<P> provisions) {
-      for (final P p : provisions) {
-        this.provisions.put(p.getRequest(), p);
-        final Action a = p.getProvidingAction();
-        actions.put(a.getWidget(), a);
-      }
+    /**
+     * Map subjects to their offers.
+     */
+    private final SetMultimap<T, O> subjects2offers = HashMultimap.create();
+
+    /**
+     * Map offers to matching request.
+     */
+    private final SetMultimap<O, T> offers2requests = HashMultimap.create();
+
+    /**
+     * Add a request and matching offer to the index.
+     *
+     * @param request a requested subject
+     * @param offer   a offer for the request
+     */
+    public void add(final T request, final O offer) {
+      final Action a = offer.getAction();
+      actions.put(a.getWidget(), a);
+      subjects2offers.put(offer.getSubject(), offer);
+      offers2requests.put(offer, request);
     }
 
     /**
@@ -124,13 +136,15 @@ abstract class ComposingProvisionProvider<T, P extends Provision<T>> {
      * @return a set of provisions
      */
     public Set<P> createProvisions(final Action action) {
-      final Set<P> pps = new HashSet<>();
-      for (final T r : getOffers(action)) {
-        for (final P p : provisions.get(r)) {
-          pps.add(createProvision(p.getRequest(), r, action));
+      final Set<P> provisions = new HashSet<>();
+      for (final T subject : getOfferedSubjects(action)) {
+        for (final O offer : subjects2offers.get(subject)) {
+          for (final T request : offers2requests.get(offer)) {
+            provisions.add(createProvision(request, offer.getSubject(), action));
+          }
         }
       }
-      return pps;
+      return provisions;
     }
 
     private class CombinationsIterable implements Iterable<OrderedPowerSetIterator<Action>> {

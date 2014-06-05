@@ -7,7 +7,6 @@
 
 package vsr.cobalt.planner;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import vsr.cobalt.models.Action;
@@ -20,7 +19,7 @@ import vsr.cobalt.planner.graph.PropertyProvision;
  * @author Erik Wienhold
  */
 public class ComposingPropertyProvisionProvider
-    extends ComposingProvisionProvider<Property, PropertyProvision>
+    extends ComposingProvisionProvider<Property, PublishedProperty, PropertyProvision>
     implements PropertyProvisionProvider {
 
   private final Repository repository;
@@ -30,32 +29,18 @@ public class ComposingPropertyProvisionProvider
   }
 
   @Override
-  protected Set<PropertyProvision> findProvisionsFor(final Property request) {
-    return createProvisions(request, repository.findCompatibleProperties(request));
+  protected Set<PublishedProperty> getOffersFor(final Property request) {
+    return repository.findCompatibleProperties(request);
   }
 
   @Override
-  protected PropertyProvision createProvision(final Property request, final Property offer, final Action action) {
-    return new PropertyProvision(request, offer, action);
+  protected PropertyProvision createProvision(final Property request, final Property subject, final Action action) {
+    return new PropertyProvision(request, new PublishedProperty(subject, action));
   }
 
   @Override
-  protected Set<Property> getOffers(final Action action) {
+  protected Set<Property> getOfferedSubjects(final Action action) {
     return action.getPublishedProperties();
-  }
-
-
-  private static Set<PropertyProvision> createProvisions(final Property request,
-                                                         final Set<PublishedProperty> publishedProperties) {
-    final Set<PropertyProvision> provisions = new HashSet<>(publishedProperties.size());
-    for (final PublishedProperty pp : publishedProperties) {
-      provisions.add(createProvision(request, pp));
-    }
-    return provisions;
-  }
-
-  private static PropertyProvision createProvision(final Property request, final PublishedProperty published) {
-    return new PropertyProvision(request, published.getProperty(), published.getAction());
   }
 
 }

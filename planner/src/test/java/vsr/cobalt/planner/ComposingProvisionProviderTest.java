@@ -13,6 +13,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Offer;
 import vsr.cobalt.planner.graph.Provision;
 
 import static org.mockito.Matchers.anySetOf;
@@ -38,17 +39,20 @@ public class ComposingProvisionProviderTest {
       final Subject s1 = new Subject();
       final Subject s2 = new Subject();
 
-      final DummyProvision dp1 = provision(s1);
-      final DummyProvision dp2 = provision(s2);
+      final DummyOffer o1 = offer(s1);
+      final DummyOffer o2 = offer(s2);
+
+      final DummyProvision p1 = provision(o1);
+      final DummyProvision p2 = provision(o2);
 
       final DummyComposingProvisionProvider cpp = mock(DummyComposingProvisionProvider.class, MOCKS_ABSTRACT_CLASS);
       when(cpp.getProvisionsFor(anySetOf(Subject.class))).thenCallRealMethod();
-      when(cpp.findProvisionsFor(s1)).thenReturn(setOf(dp1));
-      when(cpp.findProvisionsFor(s2)).thenReturn(setOf(dp2));
+      when(cpp.getOffersFor(s1)).thenReturn(setOf(o1));
+      when(cpp.getOffersFor(s2)).thenReturn(setOf(o2));
 
-      final Set<DummyProvision> tps = cpp.getProvisionsFor(setOf(s1, s2));
+      final Set<DummyProvision> ps = cpp.getProvisionsFor(setOf(s1, s2));
 
-      assertContainsAll(tps, setOf(dp1, dp2));
+      assertContainsAll(ps, setOf(p1, p2));
     }
 
     @Test
@@ -56,21 +60,23 @@ public class ComposingProvisionProviderTest {
       final Subject s1 = new Subject();
       final Subject s2 = new Subject();
 
-      final DummyProvision dp1 = provision(s1, actionWithTask("t1"));
-      final DummyProvision dp2 = provision(s2, actionWithTask("t2"));
+      final DummyOffer o1 = offer(s1, actionWithTask("t1"));
+      final DummyOffer o2 = offer(s2, actionWithTask("t2"));
 
-      final Action a1 = Action.compose(dp1.getProvidingAction(), dp2.getProvidingAction());
+      final Action a = Action.compose(o1.getAction(), o2.getAction());
 
-      final DummyProvision dp3 = provision(s1, a1);
-      final DummyProvision dp4 = provision(s2, a1);
+      final DummyProvision p1 = provision(o1);
+      final DummyProvision p2 = provision(o2);
+      final DummyProvision p3 = provision(s1, a);
+      final DummyProvision p4 = provision(s2, a);
 
       final DummyComposingProvisionProvider cpp = mock(DummyComposingProvisionProvider.class, MOCKS_ABSTRACT_CLASS);
-      when(cpp.findProvisionsFor(s1)).thenReturn(setOf(dp1));
-      when(cpp.findProvisionsFor(s2)).thenReturn(setOf(dp2));
+      when(cpp.getOffersFor(s1)).thenReturn(setOf(o1));
+      when(cpp.getOffersFor(s2)).thenReturn(setOf(o2));
 
-      final Set<DummyProvision> tps = cpp.getProvisionsFor(setOf(s1, s2));
+      final Set<DummyProvision> ps = cpp.getProvisionsFor(setOf(s1, s2));
 
-      assertEquals(tps, setOf(dp1, dp2, dp3, dp4));
+      assertEquals(ps, setOf(p1, p2, p3, p4));
     }
 
     @Test
@@ -78,16 +84,19 @@ public class ComposingProvisionProviderTest {
       final Subject s1 = new Subject();
       final Subject s2 = new Subject();
 
-      final DummyProvision dp1 = provision(s1, actionWithWidget("w1"));
-      final DummyProvision dp2 = provision(s1, actionWithWidget("w2"));
+      final DummyOffer o1 = offer(s1, actionWithWidget("w1"));
+      final DummyOffer o2 = offer(s2, actionWithWidget("w2"));
+
+      final DummyProvision p1 = provision(o1);
+      final DummyProvision p2 = provision(o2);
 
       final DummyComposingProvisionProvider cpp = mock(DummyComposingProvisionProvider.class, MOCKS_ABSTRACT_CLASS);
-      when(cpp.findProvisionsFor(s1)).thenReturn(setOf(dp1));
-      when(cpp.findProvisionsFor(s2)).thenReturn(setOf(dp2));
+      when(cpp.getOffersFor(s1)).thenReturn(setOf(o1));
+      when(cpp.getOffersFor(s2)).thenReturn(setOf(o2));
 
-      final Set<DummyProvision> tps = cpp.getProvisionsFor(setOf(s1, s2));
+      final Set<DummyProvision> ps = cpp.getProvisionsFor(setOf(s1, s2));
 
-      assertEquals(tps, setOf(dp1, dp2));
+      assertEquals(ps, setOf(p1, p2));
     }
 
     private static Action actionWithWidget(final String widgetId) {
@@ -102,12 +111,20 @@ public class ComposingProvisionProviderTest {
               .withIdentifier(taskId)));
     }
 
-    private static DummyProvision provision(final Subject subject) {
-      return new DummyProvision(subject, make(aMinimalAction()));
+    private static DummyOffer offer(final Subject subject, final Action action) {
+      return new DummyOffer(subject, action);
+    }
+
+    private static DummyOffer offer(final Subject subject) {
+      return offer(subject, make(aMinimalAction()));
+    }
+
+    private static DummyProvision provision(final DummyOffer offer) {
+      return new DummyProvision(offer);
     }
 
     private static DummyProvision provision(final Subject subject, final Action action) {
-      return new DummyProvision(subject, action);
+      return provision(offer(subject, action));
     }
 
   }
@@ -116,9 +133,18 @@ public class ComposingProvisionProviderTest {
    * The subjects of {@link DummyProvision}.
    */
   private static class Subject {
+
+    private static int ID = 0;
+
+    private final int id;
+
+    public Subject() {
+      id = ++ID;
+    }
+
   }
 
-  private static class DummyProvision extends Provision<Subject> {
+  private static class DummyOffer extends Offer<Subject> {
 
     /**
      * Associates actions with their offered subjects.
@@ -126,14 +152,10 @@ public class ComposingProvisionProviderTest {
      */
     private static final SetMultimap<Action, Subject> offers = HashMultimap.create();
 
-    public DummyProvision(final Subject request, final Subject offer, final Action action) {
-      super(request, offer, action);
-      // remember the offer for this action
-      offers.put(action, offer);
-    }
-
-    public DummyProvision(final Subject subject, final Action action) {
-      this(subject, subject, action);
+    public DummyOffer(final Subject subject, final Action action) {
+      super(subject, action);
+      // remember the offered subject for the given action
+      offers.put(action, subject);
     }
 
     public static Set<Subject> getOffers(final Action action) {
@@ -147,17 +169,34 @@ public class ComposingProvisionProviderTest {
 
   }
 
-  private static abstract class DummyComposingProvisionProvider
-      extends ComposingProvisionProvider<Subject, DummyProvision> {
+  private static class DummyProvision extends Provision<Subject> {
 
-    @Override
-    protected DummyProvision createProvision(final Subject request, final Subject offer, final Action action) {
-      return new DummyProvision(request, offer, action);
+    public DummyProvision(final Subject request, final DummyOffer offer) {
+      super(request, offer);
+    }
+
+    public DummyProvision(final DummyOffer offer) {
+      super(offer);
     }
 
     @Override
-    protected Set<Subject> getOffers(final Action action) {
-      return DummyProvision.getOffers(action);
+    protected boolean canEqual(final Object other) {
+      return true;
+    }
+
+  }
+
+  private static abstract class DummyComposingProvisionProvider
+      extends ComposingProvisionProvider<Subject, DummyOffer, DummyProvision> {
+
+    @Override
+    protected DummyProvision createProvision(final Subject request, final Subject subject, final Action action) {
+      return new DummyProvision(request, new DummyOffer(subject, action));
+    }
+
+    @Override
+    protected Set<Subject> getOfferedSubjects(final Action action) {
+      return DummyOffer.getOffers(action);
     }
 
   }

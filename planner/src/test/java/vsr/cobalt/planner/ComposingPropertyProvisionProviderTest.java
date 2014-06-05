@@ -35,19 +35,12 @@ public class ComposingPropertyProvisionProviderTest {
     assertSubClass(ComposingPropertyProvisionProvider.class, ComposingProvisionProvider.class);
   }
 
-  private static PropertyProvision propertyProvision(final Property p, final Action a) {
-    return make(aPropertyProvision()
-        .withRequest(p)
-        .withOffer(p)
-        .withProvidingAction(a));
-  }
-
   private static PublishedProperty publishedProperty(final Property p, final Action a) {
     return new PublishedProperty(p, a);
   }
 
   @Test
-  public static class FindProvisionsFor {
+  public static class GetOffersFor {
 
     @Test
     public void delegateToRepository() {
@@ -57,13 +50,11 @@ public class ComposingPropertyProvisionProviderTest {
 
       final Set<PublishedProperty> pubs = setOf(publishedProperty(p, a));
 
-      final Set<PropertyProvision> pps = setOf(propertyProvision(p, a));
-
       final Repository r = mock(Repository.class);
       when(r.findCompatibleProperties(p)).thenReturn(pubs);
 
       final ComposingPropertyProvisionProvider ppp = new ComposingPropertyProvisionProvider(r);
-      assertEquals(ppp.findProvisionsFor(p), pps);
+      assertEquals(ppp.getOffersFor(p), pubs);
     }
 
   }
@@ -76,18 +67,18 @@ public class ComposingPropertyProvisionProviderTest {
       final Property p1 = make(aProperty().withName("p1"));
       final Property p2 = make(aProperty().withName("p2"));
       final Action a = make(aMinimalAction().withPub(p2));
-      final PropertyProvision tp = make(aPropertyProvision()
+      final PropertyProvision pp = make(aPropertyProvision()
           .withRequest(p1)
           .withOffer(p2)
           .withProvidingAction(a));
       final ComposingPropertyProvisionProvider ppp = new ComposingPropertyProvisionProvider(null);
-      assertEquals(ppp.createProvision(p1, p2, a), tp);
+      assertEquals(ppp.createProvision(p1, p2, a), pp);
     }
 
   }
 
   @Test
-  public static class GetOffers {
+  public static class GetOfferedSubjects {
 
     @Test
     public void returnPublishedProperties() {
@@ -95,7 +86,7 @@ public class ComposingPropertyProvisionProviderTest {
       final Property p2 = make(aProperty().withName("p2"));
       final Action a = make(aMinimalAction().withPub(p1, p2));
       final ComposingPropertyProvisionProvider ppp = new ComposingPropertyProvisionProvider(null);
-      assertEquals(ppp.getOffers(a), setOf(p1, p2));
+      assertEquals(ppp.getOfferedSubjects(a), setOf(p1, p2));
     }
 
   }

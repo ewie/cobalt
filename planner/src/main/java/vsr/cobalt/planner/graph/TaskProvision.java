@@ -7,7 +7,6 @@
 
 package vsr.cobalt.planner.graph;
 
-import vsr.cobalt.models.Action;
 import vsr.cobalt.models.RealizedTask;
 import vsr.cobalt.models.Task;
 
@@ -21,25 +20,20 @@ public final class TaskProvision extends Provision<Task> {
   /**
    * Create a new task provision.
    *
-   * @param request the requested task
-   * @param offer   the provided task matching the requested task
-   * @param action  the action realizing the providing task
+   * @param request a requested task
+   * @param offer   a realized task
    */
-  public TaskProvision(final Task request, final Task offer, final Action action) {
-    super(request, offer, action);
-    if (!action.realizes(offer)) {
-      throw new IllegalArgumentException("expecting the offered task to be realized by providing action");
-    }
+  public TaskProvision(final Task request, final RealizedTask offer) {
+    super(request, offer);
   }
 
   /**
-   * Create a new task provision.
+   * Create a new task provision using the offered task as requested task.
    *
-   * @param request      the requested task
-   * @param realizedTask a realized task
+   * @param offer a realized task
    */
-  public TaskProvision(final Task request, final RealizedTask realizedTask) {
-    this(request, realizedTask.getTask(), realizedTask.getAction());
+  public TaskProvision(final RealizedTask offer) {
+    super(offer);
   }
 
   @Override

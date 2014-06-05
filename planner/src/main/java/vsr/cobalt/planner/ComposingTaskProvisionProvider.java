@@ -7,7 +7,6 @@
 
 package vsr.cobalt.planner;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import vsr.cobalt.models.Action;
@@ -20,7 +19,7 @@ import vsr.cobalt.planner.graph.TaskProvision;
  * @author Erik Wienhold
  */
 public class ComposingTaskProvisionProvider
-    extends ComposingProvisionProvider<Task, TaskProvision>
+    extends ComposingProvisionProvider<Task, RealizedTask, TaskProvision>
     implements TaskProvisionProvider {
 
   private final Repository repository;
@@ -30,31 +29,18 @@ public class ComposingTaskProvisionProvider
   }
 
   @Override
-  protected Set<TaskProvision> findProvisionsFor(final Task task) {
-    return createProvisions(task, repository.findCompatibleTasks(task));
+  protected Set<RealizedTask> getOffersFor(final Task task) {
+    return repository.findCompatibleTasks(task);
   }
 
   @Override
-  protected TaskProvision createProvision(final Task request, final Task offer, final Action action) {
-    return new TaskProvision(request, offer, action);
+  protected TaskProvision createProvision(final Task request, final Task subject, final Action action) {
+    return new TaskProvision(request, new RealizedTask(subject, action));
   }
 
   @Override
-  protected Set<Task> getOffers(final Action action) {
+  protected Set<Task> getOfferedSubjects(final Action action) {
     return action.getRealizedTasks();
-  }
-
-  private static Set<TaskProvision> createProvisions(final Task request, final Set<RealizedTask>
-      realizedTasks) {
-    final Set<TaskProvision> provisions = new HashSet<>(realizedTasks.size());
-    for (final RealizedTask rt : realizedTasks) {
-      provisions.add(createProvision(request, rt));
-    }
-    return provisions;
-  }
-
-  private static TaskProvision createProvision(final Task request, final RealizedTask realized) {
-    return new TaskProvision(request, realized.getTask(), realized.getAction());
   }
 
 }

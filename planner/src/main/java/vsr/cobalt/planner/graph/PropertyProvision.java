@@ -7,7 +7,6 @@
 
 package vsr.cobalt.planner.graph;
 
-import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PublishedProperty;
 
@@ -22,25 +21,20 @@ public final class PropertyProvision extends Provision<Property> {
   /**
    * Create a new property provision.
    *
-   * @param request the requested property
-   * @param offer   the provided property matching the requested property
-   * @param action  the action publishing the provided property
+   * @param request a requested property
+   * @param offer   a published property
    */
-  public PropertyProvision(final Property request, final Property offer, final Action action) {
-    super(request, offer, action);
-    if (!action.publishes(offer)) {
-      throw new IllegalArgumentException("expecting the offered property to be published by providing action");
-    }
+  public PropertyProvision(final Property request, final PublishedProperty offer) {
+    super(request, offer);
   }
 
   /**
-   * Create a new property provision.
+   * Create a new property provision using the offered property as requested property.
    *
-   * @param request           the requested property
-   * @param publishedProperty a published property
+   * @param offer a published property
    */
-  public PropertyProvision(final Property request, final PublishedProperty publishedProperty) {
-    this(request, publishedProperty.getProperty(), publishedProperty.getAction());
+  public PropertyProvision(final PublishedProperty offer) {
+    super(offer);
   }
 
   @Override

@@ -47,13 +47,9 @@ public class BasicTaskProvisionProvider implements TaskProvisionProvider {
                                                             final Collection<RealizedTask> realizedTasks) {
     final Collection<TaskProvision> provisions = new ArrayList<>(realizedTasks.size());
     for (final RealizedTask rt : realizedTasks) {
-      provisions.add(createProvision(request, rt));
+      provisions.add(new TaskProvision(request, rt));
     }
     return provisions;
-  }
-
-  private static TaskProvision createProvision(final Task request, final RealizedTask realized) {
-    return new TaskProvision(request, realized.getTask(), realized.getAction());
   }
 
 }

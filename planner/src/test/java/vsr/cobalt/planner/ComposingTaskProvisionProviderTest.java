@@ -35,19 +35,12 @@ public class ComposingTaskProvisionProviderTest {
     assertSubClass(ComposingTaskProvisionProvider.class, ComposingProvisionProvider.class);
   }
 
-  private static TaskProvision taskProvision(final Task t, final Action a) {
-    return make(aTaskProvision()
-        .withRequest(t)
-        .withOffer(t)
-        .withProvidingAction(a));
-  }
-
   private static RealizedTask realizedTask(final Task t, final Action a) {
     return new RealizedTask(t, a);
   }
 
   @Test
-  public static class FindProvisionsFor {
+  public static class GetOffersFor {
 
     @Test
     public void delegateToRepository() {
@@ -57,13 +50,11 @@ public class ComposingTaskProvisionProviderTest {
 
       final Set<RealizedTask> rts = setOf(realizedTask(t, a));
 
-      final Set<TaskProvision> tps = setOf(taskProvision(t, a));
-
       final Repository r = mock(Repository.class);
       when(r.findCompatibleTasks(t)).thenReturn(rts);
 
       final ComposingTaskProvisionProvider tpp = new ComposingTaskProvisionProvider(r);
-      assertEquals(tpp.findProvisionsFor(t), tps);
+      assertEquals(tpp.getOffersFor(t), rts);
     }
 
   }
@@ -87,7 +78,7 @@ public class ComposingTaskProvisionProviderTest {
   }
 
   @Test
-  public static class GetOffers {
+  public static class GetOfferedSubjects {
 
     @Test
     public void returnRealizedTasks() {
@@ -95,7 +86,7 @@ public class ComposingTaskProvisionProviderTest {
       final Task t2 = make(aTask().withIdentifier("t2"));
       final Action a = make(aMinimalAction().withTask(t1, t2));
       final ComposingTaskProvisionProvider tpp = new ComposingTaskProvisionProvider(null);
-      assertEquals(tpp.getOffers(a), setOf(t1, t2));
+      assertEquals(tpp.getOfferedSubjects(a), setOf(t1, t2));
     }
 
   }

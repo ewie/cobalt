@@ -7,6 +7,7 @@
 
 package vsr.cobalt.planner.graph;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.RealizedTask;
@@ -24,31 +25,20 @@ import static vsr.cobalt.testing.Utilities.make;
 public class TaskProvisionTest {
 
   @Test
-  public void extendsIdentifiable() {
+  public void extendsProvision() {
     assertSubClass(TaskProvision.class, Provision.class);
   }
 
   @Test
   public static class New {
 
-    @Test(expectedExceptions = IllegalArgumentException.class,
-        expectedExceptionsMessageRegExp = "expecting the offered task to be realized by providing action")
-    public void rejectOfferedTaskWhenNotRealizedByGivenAction() {
-      final Action a = make(aMinimalAction());
-      final Task t = make(aMinimalTask());
-      new TaskProvision(null, t, a);
-    }
-
     @Test
-    public void createFromRealizedTask() {
-      final Task r = make(aMinimalTask().withIdentifier("t1"));
-      final Task t = make(aMinimalTask().withIdentifier("t2"));
+    public void useOfferedSubjectAsRequestWhenCreatedFromOffer() {
+      final Task t = make(aMinimalTask());
       final Action a = make(aMinimalAction().withTask(t));
       final RealizedTask rt = new RealizedTask(t, a);
-      final TaskProvision tp = new TaskProvision(r, rt);
-      assertSame(tp.getRequest(), r);
-      assertSame(tp.getOffer(), rt.getTask());
-      assertSame(tp.getProvidingAction(), rt.getAction());
+      final TaskProvision tp = new TaskProvision(rt);
+      assertSame(tp.getRequest(), rt.getSubject());
     }
 
   }
@@ -56,20 +46,23 @@ public class TaskProvisionTest {
   @Test
   public static class CanEqual {
 
-    @Test
-    public void returnTrueWhenCalledWithTaskProvision() {
+    private TaskProvision tp;
+
+    @BeforeMethod
+    public void setUp() {
       final Task t = make(aMinimalTask());
       final Action a = make(aMinimalAction().withTask(t));
-      final TaskProvision tp1 = new TaskProvision(null, t, a);
-      final TaskProvision tp2 = new TaskProvision(null, t, a);
-      assertTrue(tp1.canEqual(tp2));
+      final RealizedTask rt = new RealizedTask(t, a);
+      tp = new TaskProvision(t, rt);
+    }
+
+    @Test
+    public void returnTrueWhenCalledWithTaskProvision() {
+      assertTrue(tp.canEqual(tp));
     }
 
     @Test
     public void returnFalseWhenCalledWithNonTaskProvision() {
-      final Task t = make(aMinimalTask());
-      final Action a = make(aMinimalAction().withTask(t));
-      final TaskProvision tp = new TaskProvision(null, t, a);
       final Object x = new Object();
       assertFalse(tp.canEqual(x));
     }

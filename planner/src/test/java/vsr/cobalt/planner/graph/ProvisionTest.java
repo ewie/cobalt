@@ -12,6 +12,7 @@ import java.util.Objects;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Offer;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -20,7 +21,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertSame;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.models.makers.PropertyMaker.aProperty;
 import static vsr.cobalt.testing.Utilities.make;
 
 @Test
@@ -28,8 +28,21 @@ public class ProvisionTest {
 
   private static class DummyProvision extends Provision<Object> {
 
-    public DummyProvision(final Object request, final Object offer, final Action providingAction) {
-      super(request, offer, providingAction);
+    public DummyProvision(final Object request, final DummyOffer offer) {
+      super(request, offer);
+    }
+
+    @Override
+    public boolean canEqual(final Object other) {
+      return true;
+    }
+
+  }
+
+  private static class DummyOffer extends Offer<Object> {
+
+    public DummyOffer(final Object subject, final Action action) {
+      super(subject, action);
     }
 
     @Override
@@ -44,23 +57,21 @@ public class ProvisionTest {
 
     private DummyProvision provision;
 
-    private Object offer;
-
     private Object request;
 
-    private Action action;
+    private DummyOffer offer;
 
     @BeforeMethod
     public void setUp() {
-      offer = new Object();
       request = new Object();
-      action = make(aMinimalAction());
-      provision = new DummyProvision(request, offer, action);
+      offer = mock(DummyOffer.class);
+      when(offer.getAction()).thenReturn(make(aMinimalAction()));
+      provision = new DummyProvision(request, offer);
     }
 
     @Test
-    public void getProvidingAction() {
-      assertSame(provision.getProvidingAction(), action);
+    public void getRequest() {
+      assertSame(provision.getRequest(), request);
     }
 
     @Test
@@ -69,8 +80,8 @@ public class ProvisionTest {
     }
 
     @Test
-    public void getRequest() {
-      assertSame(provision.getRequest(), request);
+    public void getProvidingAction() {
+      assertSame(provision.getProvidingAction(), offer.getAction());
     }
 
   }
@@ -79,93 +90,73 @@ public class ProvisionTest {
   public static class Equality {
 
     @Test
-    public void returnHashValue() {
-      final Action a = make(aMinimalAction());
-      final Object o = new Object();
+    public void calculateHashCodeFromRequestAndOffer() {
       final Object r = new Object();
-      final DummyProvision provision = new DummyProvision(r, o, a);
-      assertEquals(provision.hashCode(), Objects.hash(a, o, r));
+
+      final DummyOffer o = new DummyOffer(null, null);
+
+      final DummyProvision provision = new DummyProvision(r, o);
+      assertEquals(provision.hashCode(), Objects.hash(r, o));
     }
 
     @Test
-    public void returnTrueWhenEqual() {
-      final Action a = make(aMinimalAction());
-      final Object o = new Object();
+    public void equalWhenRequestsAndOffersEqual() {
       final Object r = new Object();
 
-      final DummyProvision p1 = new DummyProvision(r, o, a);
-      final DummyProvision p2 = new DummyProvision(r, o, a);
+      final DummyOffer o = new DummyOffer(null, null);
+
+      final DummyProvision p1 = new DummyProvision(r, o);
+      final DummyProvision p2 = new DummyProvision(r, o);
 
       assertEquals(p1, p2);
     }
 
     @Test
-    public void returnFalseWhenOtherIsNoProvision() {
-      final Action a = make(aMinimalAction());
-      final Object o = new Object();
+    public void notEqualToObjectOfDifferentClass() {
       final Object r = new Object();
+      final DummyOffer o = mock(DummyOffer.class);
 
-      final DummyProvision p = new DummyProvision(r, o, a);
+      final DummyProvision p = new DummyProvision(r, o);
       final Object x = new Object();
 
       assertNotEquals(p, x);
     }
 
     @Test
-    public void returnFalseWhenOtherCanEqualReturnsFalse() {
-      final Action a = make(aMinimalAction());
-      final Object o = new Object();
+    public void notEqualWhenOtherCanEqualReturnsFalse() {
       final Object r = new Object();
+      final DummyOffer o = mock(DummyOffer.class);
 
-      final DummyProvision p1 = new DummyProvision(r, o, a);
+      final DummyProvision p1 = new DummyProvision(r, o);
+
       final DummyProvision p2 = mock(DummyProvision.class);
-
       when(p2.canEqual(any())).thenReturn(false);
 
       assertNotEquals(p1, p2);
     }
 
     @Test
-    public void returnFalseWhenActionDiffers() {
-      final Action a1 = make(aMinimalAction()
-          .withPub(aProperty().withName("p")));
-
-      final Action a2 = make(aMinimalAction()
-          .withPub(aProperty().withName("q")));
-
-      final Object o = new Object();
-      final Object r = new Object();
-
-      final DummyProvision p1 = new DummyProvision(r, o, a1);
-      final DummyProvision p2 = new DummyProvision(r, o, a2);
-
-      assertNotEquals(p1, p2);
-    }
-
-    @Test
-    public void returnFalseWhenOfferDiffers() {
-      final Action a = make(aMinimalAction());
-
-      final Object o1 = new Object();
-      final Object o2 = new Object();
-      final Object r = new Object();
-
-      final DummyProvision p1 = new DummyProvision(r, o1, a);
-      final DummyProvision p2 = new DummyProvision(r, o2, a);
-
-      assertNotEquals(p1, p2);
-    }
-
-    @Test
-    public void returnFalseWhenRequestDiffers() {
-      final Action a = make(aMinimalAction());
-
-      final Object o = new Object();
+    public void notEqualWhenRequestDiffers() {
       final Object r1 = new Object();
       final Object r2 = new Object();
 
-      final DummyProvision p1 = new DummyProvision(r1, o, a);
-      final DummyProvision p2 = new DummyProvision(r2, o, a);
+      final DummyOffer o = mock(DummyOffer.class);
+
+      final DummyProvision p1 = new DummyProvision(r1, o);
+      final DummyProvision p2 = new DummyProvision(r2, o);
+
+      assertNotEquals(p1, p2);
+    }
+
+    @Test
+    public void notEqualWhenOfferDiffers() {
+      final Object r = new Object();
+
+      final DummyOffer o1 = new DummyOffer(new Object(), null);
+      final DummyOffer o2 = new DummyOffer(new Object(), null);
+
+      final DummyProvision p1 = new DummyProvision(r, o1);
+      final DummyProvision p2 = new DummyProvision(r, o2);
 
       assertNotEquals(p1, p2);
     }

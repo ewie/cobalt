@@ -47,13 +47,9 @@ public class BasicPropertyProvisionProvider implements PropertyProvisionProvider
                                                          final Collection<PublishedProperty> publishedProperties) {
     final Collection<PropertyProvision> provisions = new ArrayList<>(publishedProperties.size());
     for (final PublishedProperty pp : publishedProperties) {
-      provisions.add(createProvision(request, pp));
+      provisions.add(new PropertyProvision(request, pp));
     }
     return provisions;
-  }
-
-  private PropertyProvision createProvision(final Property request, final PublishedProperty published) {
-    return new PropertyProvision(request, published.getProperty(), published.getAction());
   }
 
 }

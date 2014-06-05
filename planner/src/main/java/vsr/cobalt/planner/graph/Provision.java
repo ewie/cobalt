@@ -10,6 +10,7 @@ package vsr.cobalt.planner.graph;
 import java.util.Objects;
 
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Offer;
 
 /**
  * Base class to represent provisions conforming to the request/offer/provider triple.
@@ -20,19 +21,24 @@ public abstract class Provision<T> {
 
   private final T request;
 
-  private final T offer;
-
-  private final Action action;
+  private final Offer<T> offer;
 
   /**
    * @param request a requested subject
-   * @param offer   a subject offered by a providing action
-   * @param action  a providing action
+   * @param offer   an offer
    */
-  public Provision(final T request, final T offer, final Action action) {
+  public Provision(final T request, final Offer<T> offer) {
     this.request = request;
     this.offer = offer;
-    this.action = action;
+  }
+
+  /**
+   * Create a provision using the offered subject as request.
+   *
+   * @param offer an offer
+   */
+  public Provision(final Offer<T> offer) {
+    this(offer.getSubject(), offer);
   }
 
   /**
@@ -45,7 +51,7 @@ public abstract class Provision<T> {
   /**
    * @return the object offered by the providing action
    */
-  public T getOffer() {
+  public Offer<T> getOffer() {
     return offer;
   }
 
@@ -53,14 +59,14 @@ public abstract class Provision<T> {
    * @return the providing action
    */
   public Action getProvidingAction() {
-    return action;
+    return offer.getAction();
   }
 
   protected abstract boolean canEqual(Object other);
 
   @Override
   public int hashCode() {
-    return Objects.hash(action, offer, request);
+    return Objects.hash(request, offer);
   }
 
   @Override
@@ -72,9 +78,8 @@ public abstract class Provision<T> {
 
   private boolean equals(final Provision<?> other) {
     return other.canEqual(this)
-        && Objects.equals(action, other.action)
-        && Objects.equals(offer, other.offer)
-        && Objects.equals(request, other.request);
+        && Objects.equals(request, other.request)
+        && Objects.equals(offer, other.offer);
   }
 
 }

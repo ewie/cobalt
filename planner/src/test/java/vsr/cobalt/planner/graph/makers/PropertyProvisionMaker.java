@@ -9,6 +9,7 @@ package vsr.cobalt.planner.graph.makers;
 
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
+import vsr.cobalt.models.PublishedProperty;
 import vsr.cobalt.models.makers.ActionMaker;
 import vsr.cobalt.models.makers.PropertyMaker;
 import vsr.cobalt.planner.graph.PropertyProvision;
@@ -44,7 +45,7 @@ public class PropertyProvisionMaker implements Maker<PropertyProvision> {
 
   @Override
   public PropertyProvision make() {
-    return new PropertyProvision(request.get(), offer.get(), action.get());
+    return new PropertyProvision(request.get(), new PublishedProperty(offer.get(), action.get()));
   }
 
   public PropertyProvisionMaker withRequest(final Maker<Property> maker) {
