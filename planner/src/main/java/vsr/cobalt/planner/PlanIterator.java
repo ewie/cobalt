@@ -59,8 +59,7 @@ public class PlanIterator extends ProbingIterator<Plan> {
    * <p/>
    * Because the plan extraction usually happens after each graph extension, the constraining of the graph depth allows
    * to ignore plans which have been extracted before, when the plan iterator had been used with a less extended
-   * version
-   * of the given graph.
+   * version of the given graph.
    *
    * @param graph    a graph to examine
    * @param minDepth the minimum graph depth for a plan
@@ -88,7 +87,7 @@ public class PlanIterator extends ProbingIterator<Plan> {
    * @param minDepth the minimum graph depth for a plan
    */
   public PlanIterator(final Graph graph, final int minDepth) {
-    this(graph, minDepth, graph.getExtensionDepth() + 1);
+    this(graph, minDepth, graph.getDepth());
   }
 
   /**

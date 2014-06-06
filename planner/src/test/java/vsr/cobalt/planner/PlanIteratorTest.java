@@ -69,7 +69,7 @@ public class PlanIteratorTest {
     public void defaultToMaxDepthEqualsGraphDepth() {
       final Graph g = make(aMinimalGraph());
       final PlanIterator pi = new PlanIterator(g, 1);
-      assertEquals(pi.getMinDepth(), g.getExtensionDepth() + 1);
+      assertEquals(pi.getMaxDepth(), g.getDepth());
     }
 
   }

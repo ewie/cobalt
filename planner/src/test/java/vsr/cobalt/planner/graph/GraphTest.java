@@ -192,7 +192,41 @@ public class GraphTest {
   }
 
   @Test
-  public static class InitialGraph {
+  public static class GetDepth {
+
+    @Test
+    public void returnExtensionDepthPlusOne() {
+      final Task t = make(aMinimalTask());
+
+      final Property p = make(aMinimalProperty());
+
+      final Action a1 = make(aMinimalAction()
+          .withTask(t)
+          .withPre(aPropositionSet()
+              .withCleared(p)));
+
+      final Action a2 = make(aMinimalAction()
+          .withEffects(anEffectSet()
+              .withToClear(p)));
+
+      final Graph g = make(aGraph()
+          .withInitialLevel(anInitialLevel()
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a1)))
+          .withExtensionLevel(anExtensionLevel()
+              .withProvision(anActionProvision()
+                  .withRequest(a1)
+                  .withPrecursor(a2))));
+
+      assertEquals(g.getDepth(), g.getExtensionDepth() + 1);
+    }
+
+  }
+
+  @Test
+  public static class AnInitialGraph {
 
     private static final InitialLevel initialLevel = make(aMinimalInitialLevel());
 
@@ -319,7 +353,7 @@ public class GraphTest {
   }
 
   @Test
-  public static class ExtendedGraph {
+  public static class AnExtendedGraph {
 
     private static final Graph graph;
 

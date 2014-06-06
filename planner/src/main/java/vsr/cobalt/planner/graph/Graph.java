@@ -74,6 +74,13 @@ public abstract class Graph {
   }
 
   /**
+   * @return the number of levels
+   */
+  public int getDepth() {
+    return 1 + getExtensionDepth();
+  }
+
+  /**
    * @return true when the graph is extended, false otherwise
    */
   public abstract boolean isExtended();
@@ -241,7 +248,7 @@ public abstract class Graph {
       }
       this.graph = graph;
       this.extensionLevel = extensionLevel;
-      extensionDepth = graph.getExtensionDepth() + 1;
+      extensionDepth = graph.getDepth();
       hashCode = Objects.hash(graph, extensionLevel);
     }
 
