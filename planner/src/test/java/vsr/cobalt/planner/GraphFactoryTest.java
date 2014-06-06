@@ -10,6 +10,7 @@ package vsr.cobalt.planner;
 import java.util.Set;
 
 import org.testng.annotations.Test;
+import vsr.cobalt.models.Mashup;
 import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
@@ -19,12 +20,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.MashupMaker.aMashup;
+import static vsr.cobalt.models.makers.MashupMaker.aMinimalMashup;
 import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
 import static vsr.cobalt.models.makers.TaskMaker.aTask;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
 import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aTaskProvision;
-import static vsr.cobalt.planner.makers.GoalMaker.aGoal;
-import static vsr.cobalt.planner.makers.GoalMaker.aMinimalGoal;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
@@ -36,57 +37,57 @@ public class GraphFactoryTest {
   public static class CreateGraph {
 
     @Test(expectedExceptions = PlanningException.class,
-        expectedExceptionsMessageRegExp = "cannot realize all goal tasks")
+        expectedExceptionsMessageRegExp = "cannot realize all mashup tasks")
     public void rejectWhenNoTaskCannotBeRealized() throws Exception {
-      final Goal g = make(aMinimalGoal());
+      final Mashup m = make(aMinimalMashup());
 
-      final GraphFactory gf = new GraphFactory(taskProvider(g));
-      gf.createGraph(g);
+      final GraphFactory gf = new GraphFactory(taskProvider(m));
+      gf.createGraph(m);
     }
 
     @Test(expectedExceptions = PlanningException.class,
-        expectedExceptionsMessageRegExp = "cannot realize all goal tasks")
+        expectedExceptionsMessageRegExp = "cannot realize all mashup tasks")
     public void rejectWhenSomeTaskCannotBeRealized() throws Exception {
       final Task t1 = make(aTask().withIdentifier("t1"));
       final Task t2 = make(aTask().withIdentifier("t2"));
 
-      final Goal g = make(aGoal().withTask(t1, t2));
+      final Mashup m = make(aMashup().withTask(t1, t2));
 
       final TaskProvision tp = make(aTaskProvision()
           .withRequest(t1)
           .withOffer(t1)
           .withProvidingAction(aMinimalAction().withTask(t1)));
 
-      final GraphFactory gf = new GraphFactory(taskProvider(g, setOf(tp)));
-      gf.createGraph(g);
+      final GraphFactory gf = new GraphFactory(taskProvider(m, setOf(tp)));
+      gf.createGraph(m);
     }
 
     @Test
     public void createInitialGraphWhenAllGoalTasksCanBeRealized() throws Exception {
       final Task t = make(aMinimalTask());
-      final Goal g = make(aGoal().withTask(t));
+      final Mashup m = make(aMashup().withTask(t));
 
       final TaskProvision tp = make(aTaskProvision()
           .withRequest(t)
           .withOffer(t)
           .withProvidingAction(aMinimalAction().withTask(t)));
 
-      final GraphFactory gf = new GraphFactory(taskProvider(g, setOf(tp)));
-      final Graph ig = gf.createGraph(g);
+      final GraphFactory gf = new GraphFactory(taskProvider(m, setOf(tp)));
+      final Graph ig = gf.createGraph(m);
 
       final InitialLevel il = make(anInitialLevel().withTaskProvision(tp));
 
       assertEquals(ig.getLastLevel(), il);
     }
 
-    private static TaskProvisionProvider taskProvider(final Goal g, final Set<TaskProvision> tps) {
+    private static TaskProvisionProvider taskProvider(final Mashup m, final Set<TaskProvision> tps) {
       final TaskProvisionProvider tp = mock(TaskProvisionProvider.class);
-      when(tp.getProvisionsFor(g.getTasks())).thenReturn(tps);
+      when(tp.getProvisionsFor(m.getTasks())).thenReturn(tps);
       return tp;
     }
 
-    private static TaskProvisionProvider taskProvider(final Goal g) {
-      return taskProvider(g, emptySet(TaskProvision.class));
+    private static TaskProvisionProvider taskProvider(final Mashup m) {
+      return taskProvider(m, emptySet(TaskProvision.class));
     }
 
   }

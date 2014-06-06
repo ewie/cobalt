@@ -5,12 +5,11 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner;
+package vsr.cobalt.models;
 
 import java.util.Set;
 
 import org.testng.annotations.Test;
-import vsr.cobalt.models.Task;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
@@ -20,7 +19,7 @@ import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 
 @Test
-public class GoalTest {
+public class MashupTest {
 
   @Test
   public static class New {
@@ -28,16 +27,16 @@ public class GoalTest {
     @Test(expectedExceptions = IllegalArgumentException.class,
         expectedExceptionsMessageRegExp = "expecting one or more tasks")
     public void rejectEmptySetOfTasks() {
-      new Goal(emptySet(Task.class));
+      new Mashup(emptySet(Task.class));
     }
 
     @Test
     public void preventModificationOfTaskProvisions() {
       final Task t = make(aMinimalTask());
       final Set<Task> ts = setOf(t);
-      final Goal g = new Goal(ts);
+      final Mashup m = new Mashup(ts);
       ts.add(null);
-      assertNotEquals(g.getTasks(), ts);
+      assertNotEquals(m.getTasks(), ts);
     }
 
   }
@@ -49,8 +48,8 @@ public class GoalTest {
     public void returnTheTasks() {
       final Task t = make(aMinimalTask());
       final Set<Task> ts = setOf(t);
-      final Goal g = new Goal(ts);
-      assertEquals(g.getTasks(), ts);
+      final Mashup m = new Mashup(ts);
+      assertEquals(m.getTasks(), ts);
     }
 
   }

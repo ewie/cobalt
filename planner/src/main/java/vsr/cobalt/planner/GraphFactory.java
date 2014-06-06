@@ -10,13 +10,14 @@ package vsr.cobalt.planner;
 import java.util.HashSet;
 import java.util.Set;
 
+import vsr.cobalt.models.Mashup;
 import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.TaskProvision;
 
 /**
- * A graph factory creates an initial graph from a goal.
+ * A graph factory creates an initial graph from a mashup description.
  *
  * @author Erik Wienhold
  */
@@ -32,21 +33,21 @@ public class GraphFactory {
   }
 
   /**
-   * Create an initial graph from a given goal.
+   * Create an initial graph from a given mashup description.
    *
-   * @param goal a goal
+   * @param mashup a mashup description
    *
    * @return a new initial graph
    *
    * @throws PlanningException when the goal cannot be fully satisfied
    */
-  public Graph createGraph(final Goal goal) throws PlanningException {
-    final Set<Task> ts = goal.getTasks();
+  public Graph createGraph(final Mashup mashup) throws PlanningException {
+    final Set<Task> ts = mashup.getTasks();
 
     final Set<TaskProvision> tps = taskProvisionProvider.getProvisionsFor(ts);
 
     if (tps.isEmpty() || !satisfyAllTasks(tps, ts)) {
-      throw new PlanningException("cannot realize all goal tasks");
+      throw new PlanningException("cannot realize all mashup tasks");
     }
 
     return Graph.create(new InitialLevel(tps));

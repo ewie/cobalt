@@ -5,10 +5,10 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner.makers;
+package vsr.cobalt.models.makers;
 
+import vsr.cobalt.models.Mashup;
 import vsr.cobalt.models.Task;
-import vsr.cobalt.planner.Goal;
 import vsr.cobalt.testing.maker.CollectionValue;
 import vsr.cobalt.testing.maker.Maker;
 
@@ -17,29 +17,29 @@ import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
 /**
  * @author Erik Wienhold
  */
-public class GoalMaker implements Maker<Goal> {
+public class MashupMaker implements Maker<Mashup> {
 
   private final CollectionValue<Task> tasks = new CollectionValue<>();
 
-  public static GoalMaker aGoal() {
-    return new GoalMaker();
+  public static MashupMaker aMashup() {
+    return new MashupMaker();
   }
 
-  public static GoalMaker aMinimalGoal() {
-    return aGoal().withTask(aMinimalTask());
+  public static MashupMaker aMinimalMashup() {
+    return aMashup().withTask(aMinimalTask());
   }
 
   @Override
-  public Goal make() {
-    return new Goal(tasks.asSet());
+  public Mashup make() {
+    return new Mashup(tasks.asSet());
   }
 
-  public GoalMaker withTask(final Maker<Task> maker) {
+  public MashupMaker withTask(final Maker<Task> maker) {
     tasks.add(maker);
     return this;
   }
 
-  public GoalMaker withTask(final Task... tasks) {
+  public MashupMaker withTask(final Task... tasks) {
     this.tasks.addValues(tasks);
     return this;
   }
