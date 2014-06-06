@@ -8,4 +8,4 @@
 /**
  * @author Erik Wienhold
  */
-package vsr.cobalt.models;
+package vsr.cobalt.testing.maker;
