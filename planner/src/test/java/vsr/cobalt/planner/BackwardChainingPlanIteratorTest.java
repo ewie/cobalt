@@ -20,6 +20,7 @@ import vsr.cobalt.utils.ProbingIterator;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertSame;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
@@ -36,11 +37,11 @@ import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 
 @Test
-public class PlanIteratorTest {
+public class BackwardChainingPlanIteratorTest {
 
   @Test
   public void extendsBufferedIterator() {
-    assertSubClass(PlanIterator.class, ProbingIterator.class);
+    assertSubClass(BackwardChainingPlanIterator.class, ProbingIterator.class);
   }
 
   @Test
@@ -50,25 +51,25 @@ public class PlanIteratorTest {
         expectedExceptionsMessageRegExp = "expecting minDepth >= 1")
     public void rejectMinDepthWhenLessThanOne() {
       final Graph g = make(aMinimalGraph());
-      new PlanIterator(g, 0, 1);
+      new BackwardChainingPlanIterator(g, 0, 1);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class,
         expectedExceptionsMessageRegExp = "expecting minDepth <= maxDepth")
     public void rejectMinDepthWhenGreaterThanMaxDepth() {
       final Graph g = make(aMinimalGraph());
-      new PlanIterator(g, 2, 1);
+      new BackwardChainingPlanIterator(g, 2, 1);
     }
 
     public void defaultToMinDepthEqualsOne() {
       final Graph g = make(aMinimalGraph());
-      final PlanIterator pi = new PlanIterator(g);
+      final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g);
       assertEquals(pi.getMinDepth(), 1);
     }
 
     public void defaultToMaxDepthEqualsGraphDepth() {
       final Graph g = make(aMinimalGraph());
-      final PlanIterator pi = new PlanIterator(g, 1);
+      final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g, 1);
       assertEquals(pi.getMaxDepth(), g.getDepth());
     }
 
@@ -78,17 +79,24 @@ public class PlanIteratorTest {
   public static class Getters {
 
     @Test
+    public void getGraph() {
+      final Graph g = make(aMinimalGraph());
+      final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g, 1, 1);
+      assertSame(pi.getGraph(), g);
+    }
+
+    @Test
     public void getMinDepth() {
       final Graph g = make(aMinimalGraph());
-      final PlanIterator pi = new PlanIterator(g, 1, 1);
+      final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g, 1, 1);
       assertEquals(pi.getMinDepth(), 1);
     }
 
     @Test
     public void getMaxDepth() {
       final Graph g = make(aMinimalGraph());
-      final PlanIterator pi = new PlanIterator(g, 1, 1);
-      assertEquals(pi.getMaxDepth(), 1);
+      final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g, 1, 2);
+      assertEquals(pi.getMaxDepth(), 2);
     }
 
   }
@@ -100,7 +108,7 @@ public class PlanIteratorTest {
     public void returnNullWhenThereAreNoMorePlans() {
       final Graph g = make(aMinimalGraph());
 
-      final PlanIterator pi = new PlanIterator(g);
+      final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g);
 
       pi.probeNextValue();
       assertNull(pi.probeNextValue());
@@ -137,7 +145,7 @@ public class PlanIteratorTest {
           .withInitialLevel(anInitialLevel()
               .withTaskProvision(tp2)));
 
-      final PlanIterator pi = new PlanIterator(g);
+      final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g);
 
       final Set<Plan> xps = setOf(new Plan(g1), new Plan(g2));
       final Set<Plan> ps = setOf();
@@ -185,7 +193,7 @@ public class PlanIteratorTest {
           .withExtensionLevel(anExtensionLevel().withProvision(ap1))
           .withExtensionLevel(anExtensionLevel().withProvision(ap2)));
 
-      final PlanIterator pi = new PlanIterator(g);
+      final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g);
 
       final Set<Plan> xps = setOf(new Plan(g));
       final Set<Plan> ps = setOf();
@@ -246,7 +254,7 @@ public class PlanIteratorTest {
           .withExtensionLevel(anExtensionLevel().withProvision(ap1))
           .withExtensionLevel(anExtensionLevel().withProvision(ap3)));
 
-      final PlanIterator pi = new PlanIterator(g1);
+      final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g1);
 
       final Set<Plan> xps = setOf(new Plan(g2));
       final Set<Plan> ps = setOf();
@@ -294,7 +302,7 @@ public class PlanIteratorTest {
           .withInitialLevel(anInitialLevel().withTaskProvision(tp1))
           .withExtensionLevel(anExtensionLevel().withProvision(ap)));
 
-      final PlanIterator pi = new PlanIterator(g1, 2, 2);
+      final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g1, 2, 2);
 
       final Set<Plan> xps = setOf(new Plan(g2));
       final Set<Plan> ps = setOf();
@@ -331,7 +339,7 @@ public class PlanIteratorTest {
           .withInitialLevel(anInitialLevel().withTaskProvision(tp))
           .withExtensionLevel(anExtensionLevel().withProvision(ap)));
 
-      final PlanIterator pi = new PlanIterator(g, 1, 1);
+      final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g, 1, 1);
 
       assertNull(pi.probeNextValue());
     }

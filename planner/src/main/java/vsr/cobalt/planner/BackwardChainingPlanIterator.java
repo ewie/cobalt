@@ -27,11 +27,11 @@ import vsr.cobalt.utils.ProductSet;
 import vsr.cobalt.utils.ProductSetIterator;
 
 /**
- * Iterates over all plans available in a graph.
+ * Iterates over all plans available in a graph using backward chaining.
  *
  * @author Erik Wienhold
  */
-public class PlanIterator extends ProbingIterator<Plan> {
+class BackwardChainingPlanIterator extends ProbingIterator<Plan> {
 
   /**
    * The graph potentially containing plans.
@@ -65,7 +65,7 @@ public class PlanIterator extends ProbingIterator<Plan> {
    * @param minDepth the minimum graph depth for a plan
    * @param maxDepth the maximum graph depth for a plan
    */
-  public PlanIterator(final Graph graph, final int minDepth, final int maxDepth) {
+  public BackwardChainingPlanIterator(final Graph graph, final int minDepth, final int maxDepth) {
     if (minDepth < 1) {
       throw new IllegalArgumentException("expecting minDepth >= 1");
     }
@@ -86,7 +86,7 @@ public class PlanIterator extends ProbingIterator<Plan> {
    * @param graph    a graph to examine
    * @param minDepth the minimum graph depth for a plan
    */
-  public PlanIterator(final Graph graph, final int minDepth) {
+  public BackwardChainingPlanIterator(final Graph graph, final int minDepth) {
     this(graph, minDepth, graph.getDepth());
   }
 
@@ -95,19 +95,26 @@ public class PlanIterator extends ProbingIterator<Plan> {
    *
    * @param graph a graph to examine
    */
-  public PlanIterator(final Graph graph) {
+  public BackwardChainingPlanIterator(final Graph graph) {
     this(graph, 1);
   }
 
   /**
-   * @return the minimum graph depth
+   * @return the graph
+   */
+  public Graph getGraph() {
+    return graph;
+  }
+
+  /**
+   * @return the minimum plan depth
    */
   public int getMinDepth() {
     return minDepth;
   }
 
   /**
-   * @return the maximum graph depth
+   * @return the maximum plan depth
    */
   public int getMaxDepth() {
     return maxDepth;
