@@ -35,6 +35,7 @@ import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvi
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.aMinimalExtensionLevel;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aGraph;
+import static vsr.cobalt.planner.graph.makers.GraphMaker.aMinimalGraph;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.aMinimalInitialLevel;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
 import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aMinimalTaskProvision;
@@ -221,6 +222,38 @@ public class GraphTest {
                   .withPrecursor(a2))));
 
       assertEquals(g.getDepth(), g.getExtensionDepth() + 1);
+    }
+
+  }
+
+  @Test
+  public static class IsSatisfied {
+
+    @Test
+    public void returnFalseWhenAnyActionOfTheLastLevelIsNotEnabled() {
+      final Task t = make(aMinimalTask());
+
+      final Property p = make(aMinimalProperty());
+
+      final Action a = make(aMinimalAction()
+          .withTask(t)
+          .withPre(aPropositionSet()
+              .withCleared(p)));
+
+      final Graph g = make(aGraph()
+          .withInitialLevel(anInitialLevel()
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a))));
+
+      assertFalse(g.isSatisfied());
+    }
+
+    @Test
+    public void returnTrueWhenAllActionsOfTheLastLevelAreEnabled() {
+      final Graph g = make(aMinimalGraph());
+      assertTrue(g.isSatisfied());
     }
 
   }

@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.UnmodifiableIterator;
+import vsr.cobalt.models.Action;
 
 import static java.util.Arrays.asList;
 
@@ -78,6 +79,20 @@ public abstract class Graph {
    */
   public int getDepth() {
     return 1 + getExtensionDepth();
+  }
+
+  /**
+   * Test if this graph is satisfied, i.e. no actions of the last level has unsatisfied pre-conditions.
+   *
+   * @return true when satisfied, false otherwise
+   */
+  public boolean isSatisfied() {
+    for (final Action a : getLastLevel().getRequiredActions()) {
+      if (!a.isEnabled()) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
