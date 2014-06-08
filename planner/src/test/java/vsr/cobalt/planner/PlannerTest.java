@@ -25,7 +25,6 @@ import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertFalse;
@@ -234,8 +233,8 @@ public class PlannerTest {
 
       p.advance();
 
-      verify(gx, times(1)).extendGraph(GRAPHS.get(0));
-      verify(gx, times(1)).extendGraph(GRAPHS.get(1));
+      verify(gx).extendGraph(GRAPHS.get(0));
+      verify(gx).extendGraph(GRAPHS.get(1));
     }
 
     @Test
@@ -249,7 +248,7 @@ public class PlannerTest {
 
       p.advance();
 
-      verify(px, times(1)).extractPlans(GRAPHS.get(2), 1);
+      verify(px).extractPlans(GRAPHS.get(2), 1);
     }
 
     @Test
@@ -267,8 +266,8 @@ public class PlannerTest {
       p.advance();
       p.advance();
 
-      verify(px, times(1)).extractPlans(GRAPHS.get(0), 1);
-      verify(px, times(1)).extractPlans(GRAPHS.get(1), 2);
+      verify(px).extractPlans(GRAPHS.get(0), 1);
+      verify(px).extractPlans(GRAPHS.get(1), 2);
     }
 
     @Test
@@ -286,8 +285,8 @@ public class PlannerTest {
       p.advance();
       p.advance();
 
-      verify(px, times(1)).extractPlans(GRAPHS.get(0), 1);
-      verify(px, times(1)).extractPlans(GRAPHS.get(1), 2);
+      verify(px).extractPlans(GRAPHS.get(0), 1);
+      verify(px).extractPlans(GRAPHS.get(1), 2);
     }
 
     @Test
@@ -312,8 +311,8 @@ public class PlannerTest {
 
       p.advance();
 
-      verify(pc, times(1)).collect(p1);
-      verify(pc, times(1)).collect(p2);
+      verify(pc).collect(p1);
+      verify(pc).collect(p2);
     }
 
     @Test
