@@ -14,6 +14,8 @@ import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.PropertyProvision;
+import vsr.cobalt.planner.providers.PrecursorActionProvider;
+import vsr.cobalt.planner.providers.PropertyProvisionProvider;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anySetOf;

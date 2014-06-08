@@ -5,8 +5,9 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner;
+package vsr.cobalt.planner.extractors;
 
+import vsr.cobalt.planner.PlanExtractor;
 import vsr.cobalt.planner.graph.Graph;
 
 /**

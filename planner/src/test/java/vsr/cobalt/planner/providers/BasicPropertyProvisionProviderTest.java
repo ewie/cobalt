@@ -5,12 +5,12 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner;
+package vsr.cobalt.planner.providers;
 
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
-import vsr.cobalt.models.PublishedProperty;
 import vsr.cobalt.models.Property;
+import vsr.cobalt.models.PublishedProperty;
 import vsr.cobalt.models.Repository;
 import vsr.cobalt.planner.graph.PropertyProvision;
 

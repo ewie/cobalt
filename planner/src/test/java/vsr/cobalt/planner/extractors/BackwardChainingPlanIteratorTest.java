@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner;
+package vsr.cobalt.planner.extractors;
 
 import java.util.Set;
 
@@ -13,6 +13,7 @@ import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.Task;
+import vsr.cobalt.planner.Plan;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.TaskProvision;

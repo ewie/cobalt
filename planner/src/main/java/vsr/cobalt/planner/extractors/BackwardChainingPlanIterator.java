@@ -5,7 +5,7 @@
 * Licensed under the BSD 3-Clause License.
 */
 
-package vsr.cobalt.planner;
+package vsr.cobalt.planner.extractors;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -16,6 +16,7 @@ import java.util.Set;
 
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Task;
+import vsr.cobalt.planner.Plan;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;

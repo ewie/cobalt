@@ -15,6 +15,7 @@ import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.TaskProvision;
+import vsr.cobalt.planner.providers.TaskProvisionProvider;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

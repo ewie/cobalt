@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner;
+package vsr.cobalt.planner.providers;
 
 import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.TaskProvision;

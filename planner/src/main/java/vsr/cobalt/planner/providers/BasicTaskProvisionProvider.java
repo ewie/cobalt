@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner;
+package vsr.cobalt.planner.providers;
 
 import java.util.ArrayList;
 import java.util.Collection;
