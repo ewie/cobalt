@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.UnmodifiableIterator;
 import vsr.cobalt.models.Action;
@@ -96,6 +97,16 @@ public abstract class Graph {
   }
 
   /**
+   * Get the sequence of levels in reverse extension order, i.e. start with the most recent extension level and finish
+   * with the initial level.
+   *
+   * @return the sequence of levels in reverse order
+   */
+  public Iterable<Level> getLevels() {
+    return Iterables.concat(getExtensionLevels(), ImmutableList.of(getInitialLevel()));
+  }
+
+  /**
    * @return true when the graph is extended, false otherwise
    */
   public abstract boolean isExtended();
@@ -137,9 +148,9 @@ public abstract class Graph {
   public abstract ExtensionLevel getExtensionLevel(final int index);
 
   /**
-   * Get the sequence of extension levels in extension order, i.e. start with the most recent extension level.
+   * Get the sequence of extension levels in reverse extension order, i.e. start with the most recent extension level.
    *
-   * @return the sequence of extension levels
+   * @return the sequence of extension levels in reverse order
    */
   public abstract Iterable<ExtensionLevel> getExtensionLevels();
 

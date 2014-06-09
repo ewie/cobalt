@@ -7,10 +7,12 @@
 
 package vsr.cobalt.planner.graph;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
 import com.google.common.collect.Iterables;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
@@ -254,6 +256,56 @@ public class GraphTest {
     public void returnTrueWhenAllActionsOfTheLastLevelAreEnabled() {
       final Graph g = make(aMinimalGraph());
       assertTrue(g.isSatisfied());
+    }
+
+  }
+
+  @Test
+  public static class GetLevels {
+
+    private Graph graph;
+
+    @BeforeMethod
+    public void setUp() {
+      final Task t = make(aMinimalTask());
+
+      final Property p = make(aMinimalProperty());
+
+      final Action a1 = make(aMinimalAction()
+          .withTask(t)
+          .withPre(aPropositionSet()
+              .withCleared(p)));
+
+      final Action a2 = make(aMinimalAction()
+          .withEffects(anEffectSet()
+              .withToClear(p)));
+
+      graph = make(aGraph()
+          .withInitialLevel(anInitialLevel()
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a1)))
+          .withExtensionLevel(anExtensionLevel()
+              .withProvision(anActionProvision()
+                  .withRequest(a1)
+                  .withPrecursor(a2))));
+    }
+
+    @Test
+    public void includeExtensionLevels() {
+      final Iterator<Level> ls = graph.getLevels().iterator();
+      for (final ExtensionLevel xl : graph.getExtensionLevels()) {
+        assertEquals(ls.next(), xl);
+      }
+    }
+
+    @Test
+    public void includeInitialLevel() {
+      final Iterator<Level> ls = graph.getLevels().iterator();
+      // consume the extension level
+      ls.next();
+      assertEquals(ls.next(), graph.getInitialLevel());
     }
 
   }
