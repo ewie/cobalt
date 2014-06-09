@@ -10,9 +10,9 @@ package vsr.cobalt.planner.collectors;
 import java.util.PriorityQueue;
 
 import vsr.cobalt.planner.Plan;
-import vsr.cobalt.planner.rating.PlanRater;
-import vsr.cobalt.planner.rating.RatedPlan;
-import vsr.cobalt.planner.rating.Rating;
+import vsr.cobalt.planner.collectors.rating.PlanRater;
+import vsr.cobalt.planner.collectors.rating.RatedPlan;
+import vsr.cobalt.planner.collectors.rating.Rating;
 
 /**
  * A queue-based plan collector which queues collected plans according to the natural order of their rating.

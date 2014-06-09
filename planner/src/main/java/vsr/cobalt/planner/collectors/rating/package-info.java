@@ -8,4 +8,4 @@
 /**
  * @author Erik Wienhold
  */
-package vsr.cobalt.planner.rating;
+package vsr.cobalt.planner.collectors.rating;

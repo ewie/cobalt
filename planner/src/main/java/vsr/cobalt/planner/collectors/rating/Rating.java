@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner.rating;
+package vsr.cobalt.planner.collectors.rating;
 
 /**
  * Represents a rating based on a signed integer value.
