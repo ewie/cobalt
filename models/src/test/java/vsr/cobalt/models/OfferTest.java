@@ -51,7 +51,7 @@ public class OfferTest {
     public void setUp() {
       subject = new Object();
       action = make(aMinimalAction());
-      offer = new DummyOffer( subject, action);
+      offer = new DummyOffer(subject, action);
     }
 
     @Test

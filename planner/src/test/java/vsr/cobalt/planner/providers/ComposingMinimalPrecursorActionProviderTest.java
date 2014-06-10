@@ -15,7 +15,6 @@ import vsr.cobalt.models.Repository;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
@@ -63,7 +62,7 @@ public class ComposingMinimalPrecursorActionProviderTest {
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p)));
+          .withEffects(aPropositionSet().withCleared(p)));
 
       final Repository r = repository(a1, a2);
 
@@ -97,10 +96,10 @@ public class ComposingMinimalPrecursorActionProviderTest {
           .withPre(aPropositionSet().withCleared(p1, p2)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1)));
+          .withEffects(aPropositionSet().withCleared(p1)));
 
       final Action a3 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p2)));
+          .withEffects(aPropositionSet().withCleared(p2)));
 
       final Repository r = repository(a1, a2, a3);
 
@@ -120,7 +119,7 @@ public class ComposingMinimalPrecursorActionProviderTest {
           .withPre(aPropositionSet().withCleared(p1, p2)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1)));
+          .withEffects(aPropositionSet().withCleared(p1)));
 
       final Repository r = repository(a1, a2);
 
@@ -141,7 +140,7 @@ public class ComposingMinimalPrecursorActionProviderTest {
           .withPre(aPropositionSet().withCleared(p1, p2)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1)));
+          .withEffects(aPropositionSet().withCleared(p1)));
 
       final Repository r = repository(a1, a2);
 
@@ -162,12 +161,12 @@ public class ComposingMinimalPrecursorActionProviderTest {
 
       // mutex with a3 because of pre-condition
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1))
+          .withEffects(aPropositionSet().withCleared(p1))
           .withPre(aPropositionSet().withCleared(p2)));
 
       // mutex with a2 because of pre-condition
       final Action a3 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p2))
+          .withEffects(aPropositionSet().withCleared(p2))
           .withPre(aPropositionSet().withFilled(p2)));
 
       final Repository r = repository(a1, a2, a3);
@@ -189,10 +188,10 @@ public class ComposingMinimalPrecursorActionProviderTest {
           .withPre(aPropositionSet().withCleared(p1, p2)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1)));
+          .withEffects(aPropositionSet().withCleared(p1)));
 
       final Action a3 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p2, p3)));
+          .withEffects(aPropositionSet().withCleared(p2, p3)));
 
       final Repository r = repository(a1, a2, a3);
 

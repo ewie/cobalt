@@ -21,7 +21,6 @@ import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.models.makers.InteractionMaker.aMinimalInteraction;
 import static vsr.cobalt.models.makers.InteractionMaker.anInteraction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
@@ -46,7 +45,7 @@ public class ActionTest {
       final Widget w = make(aMinimalWidget());
       final Property p = make(aMinimalProperty());
       final PropositionSet pre = make(aPropositionSet().withCleared(p));
-      final EffectSet ef = make(anEffectSet().withToFill(p));
+      final PropositionSet ef = make(aPropositionSet().withFilled(p));
       final Set<Property> pubs = setOf(p);
       final Action a = Action.create(w, pre, ef, pubs);
       pubs.add(null);
@@ -58,7 +57,7 @@ public class ActionTest {
       final Widget w = make(aMinimalWidget());
       final Property p = make(aMinimalProperty());
       final PropositionSet pre = make(aPropositionSet().withCleared(p));
-      final EffectSet ef = make(anEffectSet().withToFill(p));
+      final PropositionSet ef = make(aPropositionSet().withFilled(p));
       final Set<Property> pubs = emptySet();
       final Task t = make(aMinimalTask());
       final Set<Task> ts = setOf(t);
@@ -72,7 +71,7 @@ public class ActionTest {
       final Widget w = make(aMinimalWidget());
       final Property p = make(aMinimalProperty());
       final PropositionSet pre = make(aPropositionSet().withCleared(p));
-      final EffectSet ef = make(anEffectSet().withToFill(p));
+      final PropositionSet ef = make(aPropositionSet().withFilled(p));
       final Set<Property> pubs = emptySet();
       final Set<Task> ts = emptySet();
       final Interaction i = make(aMinimalInteraction());
@@ -87,7 +86,7 @@ public class ActionTest {
       final Widget w = make(aMinimalWidget());
       final Property p = make(aMinimalProperty());
       final PropositionSet pre = make(aPropositionSet().withCleared(p));
-      final EffectSet ef = make(anEffectSet().withToFill(p));
+      final PropositionSet ef = make(aPropositionSet().withFilled(p));
       final Action a = Action.create(w, pre, ef);
       assertEquals(a.getPostConditions(), ef.createPostConditions(pre));
     }
@@ -103,7 +102,7 @@ public class ActionTest {
     public void defaultToEmptyEffects() {
       final Widget w = make(aMinimalWidget());
       final Action a = Action.create(w);
-      assertEquals(a.getEffects(), EffectSet.empty());
+      assertEquals(a.getEffects(), PropositionSet.empty());
     }
 
     @Test
@@ -220,7 +219,7 @@ public class ActionTest {
 
       final Action a = make(aMinimalAction()
           .withPre(aPropositionSet().withCleared(p))
-          .withEffects(anEffectSet().withToFill(p)));
+          .withEffects(aPropositionSet().withFilled(p)));
 
       assertTrue(Action.isComposable(asList(a)));
     }
@@ -231,11 +230,11 @@ public class ActionTest {
 
       final Action a1 = make(aMinimalAction()
           .withPre(aPropositionSet().withCleared(p))
-          .withEffects(anEffectSet().withToFill(p)));
+          .withEffects(aPropositionSet().withFilled(p)));
 
       final Action a2 = make(aMinimalAction()
           .withPre(aPropositionSet().withCleared(p))
-          .withEffects(anEffectSet().withToFill(p)));
+          .withEffects(aPropositionSet().withFilled(p)));
 
       assertTrue(Action.isComposable(asList(a1, a2)));
     }
@@ -258,7 +257,7 @@ public class ActionTest {
 
       final Action a2 = make(aMinimalAction()
           .withPre(aPropositionSet().withFilled(p))
-          .withEffects(anEffectSet().withToClear(p)));
+          .withEffects(aPropositionSet().withCleared(p)));
 
       assertFalse(Action.isComposable(asList(a1, a2)));
       assertFalse(Action.isComposable(asList(a2, a1)));
@@ -269,10 +268,10 @@ public class ActionTest {
       final Property p = make(aMinimalProperty());
 
       final Action a1 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p)));
+          .withEffects(aPropositionSet().withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToFill(p)));
+          .withEffects(aPropositionSet().withFilled(p)));
 
       assertFalse(Action.isComposable(asList(a1, a2)));
       assertFalse(Action.isComposable(asList(a2, a1)));
@@ -283,11 +282,11 @@ public class ActionTest {
       final Property p = make(aMinimalProperty().withName("p"));
 
       final Action a1 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToFill(p)));
+          .withEffects(aPropositionSet().withFilled(p)));
 
       final Action a2 = make(aMinimalAction()
           .withPre(aPropositionSet().withCleared(p))
-          .withEffects(anEffectSet().withToFill(p)));
+          .withEffects(aPropositionSet().withFilled(p)));
 
       assertFalse(Action.isComposable(asList(a1, a2)));
       assertFalse(Action.isComposable(asList(a2, a1)));
@@ -304,7 +303,7 @@ public class ActionTest {
 
     private PropositionSet pre;
 
-    private EffectSet effects;
+    private PropositionSet effects;
 
     private Set<Property> published;
 
@@ -317,7 +316,7 @@ public class ActionTest {
       final Property p = make(aMinimalProperty());
       widget = make(aMinimalWidget());
       pre = make(aPropositionSet().withCleared(p));
-      effects = make(anEffectSet().withToFill(p));
+      effects = make(aPropositionSet().withFilled(p));
       published = setOf(make(aMinimalProperty()));
       tasks = setOf(make(aMinimalTask()));
       interactions = setOf(make(aMinimalInteraction()));
@@ -499,8 +498,8 @@ public class ActionTest {
     @Test
     public void returnFalseWhenPreAndPostConditionsDiffer() {
       final Action a = make(aMinimalAction()
-          .withEffects(anEffectSet()
-              .withToClear(aMinimalProperty())));
+          .withEffects(aPropositionSet()
+              .withCleared(aMinimalProperty())));
       assertFalse(a.isMaintenance());
     }
 
@@ -582,7 +581,7 @@ public class ActionTest {
       final Property p = make(aMinimalProperty());
 
       final Action source = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p)));
+          .withEffects(aPropositionSet().withCleared(p)));
 
       final Action target = make(aMinimalAction()
           .withPre(aPropositionSet().withCleared(p)));
@@ -649,8 +648,8 @@ public class ActionTest {
               .withFilled(p1)));
 
       final Action precursor = make(aMinimalAction()
-          .withEffects(anEffectSet()
-              .withToClear(p1, p2)));
+          .withEffects(aPropositionSet()
+              .withCleared(p1, p2)));
 
       final Set<Property> ps = target.getFilledPropertiesNotSatisfiedByPrecursor(precursor);
 
@@ -698,13 +697,13 @@ public class ActionTest {
     @Test
     public void returnFalseWhenPostConditionsDiffer() {
       final Action a1 = make(aMinimalAction()
-          .withEffects(anEffectSet()
-              .withToClear(aMinimalProperty()
+          .withEffects(aPropositionSet()
+              .withCleared(aMinimalProperty()
                   .withName("p1"))));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet()
-              .withToClear(aMinimalProperty()
+          .withEffects(aPropositionSet()
+              .withCleared(aMinimalProperty()
                   .withName("p2"))));
 
       assertNotEquals(a1, a2);

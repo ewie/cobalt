@@ -171,6 +171,79 @@ public class PropositionSetTest {
   }
 
   @Test
+  public static class CreatePostConditions {
+
+    @Test
+    public void createPostConditions() {
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+
+      final PropositionSet eff = new PropositionSet(setOf(p1), setOf(p2));
+
+      final PropositionSet pre = make(aPropositionSet());
+
+      final PropositionSet post = eff.createPostConditions(pre);
+
+      final PropositionSet xpost = make(aPropositionSet()
+          .withCleared(p1)
+          .withFilled(p2));
+
+      assertEquals(post, xpost);
+    }
+
+    @Test
+    public void carryOverUnaffectedPreConditions() {
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+
+      final PropositionSet eff = PropositionSet.empty();
+
+      final PropositionSet pre = make(aPropositionSet()
+          .withCleared(p1)
+          .withFilled(p2));
+
+      final PropositionSet post = eff.createPostConditions(pre);
+
+      final PropositionSet xpost = make(aPropositionSet()
+          .withCleared(p1)
+          .withFilled(p2));
+
+      assertEquals(post, xpost);
+    }
+
+    @Test
+    public void overwriteClearedProperty() {
+      final Property p = make(aMinimalProperty());
+
+      final PropositionSet eff = PropositionSet.cleared(p);
+
+      final PropositionSet pre = make(aPropositionSet().withFilled(p));
+
+      final PropositionSet post = eff.createPostConditions(pre);
+
+      final PropositionSet xpost = make(aPropositionSet().withCleared(p));
+
+      assertEquals(post, xpost);
+    }
+
+    @Test
+    public void overwriteFilledProperty() {
+      final Property p = make(aMinimalProperty());
+
+      final PropositionSet eff = PropositionSet.filled(p);
+
+      final PropositionSet pre = make(aPropositionSet().withCleared(p));
+
+      final PropositionSet post = eff.createPostConditions(pre);
+
+      final PropositionSet xpost = make(aPropositionSet().withFilled(p));
+
+      assertEquals(post, xpost);
+    }
+
+  }
+
+  @Test
   public static class Equals {
 
     @Test

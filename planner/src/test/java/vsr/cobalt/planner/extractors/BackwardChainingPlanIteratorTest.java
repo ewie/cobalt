@@ -23,7 +23,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
@@ -170,11 +169,11 @@ public class BackwardChainingPlanIteratorTest {
           .withPre(aPropositionSet().withCleared(p1)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1))
+          .withEffects(aPropositionSet().withCleared(p1))
           .withPre(aPropositionSet().withCleared(p2)));
 
       final Action a3 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p2)));
+          .withEffects(aPropositionSet().withCleared(p2)));
 
       final TaskProvision tp = make(aTaskProvision()
           .withProvidingAction(a1)
@@ -218,15 +217,15 @@ public class BackwardChainingPlanIteratorTest {
           .withPre(aPropositionSet().withCleared(p1)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1))
+          .withEffects(aPropositionSet().withCleared(p1))
           .withPre(aPropositionSet().withCleared(p2)));
 
       final Action a3 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1))
+          .withEffects(aPropositionSet().withCleared(p1))
           .withPre(aPropositionSet().withCleared(p3)));
 
       final Action a4 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p2)));
+          .withEffects(aPropositionSet().withCleared(p2)));
 
       final TaskProvision tp = make(aTaskProvision()
           .withProvidingAction(a1)
@@ -279,7 +278,7 @@ public class BackwardChainingPlanIteratorTest {
       final Action a2 = make(aMinimalAction().withTask(t));
 
       final Action a3 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p)));
+          .withEffects(aPropositionSet().withCleared(p)));
 
       final TaskProvision tp1 = make(aTaskProvision()
           .withProvidingAction(a1)
@@ -325,7 +324,7 @@ public class BackwardChainingPlanIteratorTest {
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p)));
+          .withEffects(aPropositionSet().withCleared(p)));
 
       final TaskProvision tp = make(aTaskProvision()
           .withProvidingAction(a1)

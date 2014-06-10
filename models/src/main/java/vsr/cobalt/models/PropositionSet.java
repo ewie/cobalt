@@ -8,11 +8,13 @@
 package vsr.cobalt.models;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
+import static com.google.common.collect.Sets.difference;
 import static java.util.Collections.disjoint;
 
 /**
@@ -129,6 +131,23 @@ public final class PropositionSet {
    */
   public Set<Property> getFilledProperties() {
     return filled;
+  }
+
+  /**
+   * Create the post-conditions by applying this proposition set as effects on the given pre-conditions.
+   *
+   * @param preConditions the pre-conditions
+   *
+   * @return a proposition set specifying the derived post-conditions
+   */
+  public PropositionSet createPostConditions(final PropositionSet preConditions) {
+    final Set<Property> cleared = new HashSet<>();
+    final Set<Property> filled = new HashSet<>();
+    cleared.addAll(this.cleared);
+    filled.addAll(this.filled);
+    cleared.addAll(difference(preConditions.getClearedProperties(), this.filled));
+    filled.addAll(difference(preConditions.getFilledProperties(), this.cleared));
+    return new PropositionSet(cleared, filled);
   }
 
   /**

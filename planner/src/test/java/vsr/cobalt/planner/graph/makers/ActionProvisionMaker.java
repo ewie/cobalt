@@ -16,7 +16,6 @@ import vsr.cobalt.testing.maker.CollectionValue;
 import vsr.cobalt.testing.maker.Maker;
 
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 
@@ -42,8 +41,8 @@ public class ActionProvisionMaker implements Maker<ActionProvision> {
             .withPre(aPropositionSet()
                 .withCleared(p)))
         .withPrecursor(aMinimalAction()
-            .withEffects(anEffectSet()
-                .withToClear(p)));
+            .withEffects(aPropositionSet()
+                .withCleared(p)));
   }
 
   @Override

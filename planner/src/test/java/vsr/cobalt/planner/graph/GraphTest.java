@@ -26,7 +26,6 @@ import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
@@ -76,7 +75,7 @@ public class GraphTest {
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p)));
+          .withEffects(aPropositionSet().withCleared(p)));
 
       final InitialLevel il = make(anInitialLevel()
           .withTaskProvision(aMinimalTaskProvision()
@@ -140,7 +139,7 @@ public class GraphTest {
 
       final Action a2 = make(aMinimalAction()
           .withWidget(w)
-          .withEffects(anEffectSet().withToClear(p)));
+          .withEffects(aPropositionSet().withCleared(p)));
 
       final ExtensionLevel xl1 = make(anExtensionLevel()
           .withProvision(anActionProvision()
@@ -172,7 +171,7 @@ public class GraphTest {
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p)));
+          .withEffects(aPropositionSet().withCleared(p)));
 
       final ActionProvision ap = make(anActionProvision()
           .withRequest(a1)
@@ -209,8 +208,8 @@ public class GraphTest {
               .withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet()
-              .withToClear(p)));
+          .withEffects(aPropositionSet()
+              .withCleared(p)));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
@@ -277,8 +276,8 @@ public class GraphTest {
               .withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet()
-              .withToClear(p)));
+          .withEffects(aPropositionSet()
+              .withCleared(p)));
 
       graph = make(aGraph()
           .withInitialLevel(anInitialLevel()
@@ -463,11 +462,11 @@ public class GraphTest {
           .withPre(aPropositionSet().withCleared(p1)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1))
+          .withEffects(aPropositionSet().withCleared(p1))
           .withPre(aPropositionSet().withCleared(p2)));
 
       final Action a3 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p2)));
+          .withEffects(aPropositionSet().withCleared(p2)));
 
       final ActionProvision ap1 = make(anActionProvision()
           .withRequest(a1)
@@ -607,7 +606,7 @@ public class GraphTest {
         final Property p3 = make(aMinimalProperty().withName("p3"));
 
         final Action a3 = make(aMinimalAction()
-            .withEffects(anEffectSet().withToClear(p2, p3)));
+            .withEffects(aPropositionSet().withCleared(p2, p3)));
 
         final ExtensionLevel xl = make(anExtensionLevel()
             .withProvision(anActionProvision()

@@ -20,7 +20,6 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropertyMaker.aProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
@@ -81,10 +80,10 @@ public class ExtensionLevelTest {
           .withPre(aPropositionSet().withCleared(p1)));
 
       final Action precursor1 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1)));
+          .withEffects(aPropositionSet().withCleared(p1)));
 
       final Action precursor2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1, p2)));
+          .withEffects(aPropositionSet().withCleared(p1, p2)));
 
       final ActionProvision ap1 = make(anActionProvision()
           .withRequest(request)
@@ -110,7 +109,7 @@ public class ExtensionLevelTest {
               .withFilled(p2)));
 
       final Action precursor = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1)));
+          .withEffects(aPropositionSet().withCleared(p1)));
 
       final Action provider = make(aMinimalAction().withPub(p2));
 
@@ -165,7 +164,7 @@ public class ExtensionLevelTest {
           .withPre(aPropositionSet().withCleared(p2)));
 
       final Action precursor = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1, p2)));
+          .withEffects(aPropositionSet().withCleared(p1, p2)));
 
       final ActionProvision ap1 = make(anActionProvision()
           .withRequest(request1)
@@ -194,7 +193,7 @@ public class ExtensionLevelTest {
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action precursor = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p)));
+          .withEffects(aPropositionSet().withCleared(p)));
 
       final ExtensionLevel xl = make(anExtensionLevel()
           .withProvision(anActionProvision()
@@ -215,7 +214,7 @@ public class ExtensionLevelTest {
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action precursor = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p)));
+          .withEffects(aPropositionSet().withCleared(p)));
 
       final ExtensionLevel xl = make(anExtensionLevel()
           .withProvision(anActionProvision()
@@ -242,10 +241,10 @@ public class ExtensionLevelTest {
           .withPre(aPropositionSet().withCleared(p1)));
 
       final Action precursor1 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1)));
+          .withEffects(aPropositionSet().withCleared(p1)));
 
       final Action precursor2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1, p2)));
+          .withEffects(aPropositionSet().withCleared(p1, p2)));
 
       final ActionProvision ap1 = make(anActionProvision()
           .withRequest(request)
@@ -268,7 +267,7 @@ public class ExtensionLevelTest {
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action precursor = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p)));
+          .withEffects(aPropositionSet().withCleared(p)));
 
       final ActionProvision ap = make(anActionProvision()
           .withPrecursor(precursor)
@@ -325,7 +324,7 @@ public class ExtensionLevelTest {
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p)));
+          .withEffects(aPropositionSet().withCleared(p)));
 
       final ActionProvision ap1 = make(anActionProvision()
           .withRequest(a1)

@@ -16,7 +16,6 @@ import vsr.cobalt.models.Repository;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.testing.Assert.assertContains;
@@ -43,7 +42,7 @@ public class BasicPrecursorActionProviderTest {
           .withPre(aPropositionSet().withCleared(p)));
 
       a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p)));
+          .withEffects(aPropositionSet().withCleared(p)));
 
       final Repository r = mock(Repository.class);
       when(r.getWidgetActions(a1.getWidget())).thenReturn(setOf(a1, a2));

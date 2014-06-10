@@ -31,7 +31,6 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
@@ -63,14 +62,14 @@ public class PlannerTest {
             .withCleared(p1)));
 
     final Action a2 = make(aMinimalAction()
-        .withEffects(anEffectSet()
-            .withToClear(p1))
+        .withEffects(aPropositionSet()
+            .withCleared(p1))
         .withPre(aPropositionSet()
             .withCleared(p2)));
 
     final Action a3 = make(aMinimalAction()
-        .withEffects(anEffectSet()
-            .withToClear(p2)));
+        .withEffects(aPropositionSet()
+            .withCleared(p2)));
 
     final Graph g = make(aGraph()
         .withInitialLevel(anInitialLevel()

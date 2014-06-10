@@ -10,7 +10,6 @@ package vsr.cobalt.models.makers;
 import java.util.Collection;
 
 import vsr.cobalt.models.Action;
-import vsr.cobalt.models.EffectSet;
 import vsr.cobalt.models.Interaction;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PropositionSet;
@@ -20,7 +19,6 @@ import vsr.cobalt.testing.maker.AtomicValue;
 import vsr.cobalt.testing.maker.CollectionValue;
 import vsr.cobalt.testing.maker.Maker;
 
-import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.models.makers.WidgetMaker.aMinimalWidget;
 
@@ -33,7 +31,7 @@ public class ActionMaker implements Maker<Action> {
 
   private final AtomicValue<PropositionSet> pre = new AtomicValue<>();
 
-  private final AtomicValue<EffectSet> effects = new AtomicValue<>();
+  private final AtomicValue<PropositionSet> effects = new AtomicValue<>();
 
   private final CollectionValue<Property> pubs = new CollectionValue<>();
 
@@ -49,7 +47,7 @@ public class ActionMaker implements Maker<Action> {
     return anAction()
         .withWidget(aMinimalWidget())
         .withPre(aPropositionSet())
-        .withEffects(anEffectSet());
+        .withEffects(aPropositionSet());
   }
 
   @Override
@@ -83,12 +81,12 @@ public class ActionMaker implements Maker<Action> {
     return this;
   }
 
-  public ActionMaker withEffects(final EffectSet effects) {
+  public ActionMaker withEffects(final PropositionSet effects) {
     this.effects.set(effects);
     return this;
   }
 
-  public ActionMaker withEffects(final Maker<EffectSet> effects) {
+  public ActionMaker withEffects(final Maker<PropositionSet> effects) {
     this.effects.set(effects);
     return this;
   }

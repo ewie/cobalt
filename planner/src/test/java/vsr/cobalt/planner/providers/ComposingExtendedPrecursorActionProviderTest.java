@@ -17,7 +17,6 @@ import vsr.cobalt.models.Repository;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.testing.Assert.assertContains;
@@ -59,7 +58,7 @@ public class ComposingExtendedPrecursorActionProviderTest {
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p)));
+          .withEffects(aPropositionSet().withCleared(p)));
 
       final Repository r = repository(a1, a2);
 
@@ -82,10 +81,10 @@ public class ComposingExtendedPrecursorActionProviderTest {
               .withFilled(p2)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1)));
+          .withEffects(aPropositionSet().withCleared(p1)));
 
       final Action a3 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToFill(p2)));
+          .withEffects(aPropositionSet().withFilled(p2)));
 
       final Repository r = repository(a1, a2, a3);
 
@@ -108,7 +107,7 @@ public class ComposingExtendedPrecursorActionProviderTest {
               .withFilled(p2)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p1)));
+          .withEffects(aPropositionSet().withCleared(p1)));
 
       final Repository r = repository(a1, a2);
 

@@ -25,7 +25,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.models.makers.EffectSetMaker.anEffectSet;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
@@ -177,8 +176,8 @@ public class GraphExtenderTest {
               .withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet()
-              .withToClear(p)));
+          .withEffects(aPropositionSet()
+              .withCleared(p)));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
@@ -259,8 +258,8 @@ public class GraphExtenderTest {
 
       // a precursor for a1
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet()
-              .withToClear(p1)));
+          .withEffects(aPropositionSet()
+              .withCleared(p1)));
 
       // a property provider for a1
       final Action a3 = make(aMinimalAction().withPub(p2));
@@ -446,7 +445,7 @@ public class GraphExtenderTest {
           .withPre(aPropositionSet().withCleared(p2)));
 
       final Action a3 = make(aMinimalAction()
-          .withEffects(anEffectSet().withToClear(p2)));
+          .withEffects(aPropositionSet().withCleared(p2)));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
@@ -490,15 +489,15 @@ public class GraphExtenderTest {
 
       // a precursor action fully satisfying a1
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet()
-              .withToClear(p1)
-              .withToFill(p2)));
+          .withEffects(aPropositionSet()
+              .withCleared(p1)
+              .withFilled(p2)));
 
       // a precursor action not fully satisfying a1
       // because p2 cannot be provided otherwise, this precursor should be ignored
       final Action a3 = make(aMinimalAction()
-          .withEffects(anEffectSet()
-              .withToClear(p1)));
+          .withEffects(aPropositionSet()
+              .withCleared(p1)));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
@@ -535,8 +534,8 @@ public class GraphExtenderTest {
               .withCleared(p1)));
 
       final Action a2 = make(aMinimalAction()
-          .withEffects(anEffectSet()
-              .withToClear(p1)));
+          .withEffects(aPropositionSet()
+              .withCleared(p1)));
 
       // will cause cyclic dependency with a1
       final Action a3 = Action.compose(a1, make(aMinimalAction()

@@ -38,7 +38,7 @@ public abstract class Action {
   /**
    * The effects.
    */
-  private final EffectSet effects;
+  private final PropositionSet effects;
 
   /**
    * The post-conditions resulting from the pre-conditions and effects.
@@ -70,7 +70,7 @@ public abstract class Action {
    * @param realizedTasks       a set of realized tasks
    * @param interactions        a set of user interactions
    */
-  private Action(final Widget widget, final PropositionSet preConditions, final EffectSet effects,
+  private Action(final Widget widget, final PropositionSet preConditions, final PropositionSet effects,
                  final Set<Property> publishedProperties, final Set<Task> realizedTasks,
                  final Set<Interaction> interactions) {
     this.widget = widget;
@@ -92,7 +92,7 @@ public abstract class Action {
    * @param realizedTasks       a set of realized tasks
    * @param interactions        a set of user interactions
    */
-  public static Action create(final Widget widget, final PropositionSet preConditions, final EffectSet effects,
+  public static Action create(final Widget widget, final PropositionSet preConditions, final PropositionSet effects,
                               final Set<Property> publishedProperties, final Set<Task> realizedTasks,
                               final Set<Interaction> interactions) {
     return new AtomicAction(widget, preConditions, effects, publishedProperties, realizedTasks, interactions);
@@ -107,7 +107,7 @@ public abstract class Action {
    * @param publishedProperties a set of published properties
    * @param realizedTasks       a set of realized tasks
    */
-  public static Action create(final Widget widget, final PropositionSet preConditions, final EffectSet effects,
+  public static Action create(final Widget widget, final PropositionSet preConditions, final PropositionSet effects,
                               final Set<Property> publishedProperties, final Set<Task> realizedTasks) {
     return create(widget, preConditions, effects, publishedProperties, realizedTasks, ImmutableSet.<Interaction>of());
   }
@@ -120,7 +120,7 @@ public abstract class Action {
    * @param effects             the effects
    * @param publishedProperties a set of published properties
    */
-  public static Action create(final Widget widget, final PropositionSet preConditions, final EffectSet effects,
+  public static Action create(final Widget widget, final PropositionSet preConditions, final PropositionSet effects,
                               final Set<Property> publishedProperties) {
     return create(widget, preConditions, effects, publishedProperties, ImmutableSet.<Task>of());
   }
@@ -132,7 +132,7 @@ public abstract class Action {
    * @param preConditions the pre-conditions
    * @param effects       the effects
    */
-  public static Action create(final Widget widget, final PropositionSet preConditions, final EffectSet effects) {
+  public static Action create(final Widget widget, final PropositionSet preConditions, final PropositionSet effects) {
     return create(widget, preConditions, effects, ImmutableSet.<Property>of());
   }
 
@@ -144,7 +144,7 @@ public abstract class Action {
    * @param preConditions the pre-conditions
    */
   public static Action create(final Widget widget, final PropositionSet preConditions) {
-    return create(widget, preConditions, EffectSet.empty());
+    return create(widget, preConditions, PropositionSet.empty());
   }
 
   /**
@@ -249,7 +249,7 @@ public abstract class Action {
   /**
    * @return the post-conditions
    */
-  public EffectSet getEffects() {
+  public PropositionSet getEffects() {
     return effects;
   }
 
@@ -438,7 +438,7 @@ public abstract class Action {
 
   private static class AtomicAction extends Action {
 
-    private AtomicAction(final Widget widget, final PropositionSet preConditions, final EffectSet effects,
+    private AtomicAction(final Widget widget, final PropositionSet preConditions, final PropositionSet effects,
                          final Set<Property> publishedProperties, final Set<Task> realizedTasks,
                          final Set<Interaction> interactions) {
       super(widget, preConditions, effects, publishedProperties, realizedTasks, interactions);
@@ -536,8 +536,8 @@ public abstract class Action {
         return new PropositionSet(cleared.build(), filled.build());
       }
 
-      public EffectSet getEffects() {
-        return new EffectSet(toClear.build(), toFill.build());
+      public PropositionSet getEffects() {
+        return new PropositionSet(toClear.build(), toFill.build());
       }
 
       public ImmutableSet<Property> getPublishedProperties() {
@@ -557,9 +557,9 @@ public abstract class Action {
         filled.addAll(pre.getFilledProperties());
       }
 
-      private void addEffects(final EffectSet effects) {
-        toClear.addAll(effects.getPropertiesToClear());
-        toFill.addAll(effects.getPropertiesToFill());
+      private void addEffects(final PropositionSet effects) {
+        toClear.addAll(effects.getClearedProperties());
+        toFill.addAll(effects.getFilledProperties());
       }
 
     }
