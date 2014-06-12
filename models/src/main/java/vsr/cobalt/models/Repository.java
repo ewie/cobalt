@@ -36,4 +36,30 @@ public interface Repository {
    */
   Set<PublishedProperty> findCompatibleProperties(Property property);
 
+  /**
+   * Get the distance between two tasks.
+   * <p/>
+   * The distance is measured as the number of inheritance steps from the offered task O up to the requested task R.
+   * For identical tasks the distance is 0. When O subsumes R the distance is undefined.
+   *
+   * @param request a requested task
+   * @param offer   an offered task
+   *
+   * @return the distance between the tasks, -1 when not compatible
+   */
+  int getDistance(Task request, Task offer);
+
+  /**
+   * Get the distance between two types.
+   * <p/>
+   * The distance is measured as the number of inheritance steps from the offered type O up to the requested type R.
+   * For identical types the distance is 0. When O subsumes R the distance is undefined.
+   *
+   * @param request a requested type
+   * @param offer   an offered type
+   *
+   * @return the distance between the types, -1 when not compatible
+   */
+  int getDistance(Type request, Type offer);
+
 }

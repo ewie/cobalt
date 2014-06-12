@@ -1,0 +1,12 @@
+# Copyright (c) 2014, Erik Wienhold
+# All rights reserved.
+#
+# Licensed under Creative Commons (CC BY-SA 4.0).
+
+prefix : <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#>
+
+select ?propositions ?property
+where {
+  ?propositions :clearValueOf ?property .
+  ?propositions :fillValueOf ?property .
+}

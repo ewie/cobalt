@@ -1,0 +1,45 @@
+@prefix :     <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<urn:example:type:0> a rdfs:Class .
+
+<urn:example:type:1> a rdfs:Class ;
+  rdfs:subClassOf <urn:example:type:0> .
+
+<urn:example:type:2> a rdfs:Class ;
+  rdfs:subClassOf <urn:example:type:1> .
+
+<urn:example:type:3> a rdfs:Class .
+
+<urn:example:widget:1> a :Widget ;
+
+  :hasAction [
+
+    :publishesValueOf [
+      :hasName "p1" ;
+      :hasType <urn:example:type:1>
+    ]
+
+  ] .
+
+<urn:example:widget:2> a :Widget ;
+
+  :hasAction [
+
+    :publishesValueOf [
+      :hasName "p2" ;
+      :hasType <urn:example:type:2>
+    ]
+
+  ] .
+
+<urn:example:widget:3> a :Widget ;
+
+  :hasAction [
+
+    :publishesValueOf [
+      :hasName "p3" ;
+      :hasType <urn:example:type:3>
+    ]
+
+  ] .

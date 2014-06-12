@@ -13,6 +13,7 @@
   <modules>
     <module>models</module>
     <module>planner</module>
+    <module>repository-semantic</module>
     <module>testing</module>
     <module>utils</module>
   </modules>

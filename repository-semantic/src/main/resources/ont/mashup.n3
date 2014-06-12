@@ -1,0 +1,130 @@
+# Copyright (c) 2014, Erik Wienhold
+# All rights reserved.
+#
+# Licensed under Creative Commons (CC BY-SA 4.0).
+
+@prefix :     <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+: a owl:Ontology ;
+  rdfs:label "MashupOntology" ;
+  rdfs:comment "Mashup Ontology, https://vsr.informatik.tu-chemnitz.de/edu/studentprojects/2014/010" ;
+  dct:license "http://creativecommons.org/licenses/by-sa/4.0/" ;
+  dct:creator "https://vsr.informatik.tu-chemnitz.de/about/people/erik-wienhold" .
+
+:Action a owl:Class ;
+  rdfs:label "Action" ;
+  rdfs:comment "a widget action" .
+
+:Interaction a owl:Class ;
+  rdfs:label "Interaction" ;
+  rdfs:comment "a user interaction" .
+
+:Mashup a owl:Class ;
+  rdfs:label "Mashup" ;
+  rdfs:comment "a mashup" .
+
+:Property a owl:Class ;
+  rdfs:label "Property" ;
+  rdfs:comment "a widget's internal property" .
+
+:Propositions a owl:Class ;
+  rdfs:label "Propositions" ;
+  rdfs:comment "a set of propositions specifying the absence or presence of property values" .
+
+:Task a owl:Class ;
+  rdfs:label "Task" ;
+  rdfs:comment "a functionality realized by actions" .
+
+:Widget a owl:Class ;
+  rdfs:label "Widget" ;
+  rdfs:comment "the building block of a mashup" .
+
+:clearValueOf a owl:ObjectProperty ;
+  rdfs:domain :Propositions ;
+  rdfs:range :Property ;
+  rdfs:label "clearValueOf" ;
+  rdfs:comment "states that a property has no value" .
+
+:fillValueOf a owl:ObjectProperty ;
+  rdfs:domain :Propositions ;
+  rdfs:range :Property ;
+  rdfs:label "fillValueOf" ;
+  rdfs:comment "states that a property has some value" .
+
+:hasAction a owl:ObjectProperty ;
+  rdfs:domain :Widget ;
+  rdfs:range :Action ;
+  rdfs:label "hasAction" ;
+  rdfs:comment "states a widget's actions" .
+
+:hasEffects a owl:ObjectProperty ;
+  rdfs:domain :Action ;
+  rdfs:range :Propositions ;
+  owl:cardinality 1 ;
+  rdfs:label "hasEffects" ;
+  rdfs:comment "states an action's effects" .
+
+:hasInstruction a owl:DatatypeProperty ;
+  rdfs:domain :Instruction ;
+  rdfs:range xsd:string ;
+  owl:cardinality 1 ;
+  rdfs:label "hasInstruction" ;
+  rdfs:comment "states the instruction of an interaction to a the user" .
+
+:hasInteraction a owl:ObjectProperty ;
+  rdfs:domain :Action ;
+  rdfs:range :Interaction ;
+  rdfs:label "hasInteraction" ;
+  rdfs:comment "states an action's interactions" .
+
+:hasName a owl:DatatypeProperty ;
+  rdfs:domain :Property ;
+  rdfs:range xsd:string ;
+  owl:minCardinality 0 ;
+  owl:maxCardinality 1 ;
+  rdfs:label "hasName" ;
+  rdfs:comment """states a property's unique name,
+                  optional in which case the identifier of it's type is used as it's name""" .
+
+:hasPreConditions a owl:ObjectProperty ;
+  rdfs:domain :Action ;
+  rdfs:range :Propositions ;
+  owl:cardinality 1 ;
+  rdfs:label "hasPreConditions" ;
+  rdfs:comment "states an action's pre-conditions" .
+
+:hasType a owl:ObjectProperty ;
+  rdfs:domain :Property ;
+  rdfs:range rdfs:Class ;
+  owl:cardinality 1 ;
+  rdfs:label "hasType" ;
+  rdfs:comment "states a property's type" .
+
+:hasWidget a owl:ObjectProperty ;
+  rdfs:domain :Mashup ;
+  rdfs:range :Widget ;
+  rdfs:label "hasWidget" ;
+  rdfs:comment "states a mashup's widgets" .
+
+:publishesValueOf a owl:ObjectProperty ;
+  rdfs:domain :Action ;
+  rdfs:range :Property ;
+  rdfs:label "publishesValueOf" ;
+  rdfs:comment "states an action's published properties" .
+
+:realizesTask a owl:ObjectProperty ;
+  rdfs:domain [ a owl:Class ;
+    owl:unionOf(:Action :Mashup) ] ;
+  rdfs:range :Task ;
+  rdfs:label "realizesTask" ;
+  rdfs:comment "states an action's or widget's realized tasks" .
+
+:subTaskOf a owl:TransitiveProperty ;
+  rdfs:domain :Task ;
+  rdfs:range :Task ;
+  rdfs:label "subTaskOf" ;
+  rdfs:comment "states an inheritance relation between two tasks, analogous to sub-classing" .

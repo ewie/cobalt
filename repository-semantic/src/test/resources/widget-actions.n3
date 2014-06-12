@@ -1,0 +1,49 @@
+@prefix : <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#> .
+
+<urn:example:widget:1> a :Widget ;
+
+  :hasAction [
+
+    :hasPreConditions [
+
+      :clearValueOf [
+        :hasName "p1" ;
+        :hasType <urn:example:type:1>
+      ] ;
+
+
+      :fillValueOf [
+        :hasName "p2" ;
+        :hasType <urn:example:type:2>
+      ] ;
+
+    ] ;
+
+    :hasEffects [
+
+      :clearValueOf [
+        :hasName "p3" ;
+        :hasType <urn:example:type:3>
+      ] ;
+
+      :fillValueOf [
+        :hasName "p4" ;
+        :hasType <urn:example:type:4>
+      ] ;
+
+    ] ;
+
+    :publishesValueOf [
+      :hasName "p5" ;
+      :hasType <urn:example:type:5>
+    ] ;
+
+    :realizesTask <urn:example:task:1> ;
+
+    :hasInteraction [ :hasInstruction "i1" ]
+
+  ] .
+
+
+<urn:example:widget:2> a :Widget ;
+  :hasAction [] .

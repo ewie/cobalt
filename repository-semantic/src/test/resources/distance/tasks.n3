@@ -1,0 +1,11 @@
+@prefix : <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#> .
+
+<urn:example:task:0> a :Task .
+
+<urn:example:task:1> a :Task ;
+  :subTaskOf <urn:example:task:0> .
+
+<urn:example:task:2> a :Task ;
+  :subTaskOf <urn:example:task:1> .
+
+<urn:example:task:3> a :Task .

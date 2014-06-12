@@ -1,0 +1,5 @@
+@prefix : <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#> .
+
+[]
+  :clearValueOf _:p ;
+  :fillValueOf _:p .
