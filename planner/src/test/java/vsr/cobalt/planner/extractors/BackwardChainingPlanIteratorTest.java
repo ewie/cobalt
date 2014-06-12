@@ -9,6 +9,7 @@ package vsr.cobalt.planner.extractors;
 
 import java.util.Set;
 
+import com.google.common.collect.Sets;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
@@ -17,10 +18,9 @@ import vsr.cobalt.planner.Plan;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.TaskProvision;
-import vsr.cobalt.utils.ProbingIterator;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertSame;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
@@ -32,17 +32,11 @@ import static vsr.cobalt.planner.graph.makers.GraphMaker.aGraph;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aMinimalGraph;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
 import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aTaskProvision;
-import static vsr.cobalt.testing.Assert.assertSubClass;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 
 @Test
 public class BackwardChainingPlanIteratorTest {
-
-  @Test
-  public void extendsBufferedIterator() {
-    assertSubClass(BackwardChainingPlanIterator.class, ProbingIterator.class);
-  }
 
   @Test
   public static class New {
@@ -102,17 +96,7 @@ public class BackwardChainingPlanIteratorTest {
   }
 
   @Test
-  public static class ProbeNextValue {
-
-    @Test
-    public void returnNullWhenThereAreNoMorePlans() {
-      final Graph g = make(aMinimalGraph());
-
-      final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g);
-
-      pi.probeNextValue();
-      assertNull(pi.probeNextValue());
-    }
+  public static class Iteration {
 
     @Test
     public void considerAllTaskProvisions() {
@@ -148,12 +132,8 @@ public class BackwardChainingPlanIteratorTest {
       final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g);
 
       final Set<Plan> xps = setOf(new Plan(g1), new Plan(g2));
-      final Set<Plan> ps = setOf();
+      final Set<Plan> ps = Sets.newHashSet(pi);
 
-      ps.add(pi.probeNextValue());
-      ps.add(pi.probeNextValue());
-
-      assertNull(pi.probeNextValue());
       assertEquals(ps, xps);
     }
 
@@ -196,11 +176,8 @@ public class BackwardChainingPlanIteratorTest {
       final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g);
 
       final Set<Plan> xps = setOf(new Plan(g));
-      final Set<Plan> ps = setOf();
+      final Set<Plan> ps = Sets.newHashSet(pi);
 
-      ps.add(pi.probeNextValue());
-
-      assertNull(pi.probeNextValue());
       assertEquals(ps, xps);
     }
 
@@ -257,11 +234,8 @@ public class BackwardChainingPlanIteratorTest {
       final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g1);
 
       final Set<Plan> xps = setOf(new Plan(g2));
-      final Set<Plan> ps = setOf();
+      final Set<Plan> ps = Sets.newHashSet(pi);
 
-      ps.add(pi.probeNextValue());
-
-      assertNull(pi.probeNextValue());
       assertEquals(ps, xps);
     }
 
@@ -305,11 +279,8 @@ public class BackwardChainingPlanIteratorTest {
       final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g1, 2, 2);
 
       final Set<Plan> xps = setOf(new Plan(g2));
-      final Set<Plan> ps = setOf();
+      final Set<Plan> ps = Sets.newHashSet(pi);
 
-      ps.add(pi.probeNextValue());
-
-      assertNull(pi.probeNextValue());
       assertEquals(ps, xps);
     }
 
@@ -341,7 +312,7 @@ public class BackwardChainingPlanIteratorTest {
 
       final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g, 1, 1);
 
-      assertNull(pi.probeNextValue());
+      assertFalse(pi.hasNext());
     }
 
   }

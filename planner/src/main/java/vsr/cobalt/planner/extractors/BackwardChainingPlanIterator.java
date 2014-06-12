@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.AbstractIterator;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.Plan;
@@ -23,7 +24,6 @@ import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.Level;
 import vsr.cobalt.planner.graph.TaskProvision;
-import vsr.cobalt.utils.ProbingIterator;
 import vsr.cobalt.utils.ProductSet;
 import vsr.cobalt.utils.ProductSetIterator;
 
@@ -32,7 +32,7 @@ import vsr.cobalt.utils.ProductSetIterator;
  *
  * @author Erik Wienhold
  */
-class BackwardChainingPlanIterator extends ProbingIterator<Plan> {
+class BackwardChainingPlanIterator extends AbstractIterator<Plan> {
 
   /**
    * The graph potentially containing plans.
@@ -122,7 +122,7 @@ class BackwardChainingPlanIterator extends ProbingIterator<Plan> {
   }
 
   @Override
-  protected Plan probeNextValue() {
+  protected Plan computeNext() {
     while (true) {
       evolve();
       // the stack may be empty after evolving it
@@ -137,7 +137,7 @@ class BackwardChainingPlanIterator extends ProbingIterator<Plan> {
       // grow the stack when there is no plan
       grow();
     }
-    return null;
+    return endOfData();
   }
 
   private boolean isEmpty() {

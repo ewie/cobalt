@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.UnmodifiableIterator;
@@ -39,7 +40,7 @@ import com.google.common.collect.UnmodifiableIterator;
  *
  * @author Erik Wienhold
  */
-public class OrderedPowerSetIterator<E> extends ProbingIterator<Set<E>> {
+public class OrderedPowerSetIterator<E> extends AbstractIterator<Set<E>> {
 
   private final ArrayDeque<Pair<E>> queue = new ArrayDeque<>();
 
@@ -65,10 +66,10 @@ public class OrderedPowerSetIterator<E> extends ProbingIterator<Set<E>> {
   }
 
   @Override
-  protected Set<E> probeNextValue() {
+  protected Set<E> computeNext() {
     final ExpansionIterator it = getExpansions();
     if (it == null) {
-      return null;
+      return endOfData();
     } else {
       return it.next();
     }
@@ -102,7 +103,7 @@ public class OrderedPowerSetIterator<E> extends ProbingIterator<Set<E>> {
     return expansions;
   }
 
-  private class ExpansionIterator extends ProbingIterator<Set<E>> {
+  private class ExpansionIterator extends AbstractIterator<Set<E>> {
 
     private final Set<E> set;
 
@@ -114,7 +115,7 @@ public class OrderedPowerSetIterator<E> extends ProbingIterator<Set<E>> {
     }
 
     @Override
-    protected Set<E> probeNextValue() {
+    protected Set<E> computeNext() {
       while (tail.hasNext()) {
         final Set<E> set = createSet(tail.next());
         if (!isExcluded(set)) {
@@ -123,7 +124,7 @@ public class OrderedPowerSetIterator<E> extends ProbingIterator<Set<E>> {
           return set;
         }
       }
-      return null;
+      return endOfData();
     }
 
     private Set<E> createSet(final E e) {

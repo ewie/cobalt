@@ -10,6 +10,7 @@ package vsr.cobalt.utils;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -33,7 +34,7 @@ import com.google.common.collect.ImmutableSet;
  *  {1,5,6}} =: A x B x C
  * </pre>
  */
-public class ProductSetIterator<E> extends ProbingIterator<Set<E>> {
+public class ProductSetIterator<E> extends AbstractIterator<Set<E>> {
 
   /**
    * The counters created from each set.
@@ -57,9 +58,9 @@ public class ProductSetIterator<E> extends ProbingIterator<Set<E>> {
   }
 
   @Override
-  protected Set<E> probeNextValue() {
+  protected Set<E> computeNext() {
     if (done) {
-      return null;
+      return endOfData();
     }
 
     final Set<E> values = new HashSet<>(counters.size());
