@@ -7,13 +7,10 @@
 
 package vsr.cobalt.repository.semantic.utils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +21,7 @@ public class ResourceCache {
 
   private static ResourceCache INSTANCE;
 
-  private final Map<Path, String> index = new HashMap<>();
+  private final Map<String, String> index = new HashMap<>();
 
   public static ResourceCache getInstance() {
     if (INSTANCE == null) {
@@ -34,40 +31,44 @@ public class ResourceCache {
   }
 
   public String get(final String path) {
-    final Path p = getPath(path);
-    if (!contains(p)) {
-      index.put(p, read(p));
+    String content = index.get(path);
+    if (content == null) {
+      content = read(path);
+      if (content != null) {
+        index.put(path, content);
+      }
     }
-    return index.get(p);
+    return content;
   }
 
-  private boolean contains(final Path path) {
-    return index.containsKey(path);
-  }
-
-  private String read(final Path path) {
-    final byte[] bytes;
-    try {
-      bytes = Files.readAllBytes(path);
-    } catch (final IOException ex) {
-      throw new RuntimeException(ex);
+  private String read(final String path) {
+    final InputStream in = getResource(path);
+    if (in == null) {
+      return null;
     }
-    return new String(bytes);
+    return inputStreamToString(in);
   }
 
-  private Path getPath(final String path) {
-    return Paths.get(getUri(path));
+  private InputStream getResource(final String path) {
+    return getClass().getResourceAsStream(path);
   }
 
-  private URI getUri(final String path) {
-    final URL url = getClass().getResource(path);
-    final URI uri;
-    try {
-      uri = url.toURI();
-    } catch (final URISyntaxException e) {
-      throw new RuntimeException(e);
+  private String inputStreamToString(final InputStream in) {
+    final BufferedReader br = new BufferedReader(new InputStreamReader(in));
+    final StringBuilder sb = new StringBuilder();
+    while (true) {
+      final String line;
+      try {
+        line = br.readLine();
+      } catch (final IOException ex) {
+        break;
+      }
+      if (line == null) {
+        break;
+      }
+      sb.append(line).append("\n");
     }
-    return uri;
+    return sb.toString();
   }
 
 }
