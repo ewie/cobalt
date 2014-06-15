@@ -7,8 +7,10 @@
 
 package vsr.cobalt.models;
 
+import java.util.Objects;
 import java.util.Set;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -50,6 +52,43 @@ public class MashupTest {
       final Set<Task> ts = setOf(t);
       final Mashup m = new Mashup(ts);
       assertEquals(m.getTasks(), ts);
+    }
+
+  }
+
+  @Test
+  public static class Equality {
+
+    private Mashup mashup;
+
+    @BeforeMethod
+    public void setUp() {
+      final Task task = make(aMinimalTask());
+      mashup = new Mashup(setOf(task));
+    }
+
+    @Test
+    public void calculateHastCodeFromTasks() {
+      assertEquals(mashup.hashCode(), mashup.getTasks().hashCode());
+    }
+
+    @Test
+    public void notEqualToObjectOfDifferentClass() {
+      final Object x = new Object();
+      assertNotEquals(mashup, x);
+    }
+
+    @Test
+    public void notEqualWhenRealizedTasksDiffer() {
+      final Task task = make(aMinimalTask().withIdentifier("task"));
+      final Mashup other = new Mashup(setOf(task));
+      assertNotEquals(mashup, other);
+    }
+
+    @Test
+    public void equalWhenTasksEqual() {
+      final Mashup other = new Mashup(mashup.getTasks());
+      assertEquals(mashup, other);
     }
 
   }

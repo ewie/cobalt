@@ -7,6 +7,7 @@
 
 package vsr.cobalt.models;
 
+import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
@@ -40,6 +41,22 @@ public final class Mashup {
    */
   public Set<Task> getTasks() {
     return tasks;
+  }
+
+  @Override
+  public int hashCode() {
+    return tasks.hashCode();
+  }
+
+  @Override
+  public boolean equals(final Object other) {
+    return super.equals(other)
+        || other instanceof Mashup
+        && equals((Mashup) other);
+  }
+
+  private boolean equals(final Mashup other) {
+    return tasks.equals(other.tasks);
   }
 
 }
