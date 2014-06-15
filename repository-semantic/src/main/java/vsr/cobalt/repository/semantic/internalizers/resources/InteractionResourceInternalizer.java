@@ -10,15 +10,15 @@ package vsr.cobalt.repository.semantic.internalizers.resources;
 import com.hp.hpl.jena.rdf.model.Resource;
 import vsr.cobalt.models.Interaction;
 import vsr.cobalt.repository.semantic.Ontology;
-import vsr.cobalt.repository.semantic.internalizers.CachingResourceInternalizer;
+import vsr.cobalt.repository.semantic.internalizers.ResourceInternalizer;
 
 /**
  * @author Erik Wienhold
  */
-public class CachingInteractionResourceInternalizer extends CachingResourceInternalizer<Interaction> {
+public class InteractionResourceInternalizer extends ResourceInternalizer<Interaction> {
 
   @Override
-  protected Interaction create(final Resource r) {
+  public Interaction internalize(final Resource r) {
     final String instruction = getLiteralObject(r, Ontology.hasInstruction).getString();
     return new Interaction(instruction);
   }

@@ -13,22 +13,21 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PropositionSet;
 import vsr.cobalt.repository.semantic.Ontology;
-import vsr.cobalt.repository.semantic.internalizers.CachingResourceInternalizer;
 import vsr.cobalt.repository.semantic.internalizers.ResourceInternalizer;
 
 /**
  * @author Erik Wienhold
  */
-public class CachingPropositionsResourceInternalizer extends CachingResourceInternalizer<PropositionSet> {
+public class PropositionsResourceInternalizer extends ResourceInternalizer<PropositionSet> {
 
   private final ResourceInternalizer<Property> properties;
 
-  public CachingPropositionsResourceInternalizer(final ResourceInternalizer<Property> properties) {
+  public PropositionsResourceInternalizer(final ResourceInternalizer<Property> properties) {
     this.properties = properties;
   }
 
   @Override
-  protected PropositionSet create(final Resource r) {
+  public PropositionSet internalize(final Resource r) {
     if (r == null) {
       return PropositionSet.empty();
     }

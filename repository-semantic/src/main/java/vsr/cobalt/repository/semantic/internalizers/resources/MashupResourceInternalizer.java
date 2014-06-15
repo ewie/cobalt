@@ -13,22 +13,21 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import vsr.cobalt.models.Mashup;
 import vsr.cobalt.models.Task;
 import vsr.cobalt.repository.semantic.Ontology;
-import vsr.cobalt.repository.semantic.internalizers.CachingResourceInternalizer;
 import vsr.cobalt.repository.semantic.internalizers.ResourceInternalizer;
 
 /**
  * @author Erik Wienhold
  */
-public class CachingMashupResourceInternalizer extends CachingResourceInternalizer<Mashup> {
+public class MashupResourceInternalizer extends ResourceInternalizer<Mashup> {
 
   private final ResourceInternalizer<Task> tasks;
 
-  public CachingMashupResourceInternalizer(final ResourceInternalizer<Task> tasks) {
+  public MashupResourceInternalizer(final ResourceInternalizer<Task> tasks) {
     this.tasks = tasks;
   }
 
   @Override
-  protected Mashup create(final Resource r) {
+  public Mashup internalize(final Resource r) {
     final Set<Task> ts = tasks.internalizeAll(getResourceObjects(r, Ontology.realizesTask));
     return new Mashup(ts);
   }

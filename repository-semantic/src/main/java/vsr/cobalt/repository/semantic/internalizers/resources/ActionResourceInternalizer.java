@@ -17,13 +17,12 @@ import vsr.cobalt.models.PropositionSet;
 import vsr.cobalt.models.Task;
 import vsr.cobalt.models.Widget;
 import vsr.cobalt.repository.semantic.Ontology;
-import vsr.cobalt.repository.semantic.internalizers.CachingResourceInternalizer;
 import vsr.cobalt.repository.semantic.internalizers.ResourceInternalizer;
 
 /**
  * @author Erik Wienhold
  */
-public class CachingActionResourceInternalizer extends CachingResourceInternalizer<Action> {
+public class ActionResourceInternalizer extends ResourceInternalizer<Action> {
 
   private final ResourceInternalizer<Widget> widgets;
 
@@ -35,11 +34,11 @@ public class CachingActionResourceInternalizer extends CachingResourceInternaliz
 
   private final ResourceInternalizer<Interaction> interactions;
 
-  public CachingActionResourceInternalizer(final ResourceInternalizer<Widget> widgets,
-                                           final ResourceInternalizer<PropositionSet> propositions,
-                                           final ResourceInternalizer<Property> properties,
-                                           final ResourceInternalizer<Task> tasks,
-                                           final ResourceInternalizer<Interaction> interactions) {
+  public ActionResourceInternalizer(final ResourceInternalizer<Widget> widgets,
+                                    final ResourceInternalizer<PropositionSet> propositions,
+                                    final ResourceInternalizer<Property> properties,
+                                    final ResourceInternalizer<Task> tasks,
+                                    final ResourceInternalizer<Interaction> interactions) {
     this.widgets = widgets;
     this.propositions = propositions;
     this.properties = properties;
@@ -48,7 +47,7 @@ public class CachingActionResourceInternalizer extends CachingResourceInternaliz
   }
 
   @Override
-  protected Action create(final Resource r) {
+  public Action internalize(final Resource r) {
     final Widget w = widgets.internalize(getSubject(r, Ontology.hasAction));
     final PropositionSet pre = propositions.internalize(getResourceObject(r, Ontology.hasPreConditions));
     final PropositionSet eff = propositions.internalize(getResourceObject(r, Ontology.hasEffects));

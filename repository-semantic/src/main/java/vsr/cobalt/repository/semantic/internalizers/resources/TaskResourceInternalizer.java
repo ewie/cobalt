@@ -8,17 +8,17 @@
 package vsr.cobalt.repository.semantic.internalizers.resources;
 
 import com.hp.hpl.jena.rdf.model.Resource;
-import vsr.cobalt.models.Type;
-import vsr.cobalt.repository.semantic.internalizers.CachingResourceInternalizer;
+import vsr.cobalt.models.Task;
+import vsr.cobalt.repository.semantic.internalizers.ResourceInternalizer;
 
 /**
  * @author Erik Wienhold
  */
-public class CachingTypeResourceInternalizer extends CachingResourceInternalizer<Type> {
+public class TaskResourceInternalizer extends ResourceInternalizer<Task> {
 
   @Override
-  protected Type create(final Resource r) {
-    return new Type(r.getURI());
+  public Task internalize(final Resource r) {
+    return new Task(r.getURI());
   }
 
 }
