@@ -25,10 +25,11 @@ import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.models.makers.ActionMaker.anAction;
 import static vsr.cobalt.models.makers.InteractionMaker.anInteraction;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
-import static vsr.cobalt.models.makers.TaskMaker.aTask;
 import static vsr.cobalt.repository.semantic.Datasets.loadDataset;
 import static vsr.cobalt.repository.semantic.Models.property;
+import static vsr.cobalt.repository.semantic.Models.task;
 import static vsr.cobalt.repository.semantic.Models.type;
+import static vsr.cobalt.repository.semantic.Models.widget;
 import static vsr.cobalt.testing.Assert.assertEmpty;
 import static vsr.cobalt.testing.Utilities.make;
 
@@ -45,17 +46,17 @@ public class WidgetActionFinderTest {
 
   @Test
   public void ignoreActionsOfDifferentWidgets() {
-    final Widget widget = new Widget("urn:example:widget:1");
-    final Set<Action> actions = finder.findWidgetActions(widget);
+    final Widget w = widget(1);
+    final Set<Action> actions = finder.findWidgetActions(w);
     for (final Action a : actions) {
-      assertEquals(a.getWidget(), widget);
+      assertEquals(a.getWidget(), w);
     }
   }
 
   @Test
   public void internalizeAction() {
-    final Widget widget = new Widget("urn:example:widget:1");
-    final Set<Action> actions = finder.findWidgetActions(widget);
+    final Widget w = widget(1);
+    final Set<Action> actions = finder.findWidgetActions(w);
 
     final Type y1 = type(1);
     final Type y2 = type(2);
@@ -69,12 +70,12 @@ public class WidgetActionFinderTest {
     final Property p4 = property(4, y4);
     final Property p5 = property(5, y5);
 
-    final Task t1 = make(aTask().withIdentifier("urn:example:task:1"));
+    final Task t1 = task(1);
 
     final Interaction i1 = make(anInteraction().withInstruction("i1"));
 
     final Action x = make(anAction()
-        .withWidget(widget)
+        .withWidget(w)
         .withTask(t1)
         .withInteraction(i1)
         .withPub(p5)
@@ -92,8 +93,8 @@ public class WidgetActionFinderTest {
 
   @Test
   public void defaultToEmptyPreConditions() {
-    final Widget widget = new Widget("urn:example:widget:2");
-    final Set<Action> actions = finder.findWidgetActions(widget);
+    final Widget w = widget(2);
+    final Set<Action> actions = finder.findWidgetActions(w);
 
     final Action a = Iterables.get(actions, 0);
 
@@ -102,8 +103,8 @@ public class WidgetActionFinderTest {
 
   @Test
   public void defaultToEmptyEffects() {
-    final Widget widget = new Widget("urn:example:widget:2");
-    final Set<Action> actions = finder.findWidgetActions(widget);
+    final Widget w = widget(2);
+    final Set<Action> actions = finder.findWidgetActions(w);
 
     final Action a = Iterables.get(actions, 0);
 

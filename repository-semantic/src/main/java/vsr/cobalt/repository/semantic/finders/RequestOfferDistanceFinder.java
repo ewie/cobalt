@@ -14,11 +14,12 @@ import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import vsr.cobalt.models.Identifiable;
 import vsr.cobalt.models.Task;
 import vsr.cobalt.models.Type;
 import vsr.cobalt.repository.semantic.Ontology;
+import vsr.cobalt.repository.semantic.externalizer.IdentifiableExternalizer;
 import vsr.cobalt.repository.semantic.utils.CappedLinkedHashMap;
 import vsr.cobalt.repository.semantic.utils.ShortestPathFinder;
 
@@ -33,7 +34,7 @@ public class RequestOfferDistanceFinder {
 
   private final Dataset dataset;
 
-  private final CappedLinkedHashMap<Pair, Integer> cache;
+  private final CappedLinkedHashMap<Pair<?>, Integer> cache;
 
   public RequestOfferDistanceFinder(final Dataset dataset, final int cacheSize) {
     this.dataset = dataset;
@@ -45,31 +46,29 @@ public class RequestOfferDistanceFinder {
   }
 
   public int getDistance(final Task request, final Task offer) {
-    final Resource source = asResource(offer);
-    final Resource target = asResource(request);
-    return getDistance(source, target, Ontology.subTaskOf);
+    return getDistance(request, offer, Ontology.subTaskOf);
   }
 
   public int getDistance(final Type request, final Type offer) {
-    final Resource source = asResource(offer);
-    final Resource target = asResource(request);
-    return getDistance(source, target, RDFS.subClassOf);
+    return getDistance(request, offer, RDFS.subClassOf);
   }
 
-  private int getDistance(final Resource source, final Resource target, final Property property) {
-    final Pair p = new Pair(source, target);
+  private <T extends Identifiable> int getDistance(final T request, final T offer, final Property property) {
+    final Pair<T> p = new Pair<>(request, offer);
     Integer distance = cache.get(p);
     if (distance == null) {
-      distance = findDistance(source, target, property);
+      distance = findDistance(request, offer, property);
       cache.put(p, distance);
     }
     return distance;
   }
 
-  private int findDistance(final Resource source, final Resource target, final Property property) {
+  private <T extends Identifiable> int findDistance(final T request, final T offer, final Property property) {
     dataset.begin(ReadWrite.READ);
     try {
       final Model model = dataset.getDefaultModel();
+      final Resource source = asResource(offer, model);
+      final Resource target = asResource(request, model);
       final ShortestPathFinder finder = new ShortestPathFinder(model, property);
       return finder.findShortestPathLength(source, target);
     } finally {
@@ -77,21 +76,17 @@ public class RequestOfferDistanceFinder {
     }
   }
 
-  private static Resource asResource(final Task task) {
-    return ResourceFactory.createResource(task.getIdentifier());
+  private static Resource asResource(final Identifiable task, final Model model) {
+    return IdentifiableExternalizer.externalize(task, model);
   }
 
-  private static Resource asResource(final Type type) {
-    return ResourceFactory.createResource(type.getIdentifier());
-  }
+  private static class Pair<T> {
 
-  private static class Pair {
+    private final T source;
 
-    private final Resource source;
+    private final T target;
 
-    private final Resource target;
-
-    public Pair(final Resource source, final Resource target) {
+    public Pair(final T source, final T target) {
       this.source = source;
       this.target = target;
     }

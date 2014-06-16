@@ -5,13 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.testing.maker;
-
 /**
  * @author Erik Wienhold
  */
-public interface Maker<T> {
-
-  T make();
-
-}
+package vsr.cobalt.repository.semantic.externalizer;

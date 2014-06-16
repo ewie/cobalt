@@ -19,7 +19,7 @@ public final class Widget extends Identifiable {
    *
    * @param identifier a widget identifier
    */
-  public Widget(final String identifier) {
+  public Widget(final Identifier identifier) {
     super(identifier);
   }
 

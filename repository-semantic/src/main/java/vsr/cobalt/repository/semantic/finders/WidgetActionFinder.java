@@ -56,7 +56,7 @@ public class WidgetActionFinder {
     dataset.begin(ReadWrite.READ);
     try {
       final Model model = dataset.getDefaultModel();
-      final Resource wr = model.createResource(widget.getIdentifier());
+      final Resource wr = model.createResource(widget.getIdentifier().toString());
       final Iterator<Resource> ars = getActionResources(wr);
       return CachingResourceInternalizers.actions.internalizeAll(ars);
     } finally {

@@ -22,7 +22,7 @@ import static org.mockito.Mockito.RETURNS_DEFAULTS;
 /**
  * @author Erik Wienhold
  */
-public abstract class Utilities {
+public final class Utilities {
 
   /**
    * Answer useful when mocking abstract classes.

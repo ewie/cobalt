@@ -21,7 +21,7 @@ public class IdentifiableTest {
 
   private static class DummyIdentifiable extends Identifiable {
 
-    public DummyIdentifiable(final String identifier) {
+    public DummyIdentifiable(final Identifier identifier) {
       super(identifier);
     }
 
@@ -37,11 +37,11 @@ public class IdentifiableTest {
 
     private DummyIdentifiable identifiable;
 
-    private String identifier;
+    private Identifier identifier;
 
     @BeforeMethod
     public void setUp() {
-      identifier = "foo";
+      identifier = Identifier.create("foo");
       identifiable = new DummyIdentifiable(identifier);
     }
 
@@ -57,14 +57,14 @@ public class IdentifiableTest {
 
     @Test
     public void returnHashValue() {
-      final String id = "baz";
+      final Identifier id = Identifier.create("baz");
       final DummyIdentifiable provision = new DummyIdentifiable(id);
       assertEquals(provision.hashCode(), id.hashCode());
     }
 
     @Test
     public void returnTrueWhenIdentifiersEqual() {
-      final String id = "bar";
+      final Identifier id = Identifier.create("bar");
       final DummyIdentifiable i1 = new DummyIdentifiable(id);
       final DummyIdentifiable i2 = new DummyIdentifiable(id);
       assertEquals(i1, i2);
@@ -72,14 +72,14 @@ public class IdentifiableTest {
 
     @Test
     public void returnFalseWhenOtherIsNoIdentifiable() {
-      final DummyIdentifiable i = new DummyIdentifiable("");
+      final DummyIdentifiable i = new DummyIdentifiable(Identifier.create(""));
       final Object x = new Object();
       assertNotEquals(i, x);
     }
 
     @Test
     public void returnFalseWhenOtherCanEqualReturnsFalse() {
-      final DummyIdentifiable i1 = new DummyIdentifiable("");
+      final DummyIdentifiable i1 = new DummyIdentifiable(Identifier.create(""));
       final DummyIdentifiable i2 = mock(DummyIdentifiable.class);
 
       when(i2.canEqual(any())).thenReturn(false);

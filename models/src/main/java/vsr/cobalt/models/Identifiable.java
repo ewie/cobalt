@@ -12,18 +12,18 @@ package vsr.cobalt.models;
  *
  * @author Erik Wienhold
  */
-abstract class Identifiable {
+public abstract class Identifiable {
 
-  private final String identifier;
+  private final Identifier identifier;
 
-  Identifiable(final String identifier) {
+  Identifiable(final Identifier identifier) {
     this.identifier = identifier;
   }
 
   /**
    * @return the identifier
    */
-  public String getIdentifier() {
+  public Identifier getIdentifier() {
     return identifier;
   }
 

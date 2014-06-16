@@ -11,7 +11,9 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
+import static vsr.cobalt.models.makers.TypeMaker.aMinimalType;
 import static vsr.cobalt.testing.Assert.assertSubClass;
+import static vsr.cobalt.testing.Utilities.make;
 
 @Test
 public class TypeTest {
@@ -26,14 +28,14 @@ public class TypeTest {
 
     @Test
     public void returnTrueWhenCalledWithType() {
-      final Type t1 = new Type("");
-      final Type t2 = new Type("");
+      final Type t1 = make(aMinimalType());
+      final Type t2 = make(aMinimalType());
       assertTrue(t1.canEqual(t2));
     }
 
     @Test
     public void returnFalseWhenCalledWithNonType() {
-      final Type t = new Type("");
+      final Type t = make(aMinimalType());
       final Object x = new Object();
       assertFalse(t.canEqual(x));
     }

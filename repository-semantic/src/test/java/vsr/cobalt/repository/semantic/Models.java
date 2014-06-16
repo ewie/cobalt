@@ -7,6 +7,8 @@
 
 package vsr.cobalt.repository.semantic;
 
+import java.net.URI;
+
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.Task;
@@ -26,7 +28,15 @@ import static vsr.cobalt.testing.Utilities.make;
 public final class Models {
 
   public static Widget widget(final int id) {
-    return make(aWidget().withIdentifier("urn:example:widget:" + id));
+    return make(aWidget().withIdentifier(uri("urn:example:widget:" + id)));
+  }
+
+  public static Type type(final int id) {
+    return make(aType().withIdentifier(uri("urn:example:type:" + id)));
+  }
+
+  public static Task task(final int id) {
+    return make(aTask().withIdentifier(uri("urn:example:task:" + id)));
   }
 
   public static Action action(final Widget w, final Property p) {
@@ -41,18 +51,14 @@ public final class Models {
         .withTask(t));
   }
 
-  public static Type type(final int id) {
-    return make(aType().withIdentifier("urn:example:type:" + id));
-  }
-
-  public static Task task(final int id) {
-    return make(aTask().withIdentifier("urn:example:task:" + id));
-  }
-
   public static Property property(final int id, final Type type) {
     return make(aProperty()
         .withName("p" + id)
         .withType(type));
+  }
+
+  private static URI uri(final String s) {
+    return URI.create(s);
   }
 
 }

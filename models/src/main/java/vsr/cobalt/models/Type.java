@@ -19,7 +19,7 @@ public final class Type extends Identifiable {
    *
    * @param identifier a type identifier
    */
-  public Type(final String identifier) {
+  public Type(final Identifier identifier) {
     super(identifier);
   }
 

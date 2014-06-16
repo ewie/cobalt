@@ -9,52 +9,35 @@ package vsr.cobalt.models;
 
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
-import static vsr.cobalt.models.makers.TaskMaker.aTask;
+import static vsr.cobalt.testing.Assert.assertSubClass;
+import static vsr.cobalt.testing.Utilities.make;
 
 @Test
 public class TaskTest {
 
   @Test
-  public static class GetIdentifier {
-
-    @Test
-    public void returnIdentifier() {
-      final String id = "foo";
-      final Task t = aTask().withIdentifier(id).make();
-      assertEquals(t.getIdentifier(), id);
-    }
-
+  public void isAnIdentifiable() {
+    assertSubClass(Task.class, Identifiable.class);
   }
 
   @Test
-  public static class HashCode {
+  public static class CanEqual {
 
     @Test
-    public void useIdentifierHashCode() {
-      final Task t = aTask().withIdentifier("bar").make();
-      assertEquals(t.hashCode(), t.getIdentifier().hashCode());
-    }
-
-  }
-
-  @Test
-  public static class Equals {
-
-    @Test
-    public void returnTrueWhenEqual() {
-      final Task t1 = aMinimalTask().make();
-      final Task t2 = aMinimalTask().make();
-      assertEquals(t1, t2);
+    public void returnTrueWhenCalledWitTask() {
+      final Task t1 = make(aMinimalTask());
+      final Task t2 = make(aMinimalTask());
+      assertTrue(t1.canEqual(t2));
     }
 
     @Test
-    public void returnFalseWhenIdentifierDiffers() {
-      final Task t1 = aTask().withIdentifier("x").make();
-      final Task t2 = aTask().withIdentifier("y").make();
-      assertNotEquals(t1, t2);
+    public void returnFalseWhenCalledWithNonTask() {
+      final Task t = make(aMinimalTask());
+      final Object x = new Object();
+      assertFalse(t.canEqual(x));
     }
 
   }

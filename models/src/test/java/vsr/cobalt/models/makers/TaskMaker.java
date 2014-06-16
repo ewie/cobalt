@@ -8,32 +8,23 @@
 package vsr.cobalt.models.makers;
 
 import vsr.cobalt.models.Task;
-import vsr.cobalt.testing.maker.AtomicValue;
-import vsr.cobalt.testing.maker.Maker;
 
 /**
  * @author Erik Wienhold
  */
-public class TaskMaker implements Maker<Task> {
-
-  private final AtomicValue<String> identifier = new AtomicValue<>();
+public class TaskMaker extends IdentifiableMaker<Task> {
 
   public static TaskMaker aTask() {
     return new TaskMaker();
   }
 
   public static TaskMaker aMinimalTask() {
-    return aTask().withIdentifier("");
+    return (TaskMaker) aTask().withIdentifier("");
   }
 
   @Override
   public Task make() {
     return new Task(identifier.get());
-  }
-
-  public TaskMaker withIdentifier(final String identifier) {
-    this.identifier.set(identifier);
-    return this;
   }
 
 }

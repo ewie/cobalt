@@ -19,7 +19,7 @@ public final class Task extends Identifiable {
    *
    * @param identifier a task identifier
    */
-  public Task(final String identifier) {
+  public Task(final Identifier identifier) {
     super(identifier);
   }
 

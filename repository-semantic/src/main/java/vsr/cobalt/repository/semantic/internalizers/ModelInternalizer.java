@@ -10,10 +10,9 @@ package vsr.cobalt.repository.semantic.internalizers;
 import java.util.Set;
 
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
- * Translates a {@link Resource} to a domain model.
+ * Translates resources of a {@link Model} to domain models.
  *
  * @author Erik Wienhold
  */

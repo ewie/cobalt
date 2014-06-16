@@ -9,16 +9,15 @@ package vsr.cobalt.repository.semantic.internalizers.resources;
 
 import com.hp.hpl.jena.rdf.model.Resource;
 import vsr.cobalt.models.Widget;
-import vsr.cobalt.repository.semantic.internalizers.ResourceInternalizer;
 
 /**
  * @author Erik Wienhold
  */
-public class WidgetResourceInternalizer extends ResourceInternalizer<Widget> {
+public class WidgetResourceInternalizer extends IdentifiableResourceInternalizer<Widget> {
 
   @Override
   public Widget internalize(final Resource r) {
-    return new Widget(r.getURI());
+    return new Widget(asIdentifier(r));
   }
 
 }

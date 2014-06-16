@@ -11,7 +11,9 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
+import static vsr.cobalt.models.makers.WidgetMaker.aMinimalWidget;
 import static vsr.cobalt.testing.Assert.assertSubClass;
+import static vsr.cobalt.testing.Utilities.make;
 
 @Test
 public class WidgetTest {
@@ -26,14 +28,14 @@ public class WidgetTest {
 
     @Test
     public void returnTrueWhenCalledWithWidget() {
-      final Widget w1 = new Widget("");
-      final Widget w2 = new Widget("");
+      final Widget w1 = make(aMinimalWidget());
+      final Widget w2 = make(aMinimalWidget());
       assertTrue(w1.canEqual(w2));
     }
 
     @Test
     public void returnFalseWhenCalledWithNonWidget() {
-      final Widget w = new Widget("");
+      final Widget w = make(aMinimalWidget());
       final Object x = new Object();
       assertFalse(w.canEqual(x));
     }

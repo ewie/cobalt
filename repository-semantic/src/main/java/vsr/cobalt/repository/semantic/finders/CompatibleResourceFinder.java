@@ -17,12 +17,14 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Model;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Offer;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PublishedProperty;
 import vsr.cobalt.models.RealizedTask;
 import vsr.cobalt.models.Task;
+import vsr.cobalt.repository.semantic.externalizer.IdentifiableExternalizer;
 import vsr.cobalt.repository.semantic.internalizers.CachingResourceInternalizers;
 import vsr.cobalt.repository.semantic.utils.CappedLinkedHashMap;
 import vsr.cobalt.repository.semantic.utils.ResourceCache;
@@ -70,7 +72,7 @@ public class CompatibleResourceFinder {
       this(dataset, DEFAULT_CACHE_SIZE);
     }
 
-    protected abstract String getQuery(T request);
+    protected abstract String getQuery(T request, Model model);
 
     protected abstract O createOffer(QuerySolution solution);
 
@@ -91,7 +93,9 @@ public class CompatibleResourceFinder {
       dataset.begin(ReadWrite.READ);
 
       try {
-        final QueryExecution qx = QueryExecutionFactory.create(getQuery(request), dataset);
+        final Model model = dataset.getDefaultModel();
+
+        final QueryExecution qx = QueryExecutionFactory.create(getQuery(request, model), dataset);
 
         try {
           final ResultSet rs = qx.execSelect();
@@ -116,10 +120,10 @@ public class CompatibleResourceFinder {
     }
 
     @Override
-    protected String getQuery(final Task request) {
+    protected String getQuery(final Task request, final Model model) {
       final ParameterizedSparqlString pss = new ParameterizedSparqlString(
           ResourceCache.getInstance().get("/sparql/compatible-tasks.rq"));
-      pss.setIri("request", request.getIdentifier());
+      pss.setParam("request", IdentifiableExternalizer.externalize(request, model));
       return pss.toString();
     }
 
@@ -139,10 +143,10 @@ public class CompatibleResourceFinder {
     }
 
     @Override
-    protected String getQuery(final Property request) {
+    protected String getQuery(final Property request, final Model model) {
       final ParameterizedSparqlString pss = new ParameterizedSparqlString(
           ResourceCache.getInstance().get("/sparql/compatible-properties.rq"));
-      pss.setIri("request", request.getType().getIdentifier());
+      pss.setParam("request", IdentifiableExternalizer.externalize(request.getType(), model));
       return pss.toString();
     }
 

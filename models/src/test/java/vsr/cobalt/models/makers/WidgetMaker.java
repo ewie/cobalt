@@ -8,32 +8,23 @@
 package vsr.cobalt.models.makers;
 
 import vsr.cobalt.models.Widget;
-import vsr.cobalt.testing.maker.AtomicValue;
-import vsr.cobalt.testing.maker.Maker;
 
 /**
  * @author Erik Wienhold
  */
-public class WidgetMaker implements Maker<Widget> {
-
-  private final AtomicValue<String> identifier = new AtomicValue<>();
+public class WidgetMaker extends IdentifiableMaker<Widget> {
 
   public static WidgetMaker aWidget() {
     return new WidgetMaker();
   }
 
   public static WidgetMaker aMinimalWidget() {
-    return aWidget().withIdentifier("");
+    return (WidgetMaker) aWidget().withIdentifier("");
   }
 
   @Override
   public Widget make() {
     return new Widget(identifier.get());
-  }
-
-  public WidgetMaker withIdentifier(final String identifier) {
-    this.identifier.set(identifier);
-    return this;
   }
 
 }
