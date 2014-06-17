@@ -99,7 +99,7 @@ public class Planner {
   }
 
   /**
-   * Extend {@link #graph} to reach a minimal depth of {@link #targetDepth}.
+   * Extend {@link #graph} to reach a depth of {@link #targetDepth}.
    *
    * @throws PlanningException
    */

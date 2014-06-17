@@ -60,7 +60,7 @@ class ActionReachabilityIndex {
     Set<Action> enabledActions = ImmutableSet.of();
 
     // Iterate over all extension levels in reverse order, i.e. start with the last level.
-    for (final ExtensionLevel xl : graph.getExtensionLevels()) {
+    for (final ExtensionLevel xl : graph.getExtensionLevelsReversed()) {
       // Combine the enabled actions of the previous level with the enabled actions of the current level.
       enabledActions = getCombinedEnabledActions(xl, enabledActions);
 

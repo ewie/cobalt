@@ -95,7 +95,7 @@ public class PlannerTest {
     final InitialLevel il = graph.getInitialLevel();
     graphs.add(Graph.create(il));
 
-    final List<ExtensionLevel> xls = Lists.reverse(Lists.newArrayList(graph.getExtensionLevels()));
+    final List<ExtensionLevel> xls = Lists.reverse(Lists.newArrayList(graph.getExtensionLevelsReversed()));
     final int depth = graph.getDepth();
     for (int i = 1; i < depth; i += 1) {
       graphs.add(Graph.create(il, xls.subList(0, i)));

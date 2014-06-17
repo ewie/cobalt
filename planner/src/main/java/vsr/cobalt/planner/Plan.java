@@ -71,7 +71,7 @@ public final class Plan {
 
     Set<Action> actions = Collections.emptySet();
 
-    for (final ExtensionLevel xl : graph.getExtensionLevels()) {
+    for (final ExtensionLevel xl : graph.getExtensionLevelsReversed()) {
       assertRequestedActions(xl);
       assertRequiredActions(xl, actions);
       actions = xl.getRequestedActions();

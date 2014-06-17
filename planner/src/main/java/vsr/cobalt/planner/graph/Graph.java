@@ -97,13 +97,33 @@ public abstract class Graph {
   }
 
   /**
+   * Get the sequence of levels in extension order, i.e. start with the initial leveland finish with the most recent
+   * extension level.
+   *
+   * @return the sequence of levels in extension order
+   */
+  public Iterable<Level> getLevels() {
+    return ImmutableList.copyOf(getLevelsReversed()).reverse();
+  }
+
+  /**
    * Get the sequence of levels in reverse extension order, i.e. start with the most recent extension level and finish
    * with the initial level.
    *
-   * @return the sequence of levels in reverse order
+   * @return the sequence of levels in reverse extension order
    */
-  public Iterable<Level> getLevels() {
-    return Iterables.concat(getExtensionLevels(), ImmutableList.of(getInitialLevel()));
+  public Iterable<Level> getLevelsReversed() {
+    return Iterables.concat(getExtensionLevelsReversed(), ImmutableList.of(getInitialLevel()));
+  }
+
+  /**
+   * Get the sequence of extension levels in extension order, i.e. start with the very first extension level and finish
+   * with the most recent extension level.
+   *
+   * @return the sequence of extension levels in extension order
+   */
+  public Iterable<ExtensionLevel> getExtensionLevels() {
+    return ImmutableList.copyOf(getExtensionLevelsReversed()).reverse();
   }
 
   /**
@@ -150,9 +170,9 @@ public abstract class Graph {
   /**
    * Get the sequence of extension levels in reverse extension order, i.e. start with the most recent extension level.
    *
-   * @return the sequence of extension levels in reverse order
+   * @return the sequence of extension levels in reverse extension order
    */
-  public abstract Iterable<ExtensionLevel> getExtensionLevels();
+  public abstract Iterable<ExtensionLevel> getExtensionLevelsReversed();
 
   @Override
   public abstract int hashCode();
@@ -234,7 +254,7 @@ public abstract class Graph {
      * @return an empty iterable
      */
     @Override
-    public Iterable<ExtensionLevel> getExtensionLevels() {
+    public Iterable<ExtensionLevel> getExtensionLevelsReversed() {
       return Collections.emptyList();
     }
 
@@ -288,7 +308,7 @@ public abstract class Graph {
 
     @Override
     public ExtensionLevel getExtensionLevel(final int index) {
-      return Iterables.get(getExtensionLevels(), getExtensionDepth() - index - 1);
+      return Iterables.get(getExtensionLevelsReversed(), getExtensionDepth() - index - 1);
     }
 
     @Override
@@ -317,7 +337,7 @@ public abstract class Graph {
      * @return a sequence of one or more extensions
      */
     @Override
-    public Iterable<ExtensionLevel> getExtensionLevels() {
+    public Iterable<ExtensionLevel> getExtensionLevelsReversed() {
       return new ExtensionLevelIterable(this);
     }
 
@@ -351,7 +371,7 @@ public abstract class Graph {
     private boolean equals(final ExtendedGraph other) {
       return extensionDepth == other.extensionDepth
           && getInitialLevel().equals(other.getInitialLevel())
-          && Iterables.elementsEqual(getExtensionLevels(), other.getExtensionLevels());
+          && Iterables.elementsEqual(getExtensionLevelsReversed(), other.getExtensionLevelsReversed());
     }
 
     private static class ExtensionLevelIterable implements Iterable<ExtensionLevel> {

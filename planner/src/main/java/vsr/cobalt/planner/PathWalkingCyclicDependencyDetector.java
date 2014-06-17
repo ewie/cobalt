@@ -32,7 +32,7 @@ public class PathWalkingCyclicDependencyDetector implements CyclicDependencyDete
       return true;
     }
     Set<Action> dependents = ImmutableSet.of(dependent);
-    for (final ExtensionLevel xl : graph.getExtensionLevels()) {
+    for (final ExtensionLevel xl : graph.getExtensionLevelsReversed()) {
       dependents = getDependentActions(dependents, xl);
       for (final Action a : dependents) {
         if (support.represents(a)) {
