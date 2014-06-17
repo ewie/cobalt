@@ -14,6 +14,7 @@
     <module>models</module>
     <module>planner</module>
     <module>repository-semantic</module>
+    <module>service</module>
     <module>testing</module>
     <module>utils</module>
   </modules>

@@ -1,0 +1,6 @@
+{
+  "mashup": {
+    "contentType": "text/n3",
+    "content": "@prefix : <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#> . [] a :Mashup ; :realizesTask <urn:example:task:foo> ."
+  }
+}

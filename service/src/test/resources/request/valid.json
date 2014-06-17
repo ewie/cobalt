@@ -1,0 +1,20 @@
+{
+  "minDepth": 2,
+  "maxDepth": 3,
+  "mashup": {
+    "_:widget": {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": [
+        {
+          "value": "https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#Mashup",
+          "type": "uri"
+        }
+      ],
+      "https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#realizesTask": [
+        {
+          "value": "urn:example:task:bar",
+          "type": "uri"
+        }
+      ]
+    }
+  }
+}

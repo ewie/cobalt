@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": [ "rating", "initialLevel" ],
+  "properties": {
+    "rating": { "type": "number" },
+    "initialLevel": { "$ref": "#/definitions/initialLevel" },
+    "extensionLevels": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/extensionLevel" },
+      "default": []
+    }
+  },
+  "definitions": {
+    "initialLevel": {
+      "type": "object",
+      "required": [ "taskProvisions" ],
+      "properties": {
+        "taskProvisions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/taskProvision" },
+          "minItems": 1
+        }
+      }
+    },
+    "extensionLevel": {
+      "type": "object",
+      "required": [ "actionProvisions" ],
+      "properties": {
+        "actionProvisions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/actionProvision" },
+          "minItems": 1
+        }
+      }
+    },
+    "taskProvision": {
+      "type": "object",
+      "required": [ "request", "offer", "provider" ],
+      "properties": {
+        "request": { "$ref": "#/definitions/task" },
+        "offer": { "$ref": "#/definitions/task" },
+        "provider": { "$ref": "#/definitions/action" }
+      }
+    },
+    "actionProvision": {
+      "type": "object",
+      "required": [ "request" ],
+      "properties": {
+        "request": { "$ref": "#/definitions/action" },
+        "precursor": { "$ref": "#/definitions/action" },
+        "properties":
+          "type": "array",
+          "items": { "$ref": "#/definitions/propertyProvision" },
+          "minItems": 1
+        }
+      }
+    },
+    "propertyProvision": {
+      "type": "object",
+      "required": [ "request", "offer", "provider" ],
+      "properties": {
+        "request": { "$ref": "#/definitions/property" },
+        "offer": { "$ref": "#/definitions/property" },
+        "provider": { "$ref": "#/definitions/action" }
+      }
+    },
+    "action": {
+      "type": "object",
+      "required": [ "widget" ],
+      "properties": {
+        "widget": { "$ref": "#/definitions/widget" },
+        "interactions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/interaction" },
+          "default": []
+        },
+        "publishedProperties": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/property" },
+          "default": []
+        },
+        "realizedTasks": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/task" },
+          "default": []
+        }
+      }
+    },
+    "widget": { "$ref": "#/definitions/identifiable" },
+    "task": { "$ref": "#/definitions/identifiable" },
+    "type": { "$ref": "#/definitions/identifiable" },
+    "identifiable": {
+      "description": "something identified by an URI or a string unique within the plan",
+      "type": "object",
+      "properties": {
+        "uri": { "type": "string" },
+        "id": { "type": "string" }
+      }
+    },
+    "interaction": {
+      "type": "object",
+      "required": [ "instruction" ]
+      "properties": {
+        "instruction": { "type": "string" }
+      }
+    },
+    "property": {
+      "type": "object",
+      "required": [ "name", "type" ]
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "$ref": "#/definitions/type" }
+      }
+    }
+  }
+}
