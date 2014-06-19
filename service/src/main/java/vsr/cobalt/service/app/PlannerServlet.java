@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.net.HttpHeaders;
 import com.google.common.net.MediaType;
+import org.eclipse.jetty.http.HttpMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vsr.cobalt.models.Task;
@@ -41,6 +42,21 @@ public class PlannerServlet extends HttpServlet {
   private static final Logger logger = LoggerFactory.getLogger(PlannerServlet.class);
 
   private static final String CONTENT_TYPE_JSON = MediaType.JSON_UTF_8.toString();
+
+  @Override
+  public void doOptions(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+    response.setStatus(HttpServletResponse.SC_OK);
+
+    response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+
+    // allow every request header
+    response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS,
+        request.getHeader(HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS));
+
+    // allowed methods
+    response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, HttpMethod.OPTIONS.asString());
+    response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, HttpMethod.POST.asString());
+  }
 
   @Override
   public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
