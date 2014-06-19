@@ -13,6 +13,7 @@ import java.io.StringWriter;
 import java.util.Set;
 import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonStructure;
 import javax.json.JsonValue;
@@ -33,11 +34,11 @@ import vsr.cobalt.repository.semantic.internalizers.models.MashupInternalizer;
  */
 public class JsonPlannerRequestDeserializer {
 
-  private static final String MASHUP = "mashup";
-  private static final String CONTENT_TYPE = "contentType";
-  private static final String CONTENT = "content";
-  private static final String MIN_DEPTH = "minDepth";
-  private static final String MAX_DEPTH = "maxDepth";
+  private static final String mashup = "mashup";
+  private static final String contentType = "contentType";
+  private static final String content = "content";
+  private static final String minDepth = "minDepth";
+  private static final String maxDepth = "maxDepth";
 
   public PlannerRequest deserialize(final JsonStructure objOrAry) {
     if (objOrAry instanceof JsonArray) {
@@ -54,19 +55,19 @@ public class JsonPlannerRequestDeserializer {
   }
 
   private Mashup getMashup(final JsonObject obj) {
-    final JsonValue val = obj.get(MASHUP);
-    if (val == null || val.getValueType() == JsonValue.ValueType.NULL) {
+    final JsonValue val = obj.get(mashup);
+    if (val == null || !(val instanceof JsonObject)) {
       throw new IllegalArgumentException("expecting a mashup description");
     }
     final JsonObject mashupObj = (JsonObject) val;
     final Lang lang;
     final String data;
-    if (mashupObj.containsKey(CONTENT_TYPE)) {
-      lang = RDFLanguages.nameToLang(mashupObj.getString(CONTENT_TYPE));
+    if (mashupObj.containsKey(contentType)) {
+      lang = RDFLanguages.nameToLang(mashupObj.getString(contentType));
       if (lang == null) {
         throw new IllegalArgumentException("unsupported content-type");
       }
-      data = mashupObj.getString(CONTENT);
+      data = mashupObj.getString(content);
       if (Strings.isNullOrEmpty(data)) {
         throw new IllegalArgumentException("expecting non-empty mashup content");
       }
@@ -89,11 +90,30 @@ public class JsonPlannerRequestDeserializer {
   }
 
   private int getMinDepth(final JsonObject obj) {
-    return obj.getInt(MIN_DEPTH, PlannerRequest.MIN_DEPTH);
+    final Integer val = getInt(obj, minDepth, PlannerRequest.MIN_DEPTH);
+    if (val == null) {
+      throw new IllegalArgumentException("expecting minimum depth to be an integer");
+    }
+    return val;
   }
 
   private int getMaxDepth(final JsonObject obj) {
-    return obj.getInt(MAX_DEPTH, PlannerRequest.MAX_DEPTH);
+    final Integer val = getInt(obj, maxDepth, PlannerRequest.MAX_DEPTH);
+    if (val == null) {
+      throw new IllegalArgumentException("expecting maximum depth to be an integer");
+    }
+    return val;
+  }
+
+  private Integer getInt(final JsonObject obj, final String key, final int defaultValue) {
+    final JsonValue val = obj.get(key);
+    if (val == null || val == JsonValue.NULL) {
+      return defaultValue;
+    }
+    if (val instanceof JsonNumber) {
+      return ((JsonNumber) val).intValue();
+    }
+    return null;
   }
 
   private String stringify(final JsonStructure struct) {

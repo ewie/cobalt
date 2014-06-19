@@ -8,7 +8,12 @@
 package vsr.cobalt.service;
 
 import org.testng.annotations.Test;
+import vsr.cobalt.models.Mashup;
 import vsr.cobalt.service.planner.PlannerRequest;
+
+import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
+import static vsr.cobalt.testing.Utilities.make;
+import static vsr.cobalt.testing.Utilities.setOf;
 
 @Test
 public class PlannerRequestTest {
@@ -17,15 +22,23 @@ public class PlannerRequestTest {
   public static class New {
 
     @Test(expectedExceptions = IllegalArgumentException.class,
+        expectedExceptionsMessageRegExp = "expecting some goal mashup")
+    public void rejectNullAsGoalMashup() {
+      new PlannerRequest(null, -1, 0);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class,
         expectedExceptionsMessageRegExp = "expecting positive minimum depth")
     public void rejectNonPositiveMinDepth() {
-      new PlannerRequest(null, -1, 0);
+      final Mashup m = new Mashup(setOf(make(aMinimalTask())));
+      new PlannerRequest(m, -1, 0);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class,
         expectedExceptionsMessageRegExp = "expecting minimum depth to be less than or equal to maximum depth")
     public void rejectMinDepthGreaterThanMaxDepth() {
-      new PlannerRequest(null, 2, 1);
+      final Mashup m = new Mashup(setOf(make(aMinimalTask())));
+      new PlannerRequest(m, 2, 1);
     }
 
   }

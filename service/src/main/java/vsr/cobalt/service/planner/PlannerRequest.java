@@ -18,26 +18,29 @@ public final class PlannerRequest {
 
   public static final int MAX_DEPTH = Integer.MAX_VALUE;
 
-  private final Mashup mashup;
+  private final Mashup goalMashup;
 
   private final int minDepth;
 
   private final int maxDepth;
 
-  public PlannerRequest(final Mashup mashup, final int minDepth, final int maxDepth) {
+  public PlannerRequest(final Mashup goalMashup, final int minDepth, final int maxDepth) {
+    if (goalMashup == null) {
+      throw new IllegalArgumentException("expecting some goal mashup");
+    }
     if (minDepth < MIN_DEPTH) {
       throw new IllegalArgumentException("expecting positive minimum depth");
     }
     if (minDepth > maxDepth) {
       throw new IllegalArgumentException("expecting minimum depth to be less than or equal to maximum depth");
     }
-    this.mashup = mashup;
+    this.goalMashup = goalMashup;
     this.minDepth = minDepth;
     this.maxDepth = maxDepth;
   }
 
-  public Mashup getMashup() {
-    return mashup;
+  public Mashup getGoalMashup() {
+    return goalMashup;
   }
 
   public int getMinDepth() {

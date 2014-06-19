@@ -141,7 +141,7 @@ public class JsonPlannerRequestDeserializerTest {
       final JsonStructure obj = load("request/valid.json");
       final PlannerRequest r = d.deserialize(obj);
       final Set<Task> ts = setOf(make(aTask().withIdentifier(URI.create("urn:example:task:bar"))));
-      assertEquals(r.getMashup(), new Mashup(ts));
+      assertEquals(r.getGoalMashup(), new Mashup(ts));
       assertEquals(r.getMinDepth(), 2);
       assertEquals(r.getMaxDepth(), 3);
     }
@@ -152,7 +152,7 @@ public class JsonPlannerRequestDeserializerTest {
       final JsonStructure obj = load("request/textual-mashup-data.json");
       final PlannerRequest r = d.deserialize(obj);
       final Set<Task> ts = setOf(make(aTask().withIdentifier(URI.create("urn:example:task:foo"))));
-      assertEquals(r.getMashup(), new Mashup(ts));
+      assertEquals(r.getGoalMashup(), new Mashup(ts));
     }
 
     @Test

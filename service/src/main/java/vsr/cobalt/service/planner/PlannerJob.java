@@ -62,7 +62,7 @@ public class PlannerJob {
 
   private Graph createGraph() throws PlanningException {
     final GraphFactory f = new GraphFactory(new ComposingTaskProvisionProvider(repository));
-    return f.createGraph(request.getMashup());
+    return f.createGraph(request.getGoalMashup());
   }
 
   private RatingPlanCollector createPlanCollector() {

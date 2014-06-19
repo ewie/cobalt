@@ -31,7 +31,7 @@ public final class PlannerSuccess implements PlannerResponse {
   }
 
   @Override
-  public Exception getFailure() {
+  public Throwable getCause() {
     return null;
   }
 

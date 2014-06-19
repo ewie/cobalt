@@ -18,6 +18,6 @@ public interface PlannerResponse {
 
   Iterable<RatedPlan> getPlans();
 
-  Exception getFailure();
+  Throwable getCause();
 
 }

@@ -14,9 +14,9 @@ import vsr.cobalt.planner.collectors.rating.RatedPlan;
  */
 public class PlannerFailure implements PlannerResponse {
 
-  private final Exception failure;
+  private final Throwable failure;
 
-  public PlannerFailure(final Exception failure) {
+  public PlannerFailure(final Throwable failure) {
     this.failure = failure;
   }
 
@@ -31,7 +31,7 @@ public class PlannerFailure implements PlannerResponse {
   }
 
   @Override
-  public Exception getFailure() {
+  public Throwable getCause() {
     return failure;
   }
 

@@ -26,6 +26,7 @@ import vsr.cobalt.models.Task;
 import vsr.cobalt.service.json.RefJsonWriter;
 import vsr.cobalt.service.planner.JsonPlannerRequestDeserializer;
 import vsr.cobalt.service.planner.JsonPlannerResponseSerializer;
+import vsr.cobalt.service.planner.PlannerFailure;
 import vsr.cobalt.service.planner.PlannerJob;
 import vsr.cobalt.service.planner.PlannerRequest;
 import vsr.cobalt.service.planner.PlannerResponse;
@@ -57,14 +58,19 @@ public class PlannerServlet extends HttpServlet {
 
   @Override
   public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
-    final PlannerRequest req = parseRequest(request.getReader());
+    final PlannerRequest req;
 
-    logPlannerRequest(req);
-
-    if (req == null) {
+    try {
+      req = parseRequest(request.getReader());
+    } catch (final Exception ex) {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+      response.setHeader(HttpHeaders.CONTENT_TYPE, CONTENT_TYPE_JSON);
+      serializeResponse(new PlannerFailure(ex), response.getWriter());
       return;
     }
+
+    logPlannerRequest(req);
 
     final PlannerJob job = PlannerService.getInstance().createJob(req);
     final PlannerResponse res = job.run();
@@ -75,8 +81,8 @@ public class PlannerServlet extends HttpServlet {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
 
-    response.setHeader(HttpHeaders.CONTENT_TYPE, CONTENT_TYPE_JSON);
     response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    response.setHeader(HttpHeaders.CONTENT_TYPE, CONTENT_TYPE_JSON);
     serializeResponse(res, response.getWriter());
   }
 
@@ -92,7 +98,7 @@ public class PlannerServlet extends HttpServlet {
     final StringWriter sw = new StringWriter();
     final PrintWriter pw = new PrintWriter(sw);
 
-    for (final Task t : request.getMashup().getTasks()) {
+    for (final Task t : request.getGoalMashup().getTasks()) {
       pw.printf("    task: %s", t.getIdentifier()).println();
     }
 

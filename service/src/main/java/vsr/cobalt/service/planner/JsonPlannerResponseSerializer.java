@@ -27,7 +27,7 @@ public class JsonPlannerResponseSerializer extends JsonSerializer<PlannerRespons
     if (response.isSuccess()) {
       obj.add(plans, CachingJsonSerializers.plans.serializeAll(response.getPlans()));
     } else {
-      obj.add(message, response.getFailure().getMessage());
+      obj.add(message, response.getCause().getMessage());
     }
     return obj;
   }
