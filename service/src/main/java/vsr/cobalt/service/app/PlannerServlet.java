@@ -13,7 +13,6 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import javax.json.Json;
-import javax.json.JsonObject;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +23,6 @@ import org.eclipse.jetty.http.HttpMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vsr.cobalt.models.Task;
-import vsr.cobalt.planner.collectors.rating.RatedPlan;
 import vsr.cobalt.service.json.RefJsonWriter;
 import vsr.cobalt.service.planner.JsonPlannerRequestDeserializer;
 import vsr.cobalt.service.planner.JsonPlannerResponseSerializer;
@@ -32,7 +30,6 @@ import vsr.cobalt.service.planner.PlannerJob;
 import vsr.cobalt.service.planner.PlannerRequest;
 import vsr.cobalt.service.planner.PlannerResponse;
 import vsr.cobalt.service.planner.PlannerService;
-import vsr.cobalt.service.serializers.CachingJsonSerializers;
 
 /**
  * @author Erik Wienhold
@@ -89,17 +86,6 @@ public class PlannerServlet extends HttpServlet {
 
   private void serializeResponse(final PlannerResponse response, final Writer writer) {
     new RefJsonWriter(writer).write(new JsonPlannerResponseSerializer().serialize(response));
-  }
-
-  private void serializePlans(final Iterable<RatedPlan> plans, final Writer writer) {
-    new RefJsonWriter(writer).write(CachingJsonSerializers.plans.serializeAll(plans));
-  }
-
-  private void serializeMessage(final String message, final Writer writer) {
-    final JsonObject obj = Json.createObjectBuilder()
-        .add("message", message)
-        .build();
-    Json.createWriter(writer).write(obj);
   }
 
   private void logPlannerRequest(final PlannerRequest request) {
