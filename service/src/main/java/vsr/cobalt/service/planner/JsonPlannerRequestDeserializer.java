@@ -7,7 +7,6 @@
 
 package vsr.cobalt.service.planner;
 
-import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Set;
@@ -18,7 +17,6 @@ import javax.json.JsonObject;
 import javax.json.JsonStructure;
 import javax.json.JsonValue;
 import javax.json.JsonWriter;
-import javax.json.stream.JsonParsingException;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
@@ -35,7 +33,7 @@ import vsr.cobalt.repository.semantic.internalizers.models.MashupInternalizer;
 public class JsonPlannerRequestDeserializer {
 
   private static final String mashup = "mashup";
-  private static final String contentType = "contentType";
+  private static final String mediaType = "mediaType";
   private static final String content = "content";
   private static final String minDepth = "minDepth";
   private static final String maxDepth = "maxDepth";
@@ -62,10 +60,10 @@ public class JsonPlannerRequestDeserializer {
     final JsonObject mashupObj = (JsonObject) val;
     final Lang lang;
     final String data;
-    if (mashupObj.containsKey(contentType)) {
-      lang = RDFLanguages.nameToLang(mashupObj.getString(contentType));
+    if (mashupObj.containsKey(mediaType)) {
+      lang = RDFLanguages.nameToLang(mashupObj.getString(mediaType));
       if (lang == null) {
-        throw new IllegalArgumentException("unsupported content-type");
+        throw new IllegalArgumentException("unsupported media type");
       }
       data = mashupObj.getString(content);
       if (Strings.isNullOrEmpty(data)) {
@@ -121,14 +119,6 @@ public class JsonPlannerRequestDeserializer {
     final JsonWriter jw = Json.createWriter(sw);
     jw.write(struct);
     return sw.toString();
-  }
-
-  private JsonStructure read(final Reader reader) {
-    try {
-      return Json.createReader(reader).read();
-    } catch (final JsonParsingException ex) {
-      throw new IllegalArgumentException("expecting valid JSON", ex);
-    }
   }
 
 }

@@ -31,13 +31,13 @@
       "description": "RDF in any textual representation",
       "type": "object",
       "properties": {
-        "contentType": {
+        "mediaType": {
           "type": "string",
           "pattern": "^(?:application|audio|image|text|video)[^\x00-\x20\x7F()<>@,;:\\"/\[\]?.=]+$"
         },
         "content": { "type": "string" }
       },
-      "required": [ "contentType", "content" ]
+      "required": [ "mediaType", "content" ]
     }
   }
 }

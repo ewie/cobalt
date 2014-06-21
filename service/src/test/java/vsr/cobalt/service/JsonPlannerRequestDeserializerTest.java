@@ -12,15 +12,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Set;
 import javax.json.Json;
-import javax.json.JsonObject;
 import javax.json.JsonStructure;
-import javax.json.JsonWriter;
 
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Mashup;
@@ -35,23 +32,6 @@ import static vsr.cobalt.testing.Utilities.setOf;
 
 @Test
 public class JsonPlannerRequestDeserializerTest {
-
-  private static final String MASHUP = "mashup";
-
-  private static final String CONTENT_TYPE = "contentType";
-
-  private static final String CONTENT = "content";
-
-  private static final String MIN_DEPTH = "minDepth";
-
-  private static final String MAX_DEPTH = "maxDepth";
-
-  private static String asJson(final JsonObject obj) {
-    final StringWriter sw = new StringWriter();
-    final JsonWriter jw = Json.createWriter(sw);
-    jw.write(obj);
-    return sw.toString();
-  }
 
   private static Reader resource(final String name) {
     final URL url = ClassLoader.getSystemResource(name);
@@ -120,10 +100,10 @@ public class JsonPlannerRequestDeserializerTest {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class,
-        expectedExceptionsMessageRegExp = "unsupported content-type")
+        expectedExceptionsMessageRegExp = "unsupported media type")
     public void rejectMashupDataOfUnsupportedContentType() throws Exception {
       final JsonPlannerRequestDeserializer d = new JsonPlannerRequestDeserializer();
-      final JsonStructure obj = load("request/unsupported-content-type.json");
+      final JsonStructure obj = load("request/unsupported-media-type.json");
       d.deserialize(obj);
     }
 
