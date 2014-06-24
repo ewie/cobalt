@@ -13,6 +13,8 @@ package vsr.cobalt.service.json;
  */
 public abstract class JsonPointer {
 
+  private static final String SEP = "/";
+
   public static JsonPointer root() {
     return Root.INSTANCE;
   }
@@ -74,8 +76,6 @@ public abstract class JsonPointer {
 
     public static final Root INSTANCE = new Root();
 
-    private static final String DOC = "#";
-
     private Root() {
     }
 
@@ -91,14 +91,12 @@ public abstract class JsonPointer {
 
     @Override
     public String toString() {
-      return DOC;
+      return "";
     }
 
   }
 
   private static class Path extends JsonPointer {
-
-    private static final String SEP = "/";
 
     private final String token;
 
