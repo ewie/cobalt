@@ -24,12 +24,15 @@ public class JsonIdentifiableSerializer<T extends Identifiable> extends JsonSeri
 
   @Override
   public JsonObjectBuilder build(final T task) {
-    final Identifier id = task.getIdentifier();
-    return Json.createObjectBuilder().add(key(id), id.toString());
-  }
+    final Identifier identifier = task.getIdentifier();
+    final JsonObjectBuilder obj = Json.createObjectBuilder();
 
-  private String key(final Identifier identifier) {
-    return identifier.isUri() ? uri : id;
+    obj.add(id, identifier.toString());
+    if (identifier.isUri()) {
+      obj.add(uri, identifier.toString());
+    }
+
+    return obj;
   }
 
 }

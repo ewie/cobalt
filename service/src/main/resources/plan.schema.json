@@ -91,11 +91,18 @@
     "task": { "$ref": "#/definitions/identifiable" },
     "type": { "$ref": "#/definitions/identifiable" },
     "identifiable": {
-      "description": "something identified by an URI or a string unique within the plan",
+      "description": "a uniquely identifiable entity",
       "type": "object",
+      "required": [ "id" ],
       "properties": {
-        "uri": { "type": "string" },
-        "id": { "type": "string" }
+        "id": {
+          "type": "string",
+          "description": "a value uniquely identifying the entity within a single plan"
+        },
+        "uri": {
+          "type": "string",
+          "description": "the ID as a URI when it's a valid URI"
+        }
       }
     },
     "interaction": {
