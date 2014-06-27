@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.Task;
+import vsr.cobalt.models.Widget;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.PropertyProvision;
@@ -28,6 +29,7 @@ import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
+import static vsr.cobalt.models.makers.WidgetMaker.aWidget;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aGraph;
@@ -563,6 +565,66 @@ public class GraphExtenderTest {
           .withProvision(anActionProvision()
               .withRequest(a1)
               .withPrecursor(a2)));
+
+      assertEquals(xg.getLastLevel(), xl);
+    }
+
+    @Test
+    public void filterPrecursorActionsCausingCyclicDependencies() throws Exception {
+      final Task t = make(aMinimalTask());
+
+      final Widget w1 = make(aWidget().withIdentifier("w1"));
+      final Widget w2 = make(aWidget().withIdentifier("w2"));
+
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+
+      final Action a1 = make(aMinimalAction()
+          .withWidget(w1)
+          .withTask(t)
+          .withPre(aPropositionSet()
+              .withFilled(p1)));
+
+      // will cause cyclic dependency with a1, therefore cannot be a precursor
+      final Action a2 = Action.compose(a1, make(aMinimalAction()
+          .withWidget(w1)
+          .withPre(aPropositionSet()
+              .withCleared(p2))));
+
+      // an action supporting a1 via a property provision, will be used instead of a2
+      final Action a3 = make(aMinimalAction()
+          .withWidget(w2)
+          .withPub(p1));
+
+      final Graph g = make(aGraph()
+          .withInitialLevel(anInitialLevel()
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a1))));
+
+      final PropertyProvision pp = make(aPropertyProvision()
+          .withRequest(p1)
+          .withOffer(p1)
+          .withProvidingAction(a3));
+
+      final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
+      when(pap.getPrecursorActionsFor(a1)).thenReturn(setOf(a2));
+
+      final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
+      when(ppr.getProvisionsFor(setOf(p1))).thenReturn(setOf(pp));
+
+      final CyclicDependencyDetector cdd = mock(CyclicDependencyDetector.class);
+      when(cdd.createsCyclicDependencyVia(a2, a1, g)).thenReturn(true);
+
+      final GraphExtender gx = new GraphExtender(pap, ppr, cdd);
+
+      final Graph xg = gx.extendGraph(g);
+
+      final ExtensionLevel xl = make(anExtensionLevel()
+          .withProvision(anActionProvision()
+              .withRequest(a1)
+              .withProvision(pp)));
 
       assertEquals(xg.getLastLevel(), xl);
     }

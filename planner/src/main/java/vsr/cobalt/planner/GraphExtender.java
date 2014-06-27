@@ -90,16 +90,14 @@ public class GraphExtender {
   private Collection<Candidate> findCandidates(final Set<Action> requiredActions, final Graph graph) {
     final Collection<Candidate> candidates = new ArrayList<>();
     for (final Action ra : requiredActions) {
-      final Set<Action> precursors = providePrecursorActions(ra);
+      final Set<Action> precursors = filterCyclicDependentActions(providePrecursorActions(ra), ra, graph);
       if (precursors.isEmpty()) {
         if (!ra.requiresPrecursor()) {
           candidates.add(new Candidate(ra));
         }
       } else {
         for (final Action pa : precursors) {
-          if (!createsCyclicDependency(pa, ra, graph)) {
-            candidates.add(new Candidate(ra, pa));
-          }
+          candidates.add(new Candidate(ra, pa));
         }
       }
     }
@@ -134,11 +132,32 @@ public class GraphExtender {
   }
 
   /**
+   * Filter all supporting actions which create a cyclic dependency via some dependent action.
+   *
+   * @param supports  a set of supporting actions
+   * @param dependent a dependent action
+   * @param graph     a graph containing the dependent action
+   *
+   * @return a set of supporting actions not creating a cyclic dependency via the dependent action
+   */
+  private Set<Action> filterCyclicDependentActions(final Set<Action> supports, final Action dependent,
+                                                   final Graph graph) {
+    final Set<Action> filtered = new HashSet<>();
+    for (final Action support : supports) {
+      if (!createsCyclicDependency(support, dependent, graph)) {
+        filtered.add(support);
+      }
+    }
+    return filtered;
+  }
+
+  /**
    * Test if any providing action from a set of property provisions causes a cyclic dependency via dependent action,
    * e.g. a candidate's requested action.
    *
    * @param provisions a set of property provisions
    * @param dependent  a dependent action
+   * @param graph      a graph containing the dependent action
    *
    * @return true when any providing action causes a cyclic dependency, false otherwise
    */
