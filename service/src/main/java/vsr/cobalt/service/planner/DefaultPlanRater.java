@@ -78,9 +78,13 @@ public class DefaultPlanRater implements PlanRater {
   private int rateActions(final Iterable<Action> actions) {
     int value = 0;
     for (final Action a : actions) {
-      value += a.getInteractions().size();
+      value += rateAction(a);
     }
     return value;
+  }
+
+  private int rateAction(final Action action) {
+    return 1 + action.getInteractions().size();
   }
 
   private int rateTaskProvisions(final Iterable<TaskProvision> provisions) {

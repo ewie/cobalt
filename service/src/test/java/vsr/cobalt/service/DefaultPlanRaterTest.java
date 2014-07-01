@@ -270,4 +270,49 @@ public class DefaultPlanRaterTest {
     assertEquals(r1.compareTo(r2), -1);
   }
 
+  @Test
+  public void favorLessActions() {
+    final Task t1 = make(aMinimalTask().withIdentifier("t1"));
+    final Task t2 = make(aMinimalTask().withIdentifier("t2"));
+
+    final Action a1 = make(aMinimalAction()
+        .withTask(t1));
+
+    final Action a2 = make(aMinimalAction()
+        .withTask(t2));
+
+    final Action a3 = Action.compose(a1, a2);
+
+    final Plan p1 = new Plan(make(aGraph()
+        .withInitialLevel(anInitialLevel()
+            .withTaskProvision(aTaskProvision()
+                .withRequest(t1)
+                .withOffer(t1)
+                .withProvidingAction(a1))
+            .withTaskProvision(aTaskProvision()
+                .withRequest(t2)
+                .withOffer(t2)
+                .withProvidingAction(a2)))));
+
+    final Plan p2 = new Plan(make(aGraph()
+        .withInitialLevel(anInitialLevel()
+            .withTaskProvision(aTaskProvision()
+                .withRequest(t1)
+                .withOffer(t1)
+                .withProvidingAction(a3))
+            .withTaskProvision(aTaskProvision()
+                .withRequest(t2)
+                .withOffer(t2)
+                .withProvidingAction(a3)))));
+
+    final Repository r = mock(Repository.class);
+
+    final DefaultPlanRater pr = new DefaultPlanRater(r);
+
+    final Rating r1 = pr.rate(p1);
+    final Rating r2 = pr.rate(p2);
+
+    assertEquals(r1.compareTo(r2), 1);
+  }
+
 }
