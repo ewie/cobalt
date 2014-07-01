@@ -680,6 +680,69 @@ public class GraphExtenderTest {
       assertEquals(xg.getLastLevel(), xl);
     }
 
+    @Test
+    public void doNotCreateActionProvisionWithProvidingActionRepresentedByAnotherProvidingAction() throws Exception {
+      final Task t = make(aMinimalTask());
+
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+
+      final Action a1 = make(aMinimalAction()
+          .withTask(t)
+          .withPre(aPropositionSet()
+              .withFilled(p1, p2)));
+
+      final Action a2 = make(aMinimalAction().withPub(p1));
+
+      final Action a3 = make(aMinimalAction().withPub(p2));
+
+      final Action a4 = Action.compose(a2, a3);
+
+      final PropertyProvision pp1 = make(aPropertyProvision()
+          .withRequest(p1)
+          .withOffer(p1)
+          .withProvidingAction(a2));
+
+      final PropertyProvision pp2 = make(aPropertyProvision()
+          .withRequest(p2)
+          .withOffer(p2)
+          .withProvidingAction(a3));
+
+      final PropertyProvision pp3 = make(aPropertyProvision()
+          .withRequest(p1)
+          .withOffer(p1)
+          .withProvidingAction(a4));
+
+      final PropertyProvision pp4 = make(aPropertyProvision()
+          .withRequest(p2)
+          .withOffer(p2)
+          .withProvidingAction(a4));
+
+      final Graph g = make(aGraph()
+          .withInitialLevel(anInitialLevel()
+              .withTaskProvision(aTaskProvision()
+                  .withRequest(t)
+                  .withOffer(t)
+                  .withProvidingAction(a1))));
+
+      final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
+      when(ppr.getProvisionsFor(setOf(p1, p2))).thenReturn(setOf(pp1, pp2, pp3, pp4));
+
+      final GraphExtender gx = new GraphExtender(NO_PRECURSORS, ppr, NO_CYCLES);
+
+      final Graph xg = gx.extendGraph(g);
+
+      final ExtensionLevel xl = make(anExtensionLevel()
+          .withProvision(anActionProvision()
+              .withRequest(a1)
+              .withProvision(pp1, pp2))
+          .withProvision(anActionProvision()
+              .withRequest(a1)
+              .withProvision(pp3, pp4)));
+
+      assertEquals(xg.getLastLevel(), xl);
+    }
+
   }
 
 }

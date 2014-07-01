@@ -121,7 +121,7 @@ public class GraphExtender {
         aps.add(createActionProvision(c));
       } else {
         for (final Set<PropertyProvision> combination : index.getCombinations(c.requiredProperties)) {
-          if (!createsCyclicDependency(combination, c.request, graph)) {
+          if (canCreateActionProvision(c, combination, graph)) {
             aps.add(createActionProvision(c, combination));
           }
         }
@@ -149,6 +149,29 @@ public class GraphExtender {
       }
     }
     return filtered;
+  }
+
+  /**
+   * Check if we can create an action provision.
+   *
+   * @param candidate  an action provision candidate
+   * @param provisions a set of property provisions for the candidate
+   * @param graph      a graph for which the action provision should be created
+   *
+   * @return true when an action provision can be created, false otherwise
+   */
+  private boolean canCreateActionProvision(final Candidate candidate, final Set<PropertyProvision> provisions,
+                                           final Graph graph) {
+    // We can create an action provision when it does not create any cyclic dependencies.
+    // Furthermore we will not allow an action provision when its providing actions are not disjoint. This way we can
+    // avoid having providing actions whose functionality (interactions, published properties, ...) is provided by
+    // another action in the same action provision.
+    // XXX This assumes that the property provision provider, when returning non-disjoint providing actions, will also
+    // return disjoint providing actions. Otherwise we would have to use the non-disjoint variant to extend the graph
+    // with some applicable action provisions.
+
+    return haveDisjointProvidingActions(provisions)
+        && !createsCyclicDependency(provisions, candidate.request, graph);
   }
 
   /**
@@ -181,6 +204,30 @@ public class GraphExtender {
 
   private boolean createsCyclicDependency(final Action support, final Action dependent, final Graph graph) {
     return cyclicDependencyDetector.createsCyclicDependencyVia(support, dependent, graph);
+  }
+
+  /**
+   * Check if the providing actions of a set of property provisions are disjoint, i.e. no providing action represents
+   * any other providing action.
+   *
+   * @param provisions a set of property provisions
+   *
+   * @return true when providing actions are disjoint, false otherwise
+   */
+  private static boolean haveDisjointProvidingActions(final Set<PropertyProvision> provisions) {
+    for (final PropertyProvision pp1 : provisions) {
+      for (final PropertyProvision pp2 : provisions) {
+        final Action a1 = pp1.getProvidingAction();
+        final Action a2 = pp2.getProvidingAction();
+
+        // Because a nested loop pairs an action with itself and an action represents itself, we have to make sure to
+        // ignore those pairings.
+        if (!a1.equals(a2) && a1.represents(a2)) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   /**
