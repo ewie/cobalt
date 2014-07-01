@@ -21,6 +21,7 @@ import vsr.cobalt.service.planner.DefaultPlanRater;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.InteractionMaker.aMinimalInteraction;
@@ -76,7 +77,7 @@ public class DefaultPlanRaterTest {
   }
 
   @Test
-  public void returnNullWhenAnyActionHasNoInteractions() {
+  public void allowInitialLevelActionsWithoutInteractions() {
     final Task t = make(aMinimalTask());
 
     final Action a = make(aMinimalAction().withTask(t));
@@ -91,7 +92,39 @@ public class DefaultPlanRaterTest {
     final Repository r = mock(Repository.class);
 
     final DefaultPlanRater pr = new DefaultPlanRater(r);
-    assertNull(pr.rate(p));
+    assertNotNull(pr.rate(p));
+  }
+
+  @Test
+  public void returnNullWhenAnyExtensionLevelActionHasNoInteractions() {
+    final Task t = make(aMinimalTask());
+
+    final Property p = make(aMinimalProperty());
+
+    final Action a1 = make(aMinimalAction()
+        .withTask(t)
+        .withPre(aPropositionSet()
+            .withCleared(p)));
+
+    final Action a2 = make(aMinimalAction()
+        .withEffects(aPropositionSet()
+            .withCleared(p)));
+
+    final Plan pl = new Plan(make(aGraph()
+        .withInitialLevel(anInitialLevel()
+            .withTaskProvision(aTaskProvision()
+                .withRequest(t)
+                .withOffer(t)
+                .withProvidingAction(a1)))
+        .withExtensionLevel(anExtensionLevel()
+            .withProvision(anActionProvision()
+                .withRequest(a1)
+                .withPrecursor(a2)))));
+
+    final Repository r = mock(Repository.class);
+
+    final DefaultPlanRater pr = new DefaultPlanRater(r);
+    assertNull(pr.rate(pl));
   }
 
   @Test

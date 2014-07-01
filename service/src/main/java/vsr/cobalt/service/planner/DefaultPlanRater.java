@@ -124,9 +124,6 @@ public class DefaultPlanRater implements PlanRater {
    * @return true when the graph is supported, false otherwise
    */
   private boolean isSupported(final Graph graph) {
-    if (!isSupported(graph.getInitialLevel())) {
-      return false;
-    }
     for (final ExtensionLevel xl : graph.getExtensionLevelsReversed()) {
       if (!isSupported(xl)) {
         return false;
