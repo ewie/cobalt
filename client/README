@@ -1,0 +1,31 @@
+W3C widget to consume the Cobalt planning service and configure a mashup within
+Apache Rave.
+
+
+Dependencies
+============
+
+nodejs >= 0.10
+npm    >= 1.4
+
+
+Building
+========
+
+Clone the repository. After changing the current working directory to the cloned
+repository, install dependencies using npm. To build the widget run either grunt
+with either task widget:dev or widget:release the first will include sourcemaps,
+the latter will minify all JavaScript. The resulting widgets are to be found in
+the projects root directory cobalt-widget-dev.wgt or cobalt-widget-release.wgt,
+depending on which grunt task was used.
+
+  $ git clone <repo> <dir>
+  $ cd <dir>
+  $ npm i
+  $ grunt widget:{dev|release}
+
+
+License
+=======
+
+Licensed under the BSD 3-Clause License.

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets"
+  id="https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/widget">
+
+ <name>Cobalt Mashup Planner</name>
+ <description>Consumes the Cobalt planning service and configures a mashup within Apache Rave</description>
+
+ <author email="ewie@hrz.tu-chemnitz.de">Erik Wienhold</author>
+
+ <feature name="http://www.openajax.org/hub" required="true"/>
+
+ <content src="index.html"/>
+ <content src="style.css"/>
+ <content src="main.js"/>
+
+</widget>

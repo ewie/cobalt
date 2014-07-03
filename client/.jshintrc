@@ -1,0 +1,22 @@
+{
+  "browser": true,
+  "curly": true,
+  "devel": true,
+  "eqeqeq": true,
+  "expr": true,
+  "immed": true,
+  "indent": 2,
+  "jquery": true,
+  "latedef": "nofunc",
+  "node": true,
+  "predef": [
+    "Backbone",
+    "_"
+  ],
+  "proto": true,
+  "lastsemic": true,
+  "strict": false,
+  "trailing": true,
+  "undef": true,
+  "unused": true
+}

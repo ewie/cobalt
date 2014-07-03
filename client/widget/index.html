@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>COBALT</title>
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script type="application/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+    <script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
+    <script type="application/javascript" src="main.js"></script>
+  </head>
+  <body>
+    <menu type="list"><!--
+   --><li><h1 id="logo">COBALT</h1></li><!--
+   --><li><a class="menu-link" href="#service">service</a></li><!--
+   --><li><a class="menu-link" href="#plans">plans</a></li><!--
+   --><li><a class="menu-link" id="current-plan-link" href="#plan">current execution</a></li><!--
+ --></menu>
+    <main>
+      <section id="service-section"></section>
+      <section id="plans-section"></section>
+      <section id="execution-section"></section>
+    </main>
+    <footer>
+      <ul><!--
+     --><li>&copy; 2014</li><!--
+     --><li>Erik Wienhold</li><!--
+     --><li><a href="https://vsr.informatik.tu-chemnitz.de">VSR</a></li><!--
+     --><li><a href="https://github.com/ewie/cobalt">github.com/ewie/cobalt</a></li><!--
+   --></ul>
+    </footer>
+
+    <template id="service-template">
+      <h2>Service</h2>
+      <p>Request the planning of a mashup realizing the goal mashup given by a semantic description.</p>
+      <div name="error" class="error"></div>
+      <form name="request">
+        <div class="field">
+          <label class="field-label" for="{media-type}">language</label>
+          <div class="field-value">
+            <select id="{media-type}" name="media-type">
+              <option value="application/rdf+json">RDF/JSON</option>
+              <option value="application/rdf+xml">RDF/XML</option>
+              <option value="text/turtle">Turtle</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="{goal-mashup}">goal mashup</label>
+          <div class="field-value">
+            <textarea id="{goal-mashup}" class="goal-mashup" name="goal-mashup"></textarea>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">plan depth</label>
+          <div class="field-value">
+            <label for="{min-plan-depth}">min</label>
+            <input id="{min-plan-depth}" name="min-plan-depth" type="number" min="1"/>
+            <label for="{max-plan-depth}">max</label>
+            <input id="{max-plan-depth}" name="max-plan-depth" type="number" min="1"/>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="{service-url}">service URL</label>
+          <div class="field-value">
+            <input id="{service-url}" name="service-url" type="url"/>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-label"></div>
+          <div class="field-value">
+            <button id="submit" class="button" type="submit">submit</button>
+          </div>
+        </div>
+      </form>
+    </template>
+
+    <template id="plans-template">
+      <h2>Plans</h2>
+      <span name="count" class="plans-count"></span>
+      <ul class="plans" name="plans"></ul>
+    </template>
+
+    <template id="plan-template">
+      <a name="execute" class="button control plan-execute" href="#" title="execute this plan"></a>
+      <span name="rating" class="plan-rating" title="rating (the lower the better)"></span>
+      <span class="plan-rating-bar" title="relative rating among all plans">
+        <span name="rating-bar" class="plan-rating-bar-fill"></div>
+      </span>
+    </template>
+
+    <template id="execution-template">
+      <h2>Execution</h2>
+      <button class="button control execution-control execution-reload" name="reload" type="button" title="reload the plan"></button>
+      <button class="button control execution-control execution-expand" name="expand-all" type="button" title="expand all steps"></button>
+      <button class="button control execution-control execution-collapse" name="collapse-all" type="button" title="collapse all steps except the current step"></button>
+      <div name="steps"></div>
+    </template>
+
+    <template id="steps-template">
+      <span name="count"></span>
+      <ul class="steps" name="steps"></ul>
+    </template>
+
+    <template id="step-template">
+      <button name="number" class="step-number" type="button"></button>
+      <ul name="actions"></ul>
+    </template>
+
+    <template id="action-template">
+      <button name="highlight" class="button highlight-action" type="button" title="highlight the target widget"></button>
+      <span name="count"></span>
+      <span class="action-done" name="done"><input name="done-check" type="checkbox" class="action-done-check"/></span>
+      <ul name="interactions"></ul>
+    </template>
+
+    <template id="interaction-template">
+      <span name="instruction"></span>
+    </template>
+  </body>
+</html>

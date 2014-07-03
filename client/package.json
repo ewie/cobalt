@@ -1,0 +1,20 @@
+{
+  "name": "cobalt-client-widget",
+  "version": "0.1.0",
+  "description": "W3C widget to consume the Cobalt planning service and configure a mashup within Apache Rave",
+  "author": "Erik Wienhold <ewie@hrz.tu-chemnitz.de>",
+  "license": "BSD 3-Clause License",
+  "private": true,
+  "dependencies": {
+    "json-pointer": "~0.1",
+    "uuid": "~1.4"
+  },
+  "devDependencies": {
+    "grunt": "~0.4",
+    "grunt-browserify": "~2.1",
+    "grunt-contrib-clean": "~0.5",
+    "grunt-contrib-jshint": "~0.10",
+    "grunt-contrib-uglify": "~0.5",
+    "grunt-zip": "~0.15"
+  }
+}
