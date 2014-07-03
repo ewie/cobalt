@@ -14,6 +14,7 @@ if (!_rave) {
 }
 
 
+
 /**
  * @return {any} Rave's current page ID
  */
@@ -31,6 +32,7 @@ function getCurrentPageId() {
  * @return {object} a promise resolving to the matching widget
  */
 var getWookieWidget = (function () {
+
   var cache = {};
 
   return function getWookieWidget(uri) {
@@ -41,22 +43,23 @@ var getWookieWidget = (function () {
         } else {
           _rave.api.rpc.getAllWidgets({
             successCallback: function (result) {
-              var wookieWidget = _.find(result.result.resultSet, function (wookieWidget) {
-                return wookieWidget.url === uri;
+              var widget = _.find(result.result.resultSet, function (widget) {
+                return widget.url === uri;
               });
-              if (wookieWidget) {
-                dfd.resolve(wookieWidget);
+              if (widget) {
+                dfd.resolve(widget);
               } else {
-                dfd.reject({ message: "cannot find Rave widget for URI " + uri });
+                dfd.reject({ message: "cannot find Wookie widget for URI " + uri });
               }
             }
           });
         }
       } else {
-        dfd.reject({ message: "cannot determine Rave widget without a URI" });
+        dfd.reject({ message: "cannot find Wookie widget without a URI" });
       }
     });
   };
+
 }());
 
 
@@ -64,17 +67,17 @@ var getWookieWidget = (function () {
 /**
  * A a widget from Wookie to the current page.
  *
- * @param {object} wookieWidget a widget provided by Wookie
+ * @param {object} widget a widget provided by Wookie
  *
  * @return {object} a promise resolving to the added region widget
  */
-function addWookieWidgetToPage(wookieWidget) {
+function addWookieWidgetToPage(widget) {
   return $.Deferred.promise(function (dfd) {
     _rave.api.rpc.addWidgetToPage({
       pageId: getCurrentPageId(),
-      widgetId: wookieWidget.id,
-      successCallback: function (regionWidgetId) {
-        renderWidget(regionWidgetId)
+      widgetId: widget.id,
+      successCallback: function (id) {
+        renderWidget(id)
           .then(function (r) { dfd.resolve(r) });
       }
     });
@@ -86,18 +89,18 @@ function addWookieWidgetToPage(wookieWidget) {
 /**
  * Render a region widget based on a region widget ID.
  *
- * @param {string} regionWidgetId
+ * @param {string} id a region widget ID
  *
  * @return {object} a promise resolving to the rendered region widget
  */
-function renderWidget(regionWidgetId) {
+function renderWidget(id) {
   return $.Deferred.promise(function (dfd) {
     // XXX rave.renderNewWidget does not provide a callback to notify the
     // caller when the widget has been registered and rendered. Retrieving the
     // resulting region widget is only possible after it has been registered.
     // We could wait a certain amount of time, in the hope that the widget will
     // be rendered in that time frame. A more robust solution is to monkey patch
-    // $.fn.load to intercept the call made by _rave.renderNewWidget. Of course
+    // $.fn.load to intercept the call made by rave.renderNewWidget. Of course
     // this variant is brittle to implementation changes within Rave.
 
     var _$ = parent.$;
@@ -106,12 +109,12 @@ function renderWidget(regionWidgetId) {
     _$.fn.load = function (url, callback) {
       _load.call(this, url, function () {
         callback();
-        dfd.resolve(getRegionWidget(regionWidgetId));
+        dfd.resolve(getRegionWidget(id));
       });
     };
 
     // this should invoke $.fn.load synchronously
-    _rave.renderNewWidget(regionWidgetId, true, getCurrentPageId());
+    _rave.renderNewWidget(id, true, getCurrentPageId());
 
     // restore $.fn.load, after it was invoked by _rave.renderNewWidget
     _$.fn.load = _load;
@@ -125,20 +128,20 @@ function renderWidget(regionWidgetId) {
  * unregistering the region widget and removing its container element from the
  * document.
  *
- * @param {object} regionWidget
+ * @param {object} widget a region widget
  *
  * @return {object} a promise resolving when the region widget has been removed
  */
-function removeRegionWidget(regionWidget) {
+function removeRegionWidget(widget) {
   return $.Deferred.promise(function (dfd) {
     _rave.api.rpc.removeWidget({
-      regionWidgetId: regionWidget.regionWidgetId,
+      widgetId: widget.widgetId,
       successCallback: function () {
         // properly unregister the widget
-        _rave.unregisterWidget(regionWidget);
+        _rave.unregisterWidget(widget);
 
         // manually remove the widget element from the DOM
-        getRegionWidgetElement(regionWidget).remove();
+        getRegionWidgetElement(widget).remove();
 
         dfd.resolve();
       }
@@ -161,8 +164,8 @@ var getOtherRegionWidgets = (function () {
 
   return function getOtherRegionWidgets() {
     var thisUrl = removeHash(location.href);
-    return _rave.getWidgets().filter(function (regionWidget) {
-      var url = removeHash(regionWidget.widgetUrl);
+    return _rave.getWidgets().filter(function (widget) {
+      var url = removeHash(widget.widgetUrl);
       return url !== thisUrl;
     });
   };
@@ -180,9 +183,9 @@ var getOtherRegionWidgets = (function () {
  */
 function clearRegionWidgets() {
   var fns = getOtherRegionWidgets()
-    .map(function (regionWidget) {
+    .map(function (widget) {
       return function () {
-        return removeRegionWidget(regionWidget);
+        return removeRegionWidget(widget);
       };
     });
   return $.Deferred.sequence(fns, 200);
@@ -193,12 +196,12 @@ function clearRegionWidgets() {
 /**
  * Get the DOM Element wrapping a given region widget.
  *
- * @param {object} regionWidget
+ * @param {object} widget a region widget
  *
- * @return {Element} the DOM Element wrapping `regionWidget`
+ * @return {Element} the DOM Element wrapping `widget`
  */
-function getRegionWidgetElement(regionWidget) {
-  return regionWidget._el.parentElement;
+function getRegionWidgetElement(widget) {
+  return widget._el.parentElement;
 }
 
 
@@ -206,12 +209,12 @@ function getRegionWidgetElement(regionWidget) {
 /**
  * Get a region widget by its ID.
  *
- * @param {string} regionWidgetId
+ * @param {string} id a region widget ID
  *
  * @return {object} the matching region widget
  */
-function getRegionWidget(regionWidgetId) {
-  return _rave.getWidget(regionWidgetId);
+function getRegionWidget(id) {
+  return _rave.getWidget(id);
 }
 
 
