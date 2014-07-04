@@ -14,15 +14,15 @@ Building
 
 Clone the repository. After changing the current working directory to the cloned
 repository, install dependencies using npm. To build the widget run either grunt
-with either task widget:dev or widget:release the first will include sourcemaps,
+with either task widget:debug or widget:release the first will include sourcemaps,
 the latter will minify all JavaScript. The resulting widgets are to be found in
-the projects root directory cobalt-widget-dev.wgt or cobalt-widget-release.wgt,
+the projects root directory cobalt-widget-debug.wgt or cobalt-widget-release.wgt,
 depending on which grunt task was used.
 
   $ git clone <repo> <dir>
   $ cd <dir>
   $ npm i
-  $ grunt widget:{dev|release}
+  $ grunt widget:{debug|release}
 
 
 License

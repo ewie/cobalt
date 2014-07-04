@@ -12,7 +12,7 @@ module.exports = function (grunt) {
         'widget/config.xml',
         'widget/index.html',
         'widget/style.css',
-        'widget/main.build.js'
+        mainJs
       ],
       dest: widgetFileName,
       compression: 'DEFLATE'
@@ -22,22 +22,25 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     browserify: {
-      dev: {
+      debug: {
         options: {
           bundleOptions: { debug: true }
         },
         files: {
-          'widget/main.build.js': [ 'src/main.js' ]
+          'widget/main.debug.js': [ 'src/main.js' ]
         }
       },
       release: {
         files: {
-          'widget/main.build.js': [ 'src/main.js' ]
+          'widget/main.release.js': [ 'src/main.js' ]
         }
       }
     },
 
-    clean: ['widget/' ],
+    clean: [
+      'widget/*.js',
+      '*.wgt'
+    ],
 
     jshint: {
       all: [ 'Gruntfile.js', 'src/**/*.js' ],
@@ -52,13 +55,13 @@ module.exports = function (grunt) {
       },
       release: {
         files: {
-          'widget/main.min.js': [ 'widget/main.build.js' ]
+          'widget/main.min.js': [ 'widget/main.release.js' ]
         }
       }
     },
 
     zip: {
-      dev: configZip('cobalt-widget-dev.wgt', 'widget/main.build.js'),
+      debug: configZip('cobalt-widget-debug.wgt', 'widget/main.debug.js'),
       release: configZip('cobalt-widget-release.wgt', 'widget/main.min.js')
     }
 
@@ -70,10 +73,10 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-zip');
 
-  grunt.registerTask('widget-dev', [
+  grunt.registerTask('widget-debug', [
     'jshint',
-    'browserify:dev',
-    'zip:dev'
+    'browserify:debug',
+    'zip:debug'
   ]);
 
   grunt.registerTask('widget-release', [
