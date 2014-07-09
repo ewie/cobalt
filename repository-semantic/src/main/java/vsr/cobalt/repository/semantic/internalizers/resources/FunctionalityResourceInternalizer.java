@@ -8,16 +8,16 @@
 package vsr.cobalt.repository.semantic.internalizers.resources;
 
 import com.hp.hpl.jena.rdf.model.Resource;
-import vsr.cobalt.models.Task;
+import vsr.cobalt.models.Functionality;
 
 /**
  * @author Erik Wienhold
  */
-public class TaskResourceInternalizer extends IdentifiableResourceInternalizer<Task> {
+public class FunctionalityResourceInternalizer extends IdentifiableResourceInternalizer<Functionality> {
 
   @Override
-  public Task internalize(final Resource r) {
-    return new Task(asIdentifier(r));
+  public Functionality internalize(final Resource r) {
+    return new Functionality(asIdentifier(r));
   }
 
 }

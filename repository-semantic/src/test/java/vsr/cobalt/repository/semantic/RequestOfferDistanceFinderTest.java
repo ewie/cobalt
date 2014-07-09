@@ -9,25 +9,25 @@ package vsr.cobalt.repository.semantic;
 
 import com.hp.hpl.jena.query.Dataset;
 import org.testng.annotations.Test;
-import vsr.cobalt.models.Task;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Type;
 import vsr.cobalt.repository.semantic.finders.RequestOfferDistanceFinder;
 
 import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.repository.semantic.Datasets.loadDataset;
-import static vsr.cobalt.repository.semantic.Models.task;
+import static vsr.cobalt.repository.semantic.Models.functionality;
 import static vsr.cobalt.repository.semantic.Models.type;
 
 @Test
 public class RequestOfferDistanceFinderTest {
 
   @Test
-  public void taskDistance() {
-    final Dataset ds = loadDataset("distance/tasks.n3");
+  public void functionalityDistance() {
+    final Dataset ds = loadDataset("distance/functionalities.n3");
     final RequestOfferDistanceFinder df = new RequestOfferDistanceFinder(ds);
 
-    final Task t0 = task(0);
-    final Task t2 = task(2);
+    final Functionality t0 = functionality(0);
+    final Functionality t2 = functionality(2);
 
     assertEquals(df.getDistance(t0, t2), 2);
   }

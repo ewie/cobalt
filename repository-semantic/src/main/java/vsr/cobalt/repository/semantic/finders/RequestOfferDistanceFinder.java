@@ -15,8 +15,8 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Identifiable;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.models.Type;
 import vsr.cobalt.repository.semantic.Ontology;
 import vsr.cobalt.repository.semantic.externalizer.IdentifiableExternalizer;
@@ -45,8 +45,8 @@ public class RequestOfferDistanceFinder {
     this(dataset, DEFAULT_CACHE_SIZE);
   }
 
-  public int getDistance(final Task request, final Task offer) {
-    return getDistance(request, offer, Ontology.subTaskOf);
+  public int getDistance(final Functionality request, final Functionality offer) {
+    return getDistance(request, offer, Ontology.subFunctionalityOf);
   }
 
   public int getDistance(final Type request, final Type offer) {
@@ -76,8 +76,8 @@ public class RequestOfferDistanceFinder {
     }
   }
 
-  private static Resource asResource(final Identifiable task, final Model model) {
-    return IdentifiableExternalizer.externalize(task, model);
+  private static Resource asResource(final Identifiable identifiable, final Model model) {
+    return IdentifiableExternalizer.externalize(identifiable, model);
   }
 
   private static class Pair<T> {

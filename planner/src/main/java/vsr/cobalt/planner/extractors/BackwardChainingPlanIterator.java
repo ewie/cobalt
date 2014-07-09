@@ -16,14 +16,14 @@ import java.util.Set;
 
 import com.google.common.collect.AbstractIterator;
 import vsr.cobalt.models.Action;
-import vsr.cobalt.models.Task;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.planner.Plan;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
+import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.Level;
-import vsr.cobalt.planner.graph.TaskProvision;
 import vsr.cobalt.utils.ProductSet;
 import vsr.cobalt.utils.ProductSetIterator;
 
@@ -302,22 +302,22 @@ class BackwardChainingPlanIterator extends AbstractIterator<Plan> {
 
   }
 
-  private static class InitialFrame extends Frame<InitialLevel, TaskProvision> {
+  private static class InitialFrame extends Frame<InitialLevel, FunctionalityProvision> {
 
     public InitialFrame(final InitialLevel level) {
       super(level, createCombinations(level));
     }
 
     @Override
-    protected InitialLevel createLevel(final Set<TaskProvision> provisions) {
+    protected InitialLevel createLevel(final Set<FunctionalityProvision> provisions) {
       return new InitialLevel(provisions);
     }
 
-    private static ProductSet<TaskProvision> createCombinations(final InitialLevel level) {
-      final Set<Task> ts = level.getRequestedTasks();
-      final Set<Set<TaskProvision>> tps = new HashSet<>();
-      for (final Task t : ts) {
-        tps.add(level.getTaskProvisionsByRequestedTask(t));
+    private static ProductSet<FunctionalityProvision> createCombinations(final InitialLevel level) {
+      final Set<Functionality> fs = level.getRequestedFunctionalities();
+      final Set<Set<FunctionalityProvision>> tps = new HashSet<>();
+      for (final Functionality f : fs) {
+        tps.add(level.getFunctionalityProvisionsByRequestedFunctionality(f));
       }
       return new ProductSet<>(tps);
     }

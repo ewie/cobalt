@@ -21,12 +21,12 @@ import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aFunctionality;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.models.makers.InteractionMaker.aMinimalInteraction;
 import static vsr.cobalt.models.makers.InteractionMaker.anInteraction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
-import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
-import static vsr.cobalt.models.makers.TaskMaker.aTask;
 import static vsr.cobalt.models.makers.WidgetMaker.aMinimalWidget;
 import static vsr.cobalt.models.makers.WidgetMaker.aWidget;
 import static vsr.cobalt.testing.Assert.assertEmpty;
@@ -53,17 +53,17 @@ public class ActionTest {
     }
 
     @Test
-    public void preventModificationOfRealizedTasks() {
+    public void preventModificationOfRealizedFunctionalities() {
       final Widget w = make(aMinimalWidget());
       final Property p = make(aMinimalProperty());
       final PropositionSet pre = make(aPropositionSet().withCleared(p));
       final PropositionSet ef = make(aPropositionSet().withFilled(p));
       final Set<Property> pubs = emptySet();
-      final Task t = make(aMinimalTask());
-      final Set<Task> ts = setOf(t);
-      final Action a = Action.create(w, pre, ef, pubs, ts);
-      ts.add(null);
-      assertNotEquals(a.getRealizedTasks(), ts);
+      final Functionality f = make(aMinimalFunctionality());
+      final Set<Functionality> fs = setOf(f);
+      final Action a = Action.create(w, pre, ef, pubs, fs);
+      fs.add(null);
+      assertNotEquals(a.getRealizedFunctionalities(), fs);
     }
 
     @Test
@@ -73,10 +73,10 @@ public class ActionTest {
       final PropositionSet pre = make(aPropositionSet().withCleared(p));
       final PropositionSet ef = make(aPropositionSet().withFilled(p));
       final Set<Property> pubs = emptySet();
-      final Set<Task> ts = emptySet();
+      final Set<Functionality> fs = emptySet();
       final Interaction i = make(aMinimalInteraction());
       final Set<Interaction> is = setOf(i);
-      final Action a = Action.create(w, pre, ef, pubs, ts, is);
+      final Action a = Action.create(w, pre, ef, pubs, fs, is);
       is.add(null);
       assertNotEquals(a.getInteractions(), is);
     }
@@ -113,10 +113,10 @@ public class ActionTest {
     }
 
     @Test
-    public void defaultToEmptyRealizedTasks() {
+    public void defaultToEmptyRealizedFunctionalities() {
       final Widget w = make(aMinimalWidget());
       final Action a = Action.create(w);
-      assertEmpty(a.getRealizedTasks());
+      assertEmpty(a.getRealizedFunctionalities());
     }
 
     @Test
@@ -168,8 +168,8 @@ public class ActionTest {
 
       assertEquals(a3.getWidget(), a1.getWidget());
 
-      assertEquals(a3.getRealizedTasks(),
-          Sets.union(a1.getRealizedTasks(), a2.getRealizedTasks()));
+      assertEquals(a3.getRealizedFunctionalities(),
+          Sets.union(a1.getRealizedFunctionalities(), a2.getRealizedFunctionalities()));
 
       assertEquals(a3.getPublishedProperties(),
           Sets.union(a1.getPublishedProperties(), a2.getPublishedProperties()));
@@ -307,7 +307,7 @@ public class ActionTest {
 
     private Set<Property> published;
 
-    private Set<Task> tasks;
+    private Set<Functionality> functionalities;
 
     private Set<Interaction> interactions;
 
@@ -318,9 +318,9 @@ public class ActionTest {
       pre = make(aPropositionSet().withCleared(p));
       effects = make(aPropositionSet().withFilled(p));
       published = setOf(make(aMinimalProperty()));
-      tasks = setOf(make(aMinimalTask()));
+      functionalities = setOf(make(aMinimalFunctionality()));
       interactions = setOf(make(aMinimalInteraction()));
-      action = Action.create(widget, pre, effects, published, tasks, interactions);
+      action = Action.create(widget, pre, effects, published, functionalities, interactions);
     }
 
     @Test
@@ -349,8 +349,8 @@ public class ActionTest {
     }
 
     @Test
-    public void getRealizedTasks() {
-      assertEquals(action.getRealizedTasks(), tasks);
+    public void getRealizedFunctionalities() {
+      assertEquals(action.getRealizedFunctionalities(), functionalities);
     }
 
     @Test
@@ -482,9 +482,9 @@ public class ActionTest {
     }
 
     @Test
-    public void returnFalseWhenThereAreRealizedTasks() {
+    public void returnFalseWhenThereAreRealizedFunctionalities() {
       final Action a = make(aMinimalAction()
-          .withTask(aMinimalTask()));
+          .withFunctionality(aMinimalFunctionality()));
       assertFalse(a.isMaintenance());
     }
 
@@ -535,17 +535,17 @@ public class ActionTest {
   public static class Realizes {
 
     @Test
-    public void returnTrueWhenTheGivenTaskIsRealized() {
-      final Task t = make(aMinimalTask());
-      final Action a = make(aMinimalAction().withTask(t));
-      assertTrue(a.realizes(t));
+    public void returnTrueWhenTheGivenFunctionalityIsRealized() {
+      final Functionality f = make(aMinimalFunctionality());
+      final Action a = make(aMinimalAction().withFunctionality(f));
+      assertTrue(a.realizes(f));
     }
 
     @Test
-    public void returnFalseWhenTheGivenTaskIsNotRealized() {
-      final Task t = make(aMinimalTask());
+    public void returnFalseWhenTheGivenFunctionalityIsNotRealized() {
+      final Functionality f = make(aMinimalFunctionality());
       final Action a = make(aMinimalAction());
-      assertFalse(a.realizes(t));
+      assertFalse(a.realizes(f));
     }
 
   }
@@ -721,12 +721,12 @@ public class ActionTest {
     }
 
     @Test
-    public void returnFalseWhenRealizedTasksDiffer() {
+    public void returnFalseWhenRealizedFunctionalitiesDiffer() {
       final Action a1 = make(aMinimalAction()
-          .withTask(aTask().withIdentifier("t1")));
+          .withFunctionality(aFunctionality().withIdentifier("t1")));
 
       final Action a2 = make(aMinimalAction()
-          .withTask(aTask().withIdentifier("t2")));
+          .withFunctionality(aFunctionality().withIdentifier("t2")));
 
       assertNotEquals(a1, a2);
     }
@@ -764,7 +764,7 @@ public class ActionTest {
           a.getPreConditions(),
           a.getPostConditions(),
           a.getPublishedProperties(),
-          a.getRealizedTasks(),
+          a.getRealizedFunctionalities(),
           a.getInteractions());
       assertEquals(a.hashCode(), h);
     }

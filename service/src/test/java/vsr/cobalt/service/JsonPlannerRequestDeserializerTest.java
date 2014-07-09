@@ -20,13 +20,13 @@ import javax.json.Json;
 import javax.json.JsonStructure;
 
 import org.testng.annotations.Test;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Mashup;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.service.planner.JsonPlannerRequestDeserializer;
 import vsr.cobalt.service.planner.PlannerRequest;
 
 import static org.testng.Assert.assertEquals;
-import static vsr.cobalt.models.makers.TaskMaker.aTask;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aFunctionality;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 
@@ -120,7 +120,8 @@ public class JsonPlannerRequestDeserializerTest {
       final JsonPlannerRequestDeserializer d = new JsonPlannerRequestDeserializer();
       final JsonStructure obj = load("request/valid.json");
       final PlannerRequest r = d.deserialize(obj);
-      final Set<Task> ts = setOf(make(aTask().withIdentifier(URI.create("urn:example:task:bar"))));
+      final Set<Functionality> ts = setOf(make(aFunctionality()
+          .withIdentifier(URI.create("urn:example:fn:bar"))));
       assertEquals(r.getGoalMashup(), new Mashup(ts));
       assertEquals(r.getMinDepth(), 2);
       assertEquals(r.getMaxDepth(), 3);
@@ -131,7 +132,8 @@ public class JsonPlannerRequestDeserializerTest {
       final JsonPlannerRequestDeserializer d = new JsonPlannerRequestDeserializer();
       final JsonStructure obj = load("request/textual-mashup-data.json");
       final PlannerRequest r = d.deserialize(obj);
-      final Set<Task> ts = setOf(make(aTask().withIdentifier(URI.create("urn:example:task:foo"))));
+      final Set<Functionality> ts = setOf(make(aFunctionality()
+          .withIdentifier(URI.create("urn:example:fn:foo"))));
       assertEquals(r.getGoalMashup(), new Mashup(ts));
     }
 

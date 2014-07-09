@@ -14,11 +14,11 @@
   "definitions": {
     "initialLevel": {
       "type": "object",
-      "required": [ "taskProvisions" ],
+      "required": [ "functionalityProvisions" ],
       "properties": {
-        "taskProvisions": {
+        "functionalityProvisions": {
           "type": "array",
-          "items": { "$ref": "#/definitions/taskProvision" },
+          "items": { "$ref": "#/definitions/functionalityProvision" },
           "minItems": 1
         }
       }
@@ -34,12 +34,12 @@
         }
       }
     },
-    "taskProvision": {
+    "functionalityProvision": {
       "type": "object",
       "required": [ "request", "offer", "provider" ],
       "properties": {
-        "request": { "$ref": "#/definitions/task" },
-        "offer": { "$ref": "#/definitions/task" },
+        "request": { "$ref": "#/definitions/functionality" },
+        "offer": { "$ref": "#/definitions/functionality" },
         "provider": { "$ref": "#/definitions/action" }
       }
     },
@@ -80,15 +80,15 @@
           "items": { "$ref": "#/definitions/property" },
           "default": []
         },
-        "realizedTasks": {
+        "realizedFunctionalities": {
           "type": "array",
-          "items": { "$ref": "#/definitions/task" },
+          "items": { "$ref": "#/definitions/functionality" },
           "default": []
         }
       }
     },
     "widget": { "$ref": "#/definitions/identifiable" },
-    "task": { "$ref": "#/definitions/identifiable" },
+    "functionality": { "$ref": "#/definitions/identifiable" },
     "type": { "$ref": "#/definitions/identifiable" },
     "identifiable": {
       "description": "a uniquely identifiable entity",

@@ -23,8 +23,8 @@ public class JsonIdentifiableSerializer<T extends Identifiable> extends JsonSeri
   private static final String uri = "uri";
 
   @Override
-  public JsonObjectBuilder build(final T task) {
-    final Identifier identifier = task.getIdentifier();
+  public JsonObjectBuilder build(final T identifiable) {
+    final Identifier identifier = identifiable.getIdentifier();
     final JsonObjectBuilder obj = Json.createObjectBuilder();
 
     obj.add(id, identifier.toString());

@@ -10,10 +10,10 @@ package vsr.cobalt.models.makers;
 import java.util.Collection;
 
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Interaction;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PropositionSet;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.models.Widget;
 import vsr.cobalt.testing.maker.AtomicValue;
 import vsr.cobalt.testing.maker.CollectionValue;
@@ -35,7 +35,7 @@ public class ActionMaker implements Maker<Action> {
 
   private final CollectionValue<Property> pubs = new CollectionValue<>();
 
-  private final CollectionValue<Task> tasks = new CollectionValue<>();
+  private final CollectionValue<Functionality> functionalities = new CollectionValue<>();
 
   private final CollectionValue<Interaction> interactions = new CollectionValue<>();
 
@@ -57,7 +57,7 @@ public class ActionMaker implements Maker<Action> {
         pre.get(),
         effects.get(),
         pubs.asSet(),
-        tasks.asSet(),
+        functionalities.asSet(),
         interactions.asSet());
   }
 
@@ -111,19 +111,19 @@ public class ActionMaker implements Maker<Action> {
     return this;
   }
 
-  public ActionMaker withTasks(final Collection<Task> tasks) {
-    this.tasks.set(tasks);
+  public ActionMaker withFunctionalities(final Collection<Functionality> functionalities) {
+    this.functionalities.set(functionalities);
     return this;
   }
 
   @SafeVarargs
-  public final ActionMaker withTask(final Maker<Task>... makers) {
-    tasks.add(makers);
+  public final ActionMaker withFunctionality(final Maker<Functionality>... makers) {
+    functionalities.add(makers);
     return this;
   }
 
-  public ActionMaker withTask(final Task... tasks) {
-    this.tasks.addValues(tasks);
+  public ActionMaker withFunctionality(final Functionality... functionalities) {
+    this.functionalities.addValues(functionalities);
     return this;
   }
 

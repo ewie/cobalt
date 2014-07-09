@@ -11,17 +11,17 @@ import java.util.Set;
 
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
-import vsr.cobalt.models.Task;
+import vsr.cobalt.models.Functionality;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
-import static vsr.cobalt.models.makers.TaskMaker.aTask;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aFunctionality;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
+import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
+import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aMinimalFunctionalityProvision;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.aMinimalInitialLevel;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
-import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aMinimalTaskProvision;
-import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aTaskProvision;
 import static vsr.cobalt.testing.Assert.assertEmpty;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
@@ -34,86 +34,86 @@ public class InitialLevelTest {
   public static class New {
 
     @Test(expectedExceptions = IllegalArgumentException.class,
-        expectedExceptionsMessageRegExp = "expecting one or more task provisions")
-    public void rejectEmptySetOfTaskProvisions() {
-      new InitialLevel(emptySet(TaskProvision.class));
+        expectedExceptionsMessageRegExp = "expecting one or more functionality provisions")
+    public void rejectEmptySetOfFunctionalityProvisions() {
+      new InitialLevel(emptySet(FunctionalityProvision.class));
     }
 
     @Test
-    public void preventModificationOfTaskProvisions() {
-      final TaskProvision tp = make(aMinimalTaskProvision());
-      final Set<TaskProvision> tps = setOf(tp);
-      final InitialLevel il = new InitialLevel(tps);
-      tps.add(null);
-      assertNotEquals(il.getTaskProvisions(), tps);
-    }
-
-  }
-
-  @Test
-  public static class GetTaskProvisions {
-
-    @Test
-    public void returnAllTaskProvisions() {
-      final TaskProvision tp = make(aMinimalTaskProvision());
-      final InitialLevel s = make(anInitialLevel().withTaskProvision(tp));
-      assertEquals(s.getTaskProvisions(), setOf(tp));
+    public void preventModificationOfFunctionalityProvisions() {
+      final FunctionalityProvision fp = make(aMinimalFunctionalityProvision());
+      final Set<FunctionalityProvision> fps = setOf(fp);
+      final InitialLevel il = new InitialLevel(fps);
+      fps.add(null);
+      assertNotEquals(il.getFunctionalityProvisions(), fps);
     }
 
   }
 
   @Test
-  public static class GetRequestedTasks {
+  public static class GetFunctionalityProvisions {
 
     @Test
-    public void returnAllRequestedTasks() {
-      final Task t1 = make(aMinimalTask().withIdentifier("t1"));
-      final Task t2 = make(aMinimalTask().withIdentifier("t2"));
+    public void returnAllFunctionalityProvisions() {
+      final FunctionalityProvision fp = make(aMinimalFunctionalityProvision());
+      final InitialLevel s = make(anInitialLevel().withFunctionalityProvision(fp));
+      assertEquals(s.getFunctionalityProvisions(), setOf(fp));
+    }
 
-      final Action a1 = make(aMinimalAction().withTask(t1));
-      final Action a2 = make(aMinimalAction().withTask(t2));
+  }
 
-      final TaskProvision tp1 = make(aTaskProvision()
+  @Test
+  public static class GetRequestedFunctionalities {
+
+    @Test
+    public void returnAllRequestedFunctionalities() {
+      final Functionality f1 = make(aMinimalFunctionality().withIdentifier("f1"));
+      final Functionality f2 = make(aMinimalFunctionality().withIdentifier("f2"));
+
+      final Action a1 = make(aMinimalAction().withFunctionality(f1));
+      final Action a2 = make(aMinimalAction().withFunctionality(f2));
+
+      final FunctionalityProvision fp1 = make(aFunctionalityProvision()
           .withProvidingAction(a1)
-          .withOffer(t1)
-          .withRequest(t1));
+          .withOffer(f1)
+          .withRequest(f1));
 
-      final TaskProvision tp2 = make(aTaskProvision()
+      final FunctionalityProvision fp2 = make(aFunctionalityProvision()
           .withProvidingAction(a2)
-          .withOffer(t2)
-          .withRequest(t2));
+          .withOffer(f2)
+          .withRequest(f2));
 
-      final InitialLevel s = make(anInitialLevel().withTaskProvision(tp1, tp2));
+      final InitialLevel s = make(anInitialLevel().withFunctionalityProvision(fp1, fp2));
 
-      assertEquals(s.getRequestedTasks(), setOf(t1, t2));
+      assertEquals(s.getRequestedFunctionalities(), setOf(f1, f2));
     }
 
   }
 
   @Test
-  public static class GetTaskProvisionsByRequestedTask {
+  public static class GetFunctionalityProvisionsByRequestedFunctionality {
 
     @Test
-    public void returnEmptySetWhenThereIsNoTaskProvisionForTheGivenTask() {
+    public void returnEmptySetWhenThereIsNoFunctionalityProvisionForTheGivenFunctionality() {
       final InitialLevel s = make(aMinimalInitialLevel());
-      final Task t = make(aTask().withIdentifier("x"));
-      assertEmpty(s.getTaskProvisionsByRequestedTask(t));
+      final Functionality f = make(aFunctionality().withIdentifier("x"));
+      assertEmpty(s.getFunctionalityProvisionsByRequestedFunctionality(f));
     }
 
     @Test
-    public void returnAllTaskProvisionsHavingTheRequiredTask() {
-      final Task t1 = make(aTask().withIdentifier("t1"));
+    public void returnAllFunctionalityProvisionsHavingTheRequiredFunctionality() {
+      final Functionality f1 = make(aFunctionality().withIdentifier("f1"));
 
-      final TaskProvision tp1 = make(aTaskProvision()
-          .withProvidingAction(aMinimalAction().withTask(t1))
-          .withOffer(t1)
-          .withRequest(t1));
+      final FunctionalityProvision fp1 = make(aFunctionalityProvision()
+          .withProvidingAction(aMinimalAction().withFunctionality(f1))
+          .withOffer(f1)
+          .withRequest(f1));
 
-      final TaskProvision tp2 = make(aMinimalTaskProvision());
+      final FunctionalityProvision fp2 = make(aMinimalFunctionalityProvision());
 
-      final InitialLevel s = make(anInitialLevel().withTaskProvision(tp1, tp2));
+      final InitialLevel s = make(anInitialLevel().withFunctionalityProvision(fp1, fp2));
 
-      assertEquals(s.getTaskProvisionsByRequestedTask(t1), setOf(tp1));
+      assertEquals(s.getFunctionalityProvisionsByRequestedFunctionality(f1), setOf(fp1));
     }
 
   }
@@ -123,19 +123,19 @@ public class InitialLevelTest {
 
     @Test
     public void returnTheUnionOfAllRequiredActions() {
-      final Task t1 = make(aTask().withIdentifier("t1"));
-      final Task t2 = make(aTask().withIdentifier("t2"));
+      final Functionality f1 = make(aFunctionality().withIdentifier("f1"));
+      final Functionality f2 = make(aFunctionality().withIdentifier("f2"));
 
-      final Action a1 = make(aMinimalAction().withTask(t1));
-      final Action a2 = make(aMinimalAction().withTask(t2));
+      final Action a1 = make(aMinimalAction().withFunctionality(f1));
+      final Action a2 = make(aMinimalAction().withFunctionality(f2));
 
       final InitialLevel s = make(anInitialLevel()
-          .withTaskProvision(aTaskProvision()
+          .withFunctionalityProvision(aFunctionalityProvision()
               .withProvidingAction(a1)
-              .withOffer(t1))
-          .withTaskProvision(aTaskProvision()
+              .withOffer(f1))
+          .withFunctionalityProvision(aFunctionalityProvision()
               .withProvidingAction(a2)
-              .withOffer(t2)));
+              .withOffer(f2)));
 
       assertEquals(s.getRequiredActions(), setOf(a1, a2));
     }
@@ -146,40 +146,40 @@ public class InitialLevelTest {
   public static class Equality {
 
     @Test
-    public void useHashCodeOfTaskProvisionSet() {
-      final InitialLevel il = new InitialLevel(setOf(make(aMinimalTaskProvision())));
-      assertEquals(il.hashCode(), il.getTaskProvisions().hashCode());
+    public void useHashCodeOfFunctionalityProvisionSet() {
+      final InitialLevel il = new InitialLevel(setOf(make(aMinimalFunctionalityProvision())));
+      assertEquals(il.hashCode(), il.getFunctionalityProvisions().hashCode());
     }
 
     @Test
-    public void returnTrueWhenTaskProvisionSetsAreEqual() {
-      final InitialLevel il1 = new InitialLevel(setOf(make(aMinimalTaskProvision())));
-      final InitialLevel il2 = new InitialLevel(setOf(make(aMinimalTaskProvision())));
+    public void returnTrueWhenFunctionalityProvisionSetsAreEqual() {
+      final InitialLevel il1 = new InitialLevel(setOf(make(aMinimalFunctionalityProvision())));
+      final InitialLevel il2 = new InitialLevel(setOf(make(aMinimalFunctionalityProvision())));
       assertEquals(il1, il2);
     }
 
     @Test
     public void returnFalseWhenComparedWithNonInitialLevel() {
-      final InitialLevel il = new InitialLevel(setOf(make(aMinimalTaskProvision())));
+      final InitialLevel il = new InitialLevel(setOf(make(aMinimalFunctionalityProvision())));
       final Object x = new Object();
       assertNotEquals(il, x);
     }
 
     @Test
-    public void returnFalseWhenTaskProvisionSetsDiffer() {
-      final Task t = make(aMinimalTask().withIdentifier("t"));
+    public void returnFalseWhenFunctionalityProvisionSetsDiffer() {
+      final Functionality f = make(aMinimalFunctionality().withIdentifier("f"));
 
-      final Action a = make(aMinimalAction().withTask(t));
+      final Action a = make(aMinimalAction().withFunctionality(f));
 
-      final TaskProvision tp1 = make(aTaskProvision()
+      final FunctionalityProvision fp1 = make(aFunctionalityProvision()
           .withProvidingAction(a)
-          .withRequest(t)
-          .withOffer(t));
+          .withRequest(f)
+          .withOffer(f));
 
-      final TaskProvision tp2 = make(aMinimalTaskProvision());
+      final FunctionalityProvision fp2 = make(aMinimalFunctionalityProvision());
 
-      final InitialLevel il1 = new InitialLevel(setOf(tp1));
-      final InitialLevel il2 = new InitialLevel(setOf(tp2));
+      final InitialLevel il1 = new InitialLevel(setOf(fp1));
+      final InitialLevel il2 = new InitialLevel(setOf(fp2));
 
       assertNotEquals(il1, il2);
     }

@@ -19,9 +19,9 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertSame;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
-import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
 import static vsr.cobalt.models.makers.WidgetMaker.aWidget;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.aMinimalActionProvision;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
@@ -483,8 +483,8 @@ public class ActionProvisionTest {
       final ActionProvision ap2 = make(aMinimalActionProvision()
           .withPrecursor(precursor)
           .withRequest(aMinimalAction()
-              // use a dummy task to create a distinct requested action
-              .withTask(aMinimalTask())
+              // use a dummy functionality to create a distinct requested action
+              .withFunctionality(aMinimalFunctionality())
               .withPre(aPropositionSet().withCleared(p))));
 
       assertNotEquals(ap1, ap2);

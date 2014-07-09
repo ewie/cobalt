@@ -10,12 +10,12 @@ package vsr.cobalt.planner;
 import java.util.HashSet;
 import java.util.Set;
 
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Mashup;
-import vsr.cobalt.models.Task;
+import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
-import vsr.cobalt.planner.graph.TaskProvision;
-import vsr.cobalt.planner.providers.TaskProvisionProvider;
+import vsr.cobalt.planner.providers.FunctionalityProvisionProvider;
 
 /**
  * A graph factory creates an initial graph from a mashup description.
@@ -24,13 +24,13 @@ import vsr.cobalt.planner.providers.TaskProvisionProvider;
  */
 public class GraphFactory {
 
-  private final TaskProvisionProvider taskProvisionProvider;
+  private final FunctionalityProvisionProvider functionalityProvisionProvider;
 
   /**
-   * @param taskProvisionProvider a provider of task provisions
+   * @param functionalityProvisionProvider a provider of functionality provisions
    */
-  public GraphFactory(final TaskProvisionProvider taskProvisionProvider) {
-    this.taskProvisionProvider = taskProvisionProvider;
+  public GraphFactory(final FunctionalityProvisionProvider functionalityProvisionProvider) {
+    this.functionalityProvisionProvider = functionalityProvisionProvider;
   }
 
   /**
@@ -43,33 +43,34 @@ public class GraphFactory {
    * @throws PlanningException when the goal cannot be fully satisfied
    */
   public Graph createGraph(final Mashup mashup) throws PlanningException {
-    final Set<Task> ts = mashup.getTasks();
+    final Set<Functionality> fs = mashup.getFunctionalities();
 
-    final Set<TaskProvision> tps = taskProvisionProvider.getProvisionsFor(ts);
+    final Set<FunctionalityProvision> fps = functionalityProvisionProvider.getProvisionsFor(fs);
 
-    if (tps.isEmpty() || !satisfyAllTasks(tps, ts)) {
-      throw new PlanningException("cannot realize all mashup tasks");
+    if (fps.isEmpty() || !satisfyAllFunctionalities(fps, fs)) {
+      throw new PlanningException("cannot realize all mashup functionalities");
     }
 
-    return Graph.create(new InitialLevel(tps));
+    return Graph.create(new InitialLevel(fps));
   }
 
   /**
-   * Check if a set of task provisions satisfy all tasks.
+   * Check if a set of functionality provisions satisfy all functionalities.
    *
-   * @param provisions a set of task provisions
-   * @param tasks      a set of requested tasks
+   * @param provisions      a set of functionality provisions
+   * @param functionalities a set of requested functionalities
    *
-   * @return true when all tasks are satisfied, false otherwise
+   * @return true when all functionalities are satisfied, false otherwise
    */
-  private boolean satisfyAllTasks(final Set<TaskProvision> provisions, final Set<Task> tasks) {
-    final Set<Task> satisfiedTasks = new HashSet<>();
+  private boolean satisfyAllFunctionalities(final Set<FunctionalityProvision> provisions,
+                                            final Set<Functionality> functionalities) {
+    final Set<Functionality> satisfiedFunctionalities = new HashSet<>();
 
-    for (final TaskProvision tp : provisions) {
-      satisfiedTasks.add(tp.getRequest());
+    for (final FunctionalityProvision fp : provisions) {
+      satisfiedFunctionalities.add(fp.getRequest());
     }
 
-    return satisfiedTasks.equals(tasks);
+    return satisfiedFunctionalities.equals(functionalities);
   }
 
 }

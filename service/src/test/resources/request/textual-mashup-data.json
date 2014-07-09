@@ -1,6 +1,6 @@
 {
   "mashup": {
     "mediaType": "text/n3",
-    "content": "@prefix : <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#> . [] a :Mashup ; :realizesTask <urn:example:task:foo> ."
+    "content": "@prefix : <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#> . [] a :Mashup ; :realizesFunctionality <urn:example:fn:foo> ."
   }
 }

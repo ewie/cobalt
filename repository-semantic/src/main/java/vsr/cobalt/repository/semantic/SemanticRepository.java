@@ -11,11 +11,11 @@ import java.util.Set;
 
 import com.hp.hpl.jena.query.Dataset;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PublishedProperty;
-import vsr.cobalt.models.RealizedTask;
+import vsr.cobalt.models.RealizedFunctionality;
 import vsr.cobalt.models.Repository;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.models.Type;
 import vsr.cobalt.models.Widget;
 import vsr.cobalt.repository.semantic.finders.CompatibleResourceFinder;
@@ -64,8 +64,8 @@ public class SemanticRepository implements Repository {
   }
 
   @Override
-  public Set<RealizedTask> findCompatibleTasks(final Task task) {
-    return compatibleResourceFinder.findCompatibleTasks(task);
+  public Set<RealizedFunctionality> findCompatibleFunctionalities(final Functionality functionality) {
+    return compatibleResourceFinder.findCompatibleFunctionalities(functionality);
   }
 
   @Override
@@ -74,7 +74,7 @@ public class SemanticRepository implements Repository {
   }
 
   @Override
-  public int getDistance(final Task request, final Task offer) {
+  public int getDistance(final Functionality request, final Functionality offer) {
     return requestOfferDistanceFinder.getDistance(request, offer);
   }
 

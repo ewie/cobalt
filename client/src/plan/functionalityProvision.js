@@ -10,13 +10,13 @@
 var value = require('../util/value');
 
 var Action = require('./action');
-var Task = require('./task');
+var Functionality = require('./functionality');
 
 
 module.exports = value.define({
 
-  request: { type: Task },
-  offer: { type: Task },
+  request: { type: Functionality },
+  offer: { type: Functionality },
   provider: { type: Action }
 
 });

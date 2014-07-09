@@ -10,14 +10,14 @@ package vsr.cobalt.repository.semantic;
 import java.net.URI;
 
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.models.Type;
 import vsr.cobalt.models.Widget;
 
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aProperty;
-import static vsr.cobalt.models.makers.TaskMaker.aTask;
 import static vsr.cobalt.models.makers.TypeMaker.aType;
 import static vsr.cobalt.models.makers.WidgetMaker.aWidget;
 import static vsr.cobalt.testing.Utilities.make;
@@ -35,8 +35,8 @@ public final class Models {
     return make(aType().withIdentifier(uri("urn:example:type:" + id)));
   }
 
-  public static Task task(final int id) {
-    return make(aTask().withIdentifier(uri("urn:example:task:" + id)));
+  public static Functionality functionality(final int id) {
+    return make(aFunctionality().withIdentifier(uri("urn:example:fn:" + id)));
   }
 
   public static Action action(final Widget w, final Property p) {
@@ -45,10 +45,10 @@ public final class Models {
         .withPub(p));
   }
 
-  public static Action action(final Widget w, final Task t) {
+  public static Action action(final Widget w, final Functionality t) {
     return make(aMinimalAction()
         .withWidget(w)
-        .withTask(t));
+        .withFunctionality(t));
   }
 
   public static Property property(final int id, final Type type) {

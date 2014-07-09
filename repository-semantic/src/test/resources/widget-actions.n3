@@ -38,7 +38,7 @@
       :hasType <urn:example:type:5>
     ] ;
 
-    :realizesTask <urn:example:task:1> ;
+    :realizesFunctionality <urn:example:fn:1> ;
 
     :hasInteraction [ :hasInstruction "i1" ]
 

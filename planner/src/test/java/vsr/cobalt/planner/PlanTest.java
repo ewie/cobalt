@@ -9,25 +9,25 @@ package vsr.cobalt.planner;
 
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
-import vsr.cobalt.models.Task;
+import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.Graph;
-import vsr.cobalt.planner.graph.TaskProvision;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertSame;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
-import static vsr.cobalt.models.makers.TaskMaker.aTask;
 import static vsr.cobalt.models.makers.WidgetMaker.aWidget;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
+import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aGraph;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aMinimalGraph;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
-import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aTaskProvision;
 import static vsr.cobalt.testing.Utilities.make;
 
 @Test
@@ -37,28 +37,28 @@ public class PlanTest {
   public static class New {
 
     @Test(expectedExceptions = IllegalArgumentException.class,
-        expectedExceptionsMessageRegExp = "expecting graph with single provision for each requested task")
-    public void rejectGraphContainingLevelWithMultipleProvisionsForSameTask() {
-      final Task t = make(aTask().withIdentifier("t"));
+        expectedExceptionsMessageRegExp = "expecting graph with single provision for each requested functionality")
+    public void rejectGraphContainingLevelWithMultipleProvisionsForSameFunctionality() {
+      final Functionality f = make(aFunctionality().withIdentifier("f"));
 
-      final Action a1 = make(aMinimalAction().withTask(t));
+      final Action a1 = make(aMinimalAction().withFunctionality(f));
 
       final Action a2 = make(aMinimalAction()
-          .withWidget(aWidget().withIdentifier("w")).withTask(t));
+          .withWidget(aWidget().withIdentifier("w")).withFunctionality(f));
 
-      final TaskProvision tp1 = make(aTaskProvision()
+      final FunctionalityProvision fp1 = make(aFunctionalityProvision()
           .withProvidingAction(a1)
-          .withOffer(t)
-          .withRequest(t));
+          .withOffer(f)
+          .withRequest(f));
 
-      final TaskProvision tp2 = make(aTaskProvision()
+      final FunctionalityProvision fp2 = make(aFunctionalityProvision()
           .withProvidingAction(a2)
-          .withOffer(t)
-          .withRequest(t));
+          .withOffer(f)
+          .withRequest(f));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(tp1, tp2)));
+              .withFunctionalityProvision(fp1, fp2)));
 
       new Plan(g);
     }
@@ -66,13 +66,13 @@ public class PlanTest {
     @Test(expectedExceptions = IllegalArgumentException.class,
         expectedExceptionsMessageRegExp = "expecting graph with single provision for each requested action")
     public void rejectGraphContainingLevelWithMultipleActionProvisionsForSameAction() {
-      final Task t = make(aTask().withIdentifier("t"));
+      final Functionality f = make(aFunctionality().withIdentifier("f"));
 
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withCleared(p1)));
 
@@ -86,10 +86,10 @@ public class PlanTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
+              .withFunctionalityProvision(aFunctionalityProvision()
                   .withProvidingAction(a1)
-                  .withOffer(t)
-                  .withRequest(t)))
+                  .withOffer(f)
+                  .withRequest(f)))
           .withExtensionLevel(anExtensionLevel()
               .withProvision(anActionProvision()
                   .withRequest(a1)
@@ -104,21 +104,21 @@ public class PlanTest {
     @Test(expectedExceptions = IllegalArgumentException.class,
         expectedExceptionsMessageRegExp = "expecting graph with only satisfied actions")
     public void rejectGraphContainingActionInInitialLevelWithoutSatisfiedRequirements() {
-      final Task t = make(aTask().withIdentifier("t"));
+      final Functionality f = make(aFunctionality().withIdentifier("f"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withCleared(aMinimalProperty())));
 
-      final TaskProvision tp = make(aTaskProvision()
+      final FunctionalityProvision fp = make(aFunctionalityProvision()
           .withProvidingAction(a1)
-          .withOffer(t)
-          .withRequest(t));
+          .withOffer(f)
+          .withRequest(f));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(tp)));
+              .withFunctionalityProvision(fp)));
 
       new Plan(g);
     }
@@ -126,13 +126,13 @@ public class PlanTest {
     @Test(expectedExceptions = IllegalArgumentException.class,
         expectedExceptionsMessageRegExp = "expecting graph with only satisfied actions")
     public void rejectGraphContainingActionInExtensionLevelWithoutSatisfiedRequirements() {
-      final Task t = make(aTask().withIdentifier("t"));
+      final Functionality f = make(aFunctionality().withIdentifier("f"));
 
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withCleared(p1)));
 
@@ -142,14 +142,14 @@ public class PlanTest {
           .withPre(aPropositionSet()
               .withCleared(p2)));
 
-      final TaskProvision tp = make(aTaskProvision()
+      final FunctionalityProvision fp = make(aFunctionalityProvision()
           .withProvidingAction(a1)
-          .withOffer(t)
-          .withRequest(t));
+          .withOffer(f)
+          .withRequest(f));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(tp))
+              .withFunctionalityProvision(fp))
           .withExtensionLevel(anExtensionLevel()
               .withProvision(anActionProvision()
                   .withRequest(a1)
@@ -198,16 +198,16 @@ public class PlanTest {
 
     @Test
     public void returnFalseWhenGraphsDiffer() {
-      final Task t = make(aTask().withIdentifier("t"));
+      final Functionality f = make(aFunctionality().withIdentifier("f"));
 
-      final Action a = make(aMinimalAction().withTask(t));
+      final Action a = make(aMinimalAction().withFunctionality(f));
 
       final Graph g = make(aMinimalGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
+              .withFunctionalityProvision(aFunctionalityProvision()
                   .withProvidingAction(a)
-                  .withOffer(t)
-                  .withRequest(t))));
+                  .withOffer(f)
+                  .withRequest(f))));
 
       final Plan p1 = new Plan(g);
       final Plan p2 = new Plan(make(aMinimalGraph()));

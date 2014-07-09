@@ -21,7 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.models.makers.TaskMaker.aTask;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aFunctionality;
 import static vsr.cobalt.models.makers.WidgetMaker.aWidget;
 import static vsr.cobalt.testing.Assert.assertContainsAll;
 import static vsr.cobalt.testing.Utilities.MOCKS_ABSTRACT_CLASS;
@@ -60,8 +60,8 @@ public class ComposingProvisionProviderTest {
       final Subject s1 = new Subject();
       final Subject s2 = new Subject();
 
-      final DummyOffer o1 = offer(s1, actionWithTask("t1"));
-      final DummyOffer o2 = offer(s2, actionWithTask("t2"));
+      final DummyOffer o1 = offer(s1, actionWithFunctionality("t1"));
+      final DummyOffer o2 = offer(s2, actionWithFunctionality("t2"));
 
       final Action a = Action.compose(o1.getAction(), o2.getAction());
 
@@ -99,16 +99,16 @@ public class ComposingProvisionProviderTest {
       assertEquals(ps, setOf(p1, p2));
     }
 
-    private static Action actionWithWidget(final String widgetId) {
+    private static Action actionWithWidget(final String id) {
       return make(aMinimalAction()
           .withWidget(aWidget()
-              .withIdentifier(widgetId)));
+              .withIdentifier(id)));
     }
 
-    private static Action actionWithTask(final String taskId) {
+    private static Action actionWithFunctionality(final String id) {
       return make(aMinimalAction()
-          .withTask(aTask()
-              .withIdentifier(taskId)));
+          .withFunctionality(aFunctionality()
+              .withIdentifier(id)));
     }
 
     private static DummyOffer offer(final Subject subject, final Action action) {
@@ -133,15 +133,6 @@ public class ComposingProvisionProviderTest {
    * The subjects of {@link DummyProvision}.
    */
   private static class Subject {
-
-    private static int ID = 0;
-
-    private final int id;
-
-    public Subject() {
-      id = ++ID;
-    }
-
   }
 
   private static class DummyOffer extends Offer<Subject> {

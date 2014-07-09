@@ -15,9 +15,9 @@ import vsr.cobalt.models.Repository;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
-import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
 import static vsr.cobalt.testing.Assert.assertContains;
 import static vsr.cobalt.testing.Assert.assertEmpty;
 import static vsr.cobalt.testing.Assert.assertNotContains;
@@ -136,7 +136,7 @@ public class ComposingMinimalPrecursorActionProviderTest {
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(aMinimalTask())
+          .withFunctionality(aMinimalFunctionality())
           .withPre(aPropositionSet().withCleared(p1, p2)));
 
       final Action a2 = make(aMinimalAction()

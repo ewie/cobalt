@@ -12,26 +12,26 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.Plan;
 import vsr.cobalt.planner.graph.ActionProvision;
+import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.Graph;
-import vsr.cobalt.planner.graph.TaskProvision;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertSame;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
-import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
+import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aGraph;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aMinimalGraph;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
-import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aTaskProvision;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 
@@ -99,35 +99,35 @@ public class BackwardChainingPlanIteratorTest {
   public static class Iteration {
 
     @Test
-    public void considerAllTaskProvisions() {
-      final Task t1 = make(aMinimalTask().withIdentifier("t1"));
-      final Task t2 = make(aMinimalTask().withIdentifier("t2"));
+    public void considerAllFunctionalityProvisions() {
+      final Functionality f1 = make(aMinimalFunctionality().withIdentifier("f1"));
+      final Functionality f2 = make(aMinimalFunctionality().withIdentifier("f2"));
 
-      final Action a1 = make(aMinimalAction().withTask(t1));
+      final Action a1 = make(aMinimalAction().withFunctionality(f1));
 
-      final Action a2 = make(aMinimalAction().withTask(t2));
+      final Action a2 = make(aMinimalAction().withFunctionality(f2));
 
-      final TaskProvision tp1 = make(aTaskProvision()
+      final FunctionalityProvision fp1 = make(aFunctionalityProvision()
           .withProvidingAction(a1)
-          .withOffer(t1)
-          .withRequest(t1));
+          .withOffer(f1)
+          .withRequest(f1));
 
-      final TaskProvision tp2 = make(aTaskProvision()
+      final FunctionalityProvision fp2 = make(aFunctionalityProvision()
           .withProvidingAction(a2)
-          .withOffer(t2)
-          .withRequest(t1));
+          .withOffer(f2)
+          .withRequest(f1));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(tp1, tp2)));
+              .withFunctionalityProvision(fp1, fp2)));
 
       final Graph g1 = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(tp1)));
+              .withFunctionalityProvision(fp1)));
 
       final Graph g2 = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(tp2)));
+              .withFunctionalityProvision(fp2)));
 
       final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g);
 
@@ -139,13 +139,13 @@ public class BackwardChainingPlanIteratorTest {
 
     @Test
     public void handlePlansWithExtensionLevels() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withCleared(p1)));
 
       final Action a2 = make(aMinimalAction()
@@ -155,10 +155,10 @@ public class BackwardChainingPlanIteratorTest {
       final Action a3 = make(aMinimalAction()
           .withEffects(aPropositionSet().withCleared(p2)));
 
-      final TaskProvision tp = make(aTaskProvision()
+      final FunctionalityProvision fp = make(aFunctionalityProvision()
           .withProvidingAction(a1)
-          .withOffer(t)
-          .withRequest(t));
+          .withOffer(f)
+          .withRequest(f));
 
       final ActionProvision ap1 = make(anActionProvision()
           .withRequest(a1)
@@ -169,7 +169,7 @@ public class BackwardChainingPlanIteratorTest {
           .withPrecursor(a3));
 
       final Graph g = make(aGraph()
-          .withInitialLevel(anInitialLevel().withTaskProvision(tp))
+          .withInitialLevel(anInitialLevel().withFunctionalityProvision(fp))
           .withExtensionLevel(anExtensionLevel().withProvision(ap1))
           .withExtensionLevel(anExtensionLevel().withProvision(ap2)));
 
@@ -183,14 +183,14 @@ public class BackwardChainingPlanIteratorTest {
 
     @Test
     public void ignoreUnreachableActions() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
       final Property p3 = make(aMinimalProperty().withName("p3"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withCleared(p1)));
 
       final Action a2 = make(aMinimalAction()
@@ -204,10 +204,10 @@ public class BackwardChainingPlanIteratorTest {
       final Action a4 = make(aMinimalAction()
           .withEffects(aPropositionSet().withCleared(p2)));
 
-      final TaskProvision tp = make(aTaskProvision()
+      final FunctionalityProvision fp = make(aFunctionalityProvision()
           .withProvidingAction(a1)
-          .withOffer(t)
-          .withRequest(t));
+          .withOffer(f)
+          .withRequest(f));
 
       final ActionProvision ap1 = make(anActionProvision()
           .withRequest(a1)
@@ -222,12 +222,12 @@ public class BackwardChainingPlanIteratorTest {
           .withPrecursor(a4));
 
       final Graph g1 = make(aGraph()
-          .withInitialLevel(anInitialLevel().withTaskProvision(tp))
+          .withInitialLevel(anInitialLevel().withFunctionalityProvision(fp))
           .withExtensionLevel(anExtensionLevel().withProvision(ap1, ap2))
           .withExtensionLevel(anExtensionLevel().withProvision(ap3)));
 
       final Graph g2 = make(aGraph()
-          .withInitialLevel(anInitialLevel().withTaskProvision(tp))
+          .withInitialLevel(anInitialLevel().withFunctionalityProvision(fp))
           .withExtensionLevel(anExtensionLevel().withProvision(ap1))
           .withExtensionLevel(anExtensionLevel().withProvision(ap3)));
 
@@ -241,39 +241,39 @@ public class BackwardChainingPlanIteratorTest {
 
     @Test
     public void ignorePlansNotReachingMinDepth() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p = make(aMinimalProperty().withName("p"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withCleared(p)));
 
-      final Action a2 = make(aMinimalAction().withTask(t));
+      final Action a2 = make(aMinimalAction().withFunctionality(f));
 
       final Action a3 = make(aMinimalAction()
           .withEffects(aPropositionSet().withCleared(p)));
 
-      final TaskProvision tp1 = make(aTaskProvision()
+      final FunctionalityProvision fp1 = make(aFunctionalityProvision()
           .withProvidingAction(a1)
-          .withOffer(t)
-          .withRequest(t));
+          .withOffer(f)
+          .withRequest(f));
 
-      final TaskProvision tp2 = make(aTaskProvision()
+      final FunctionalityProvision fp2 = make(aFunctionalityProvision()
           .withProvidingAction(a2)
-          .withOffer(t)
-          .withRequest(t));
+          .withOffer(f)
+          .withRequest(f));
 
       final ActionProvision ap = make(anActionProvision()
           .withRequest(a1)
           .withPrecursor(a3));
 
       final Graph g1 = make(aGraph()
-          .withInitialLevel(anInitialLevel().withTaskProvision(tp1, tp2))
+          .withInitialLevel(anInitialLevel().withFunctionalityProvision(fp1, fp2))
           .withExtensionLevel(anExtensionLevel().withProvision(ap)));
 
       final Graph g2 = make(aGraph()
-          .withInitialLevel(anInitialLevel().withTaskProvision(tp1))
+          .withInitialLevel(anInitialLevel().withFunctionalityProvision(fp1))
           .withExtensionLevel(anExtensionLevel().withProvision(ap)));
 
       final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g1, 2, 2);
@@ -286,28 +286,28 @@ public class BackwardChainingPlanIteratorTest {
 
     @Test
     public void ignorePlansExceedingMaxDepth() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p = make(aMinimalProperty().withName("p"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
           .withEffects(aPropositionSet().withCleared(p)));
 
-      final TaskProvision tp = make(aTaskProvision()
+      final FunctionalityProvision fp = make(aFunctionalityProvision()
           .withProvidingAction(a1)
-          .withOffer(t)
-          .withRequest(t));
+          .withOffer(f)
+          .withRequest(f));
 
       final ActionProvision ap = make(anActionProvision()
           .withRequest(a1)
           .withPrecursor(a2));
 
       final Graph g = make(aGraph()
-          .withInitialLevel(anInitialLevel().withTaskProvision(tp))
+          .withInitialLevel(anInitialLevel().withFunctionalityProvision(fp))
           .withExtensionLevel(anExtensionLevel().withProvision(ap)));
 
       final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g, 1, 1);

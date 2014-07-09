@@ -10,8 +10,8 @@ package vsr.cobalt.service.serializers;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 
+import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.InitialLevel;
-import vsr.cobalt.planner.graph.TaskProvision;
 import vsr.cobalt.service.JsonSerializer;
 
 /**
@@ -19,18 +19,19 @@ import vsr.cobalt.service.JsonSerializer;
  */
 public class JsonInitialLevelSerializer extends JsonSerializer<InitialLevel> {
 
-  private static final String taskProvisions = "taskProvisions";
+  private static final String functionalityProvisions = "functionalityProvisions";
 
-  private final JsonSerializer<TaskProvision> taskProvisionSerializer;
+  private final JsonSerializer<FunctionalityProvision> functionalityProvisionSerializer;
 
-  public JsonInitialLevelSerializer(final JsonSerializer<TaskProvision> taskProvisionSerializer) {
-    this.taskProvisionSerializer = taskProvisionSerializer;
+  public JsonInitialLevelSerializer(final JsonSerializer<FunctionalityProvision> functionalityProvisionSerializer) {
+    this.functionalityProvisionSerializer = functionalityProvisionSerializer;
   }
 
   @Override
   public JsonObjectBuilder build(final InitialLevel level) {
     return Json.createObjectBuilder()
-        .add(taskProvisions, taskProvisionSerializer.serializeAll(level.getTaskProvisions()));
+        .add(functionalityProvisions, functionalityProvisionSerializer.serializeAll(level.getFunctionalityProvisions
+            ()));
   }
 
 }

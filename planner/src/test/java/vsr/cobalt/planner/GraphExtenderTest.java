@@ -9,8 +9,8 @@ package vsr.cobalt.planner;
 
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.models.Widget;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
@@ -26,17 +26,17 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
-import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
 import static vsr.cobalt.models.makers.WidgetMaker.aWidget;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
+import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aGraph;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aMinimalGraph;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
 import static vsr.cobalt.planner.graph.makers.PropertyProvisionMaker.aPropertyProvision;
-import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aTaskProvision;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
@@ -81,25 +81,25 @@ public class GraphExtenderTest {
 
     @Test
     public void ignoreSatisfiedActions() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
       final Property p = make(aMinimalProperty());
 
-      final Action a1 = make(aMinimalAction().withTask(t));
+      final Action a1 = make(aMinimalAction().withFunctionality(f));
 
       final Action a2 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withCleared(p)));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a1))
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a2))));
 
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
@@ -118,19 +118,19 @@ public class GraphExtenderTest {
     @Test(expectedExceptions = PlanningException.class,
         expectedExceptionsMessageRegExp = "cannot satisfy any action")
     public void throwWhenNoActionCanBeEnabledWithPrecursor() throws Exception {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
       final Property p = make(aMinimalProperty());
 
       final Action a = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withCleared(p)));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a))));
 
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
@@ -144,19 +144,19 @@ public class GraphExtenderTest {
     @Test(expectedExceptions = PlanningException.class,
         expectedExceptionsMessageRegExp = "cannot satisfy any action")
     public void throwWhenNoActionCanBeEnabledWithProviders() throws Exception {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
       final Property p = make(aMinimalProperty());
 
       final Action a = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withFilled(p)));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a))));
 
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
@@ -169,11 +169,11 @@ public class GraphExtenderTest {
 
     @Test
     public void extendWithPrecursorActions() throws Exception {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
       final Property p = make(aMinimalProperty());
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withCleared(p)));
 
@@ -183,9 +183,9 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a1))));
 
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
@@ -204,12 +204,12 @@ public class GraphExtenderTest {
 
     @Test
     public void extendWithoutPrecursorActions() throws Exception {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p = make(aMinimalProperty());
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withFilled(p)));
 
@@ -223,9 +223,9 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a1))));
 
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
@@ -247,13 +247,13 @@ public class GraphExtenderTest {
 
     @Test
     public void provideFilledPropertiesNotSatisfiedByPrecursor() throws Exception {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withCleared(p1)
               .withFilled(p2)));
@@ -273,9 +273,9 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a1))));
 
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
@@ -298,13 +298,13 @@ public class GraphExtenderTest {
 
     @Test
     public void createActionProvisionForEachPropertyProvisionCombination() throws Exception {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withFilled(p1, p2)));
 
@@ -313,9 +313,9 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a1))));
 
       final PropertyProvision pp1 = make(aPropertyProvision()
@@ -355,17 +355,17 @@ public class GraphExtenderTest {
 
     @Test
     public void collectAllRequiredProperties() throws Exception {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withFilled(p1)));
 
       final Action a2 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withFilled(p2)));
 
       final Action a3 = make(aMinimalAction().withPub(p1));
@@ -376,13 +376,13 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a1))
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a2))));
 
       final PropertyProvision pp1 = make(aPropertyProvision()
@@ -433,17 +433,17 @@ public class GraphExtenderTest {
 
     @Test
     public void ignoreActionsWithoutPrecursor() throws Exception {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withCleared(p1)));
 
       final Action a2 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withCleared(p2)));
 
       final Action a3 = make(aMinimalAction()
@@ -451,13 +451,13 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a1))
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a2))));
 
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
@@ -478,13 +478,13 @@ public class GraphExtenderTest {
 
     @Test
     public void ignoreActionProvisionWhenAnyRequiredPropertyCannotBeProvided() throws Exception {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withCleared(p1)
               .withFilled(p2)));
@@ -503,9 +503,9 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a1))));
 
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
@@ -525,13 +525,13 @@ public class GraphExtenderTest {
 
     @Test
     public void ignorePrecursorActionCausingCyclicDependency() throws Exception {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withCleared(p1)));
 
@@ -546,9 +546,9 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a1))));
 
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
@@ -571,7 +571,7 @@ public class GraphExtenderTest {
 
     @Test
     public void filterPrecursorActionsCausingCyclicDependencies() throws Exception {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Widget w1 = make(aWidget().withIdentifier("w1"));
       final Widget w2 = make(aWidget().withIdentifier("w2"));
@@ -581,7 +581,7 @@ public class GraphExtenderTest {
 
       final Action a1 = make(aMinimalAction()
           .withWidget(w1)
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withFilled(p1)));
 
@@ -598,9 +598,9 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a1))));
 
       final PropertyProvision pp = make(aPropertyProvision()
@@ -631,12 +631,12 @@ public class GraphExtenderTest {
 
     @Test
     public void ignoreProvidingActionCausingCyclicDependency() throws Exception {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p = make(aMinimalProperty());
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withFilled(p)));
 
@@ -657,9 +657,9 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a1))));
 
       final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
@@ -682,13 +682,13 @@ public class GraphExtenderTest {
 
     @Test
     public void doNotCreateActionProvisionWithProvidingActionRepresentedByAnotherProvidingAction() throws Exception {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withFilled(p1, p2)));
 
@@ -720,9 +720,9 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a1))));
 
       final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);

@@ -1,0 +1,11 @@
+@prefix : <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#> .
+
+<urn:example:fn:0> a :Functionality .
+
+<urn:example:fn:1> a :Functionality ;
+  :subFunctionalityOf <urn:example:fn:0> .
+
+<urn:example:fn:2> a :Functionality ;
+  :subFunctionalityOf <urn:example:fn:1> .
+
+<urn:example:fn:3> a :Functionality .

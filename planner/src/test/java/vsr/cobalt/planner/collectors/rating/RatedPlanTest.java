@@ -11,17 +11,17 @@ import java.util.Objects;
 
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
-import vsr.cobalt.models.Task;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.planner.Plan;
 import vsr.cobalt.planner.graph.Graph;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
+import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aMinimalGraph;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
-import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aTaskProvision;
 import static vsr.cobalt.testing.Utilities.make;
 
 @Test
@@ -58,8 +58,8 @@ public class RatedPlanTest {
 
   @Test
   public void notEqualsWhenPlansDiffer() {
-    final Plan p1 = planWithTask("t1");
-    final Plan p2 = planWithTask("t2");
+    final Plan p1 = planWithFunctionality("f1");
+    final Plan p2 = planWithFunctionality("f2");
     final Rating r1 = new Rating(1);
     final Rating r2 = new Rating(1);
     final RatedPlan rp1 = new RatedPlan(p1, r1);
@@ -86,14 +86,14 @@ public class RatedPlanTest {
     assertNotEquals(rp, x);
   }
 
-  private static Plan planWithTask(final String identifier) {
-    final Task t = make(aMinimalTask().withIdentifier(identifier));
-    final Action a = make(aMinimalAction().withTask(t));
+  private static Plan planWithFunctionality(final String identifier) {
+    final Functionality f = make(aMinimalFunctionality().withIdentifier(identifier));
+    final Action a = make(aMinimalAction().withFunctionality(f));
     final Graph g = make(aMinimalGraph()
         .withInitialLevel(anInitialLevel()
-            .withTaskProvision(aTaskProvision()
-                .withRequest(t)
-                .withOffer(t)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(f)
+                .withOffer(f)
                 .withProvidingAction(a))));
     return new Plan(g);
   }

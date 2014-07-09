@@ -20,8 +20,8 @@ import vsr.cobalt.planner.extractors.BackwardChainingPlanExtractor;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.providers.BasicPrecursorActionProvider;
 import vsr.cobalt.planner.providers.ComposingExtendedPrecursorActionProvider;
+import vsr.cobalt.planner.providers.ComposingFunctionalityProvisionProvider;
 import vsr.cobalt.planner.providers.ComposingPropertyProvisionProvider;
-import vsr.cobalt.planner.providers.ComposingTaskProvisionProvider;
 
 /**
  * @author Erik Wienhold
@@ -61,7 +61,7 @@ public class PlannerJob {
   }
 
   private Graph createGraph() throws PlanningException {
-    final GraphFactory f = new GraphFactory(new ComposingTaskProvisionProvider(repository));
+    final GraphFactory f = new GraphFactory(new ComposingFunctionalityProvisionProvider(repository));
     return f.createGraph(request.getGoalMashup());
   }
 

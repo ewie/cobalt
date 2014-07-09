@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import vsr.cobalt.models.Action;
-import vsr.cobalt.models.Task;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
@@ -20,7 +20,7 @@ import vsr.cobalt.planner.graph.Level;
 
 /**
  * A plan is the result of a planning process. It wraps a graph, resulting from the planning process, containing only
- * satisfied actions and tasks.
+ * satisfied actions and functionalities.
  *
  * @author Erik Wienhold
  */
@@ -34,7 +34,7 @@ public final class Plan {
   /**
    * Create a new plan.
    *
-   * @param graph a graph with only satisfied actions and tasks
+   * @param graph a graph with only satisfied actions and functionalities
    */
   public Plan(final Graph graph) {
     assertGraph(graph);
@@ -81,9 +81,9 @@ public final class Plan {
   }
 
   private static void assertInitialLevel(final InitialLevel level) {
-    for (final Task t : level.getRequestedTasks()) {
-      if (level.getTaskProvisionsByRequestedTask(t).size() > 1) {
-        throw new IllegalArgumentException("expecting graph with single provision for each requested task");
+    for (final Functionality f : level.getRequestedFunctionalities()) {
+      if (level.getFunctionalityProvisionsByRequestedFunctionality(f).size() > 1) {
+        throw new IllegalArgumentException("expecting graph with single provision for each requested functionality");
       }
     }
   }

@@ -14,9 +14,9 @@ import com.hp.hpl.jena.query.Dataset;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Interaction;
 import vsr.cobalt.models.Property;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.models.Type;
 import vsr.cobalt.models.Widget;
 import vsr.cobalt.repository.semantic.finders.WidgetActionFinder;
@@ -26,8 +26,8 @@ import static vsr.cobalt.models.makers.ActionMaker.anAction;
 import static vsr.cobalt.models.makers.InteractionMaker.anInteraction;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.repository.semantic.Datasets.loadDataset;
+import static vsr.cobalt.repository.semantic.Models.functionality;
 import static vsr.cobalt.repository.semantic.Models.property;
-import static vsr.cobalt.repository.semantic.Models.task;
 import static vsr.cobalt.repository.semantic.Models.type;
 import static vsr.cobalt.repository.semantic.Models.widget;
 import static vsr.cobalt.testing.Assert.assertEmpty;
@@ -70,13 +70,13 @@ public class WidgetActionFinderTest {
     final Property p4 = property(4, y4);
     final Property p5 = property(5, y5);
 
-    final Task t1 = task(1);
+    final Functionality t1 = functionality(1);
 
     final Interaction i1 = make(anInteraction().withInstruction("i1"));
 
     final Action x = make(anAction()
         .withWidget(w)
-        .withTask(t1)
+        .withFunctionality(t1)
         .withInteraction(i1)
         .withPub(p5)
         .withPre(aPropositionSet()

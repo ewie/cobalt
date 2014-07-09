@@ -23,7 +23,7 @@ public final class Ontology {
   public static final Resource Mashup = resource("Mashup");
   public static final Resource Property = resource("Property");
   public static final Resource Propositions = resource("Propositions");
-  public static final Resource Task = resource("Task");
+  public static final Resource Functionality = resource("Functionality");
   public static final Resource Widget = resource("Widget");
 
   public static final Property clearValueOf = property("clearValueOf");
@@ -36,8 +36,8 @@ public final class Ontology {
   public static final Property hasPreConditions = property("hasPreConditions");
   public static final Property hasType = property("hasType");
   public static final Property publishesValueOf = property("publishesValueOf");
-  public static final Property realizesTask = property("realizesTask");
-  public static final Property subTaskOf = property("subTaskOf");
+  public static final Property realizesFunctionality = property("realizesFunctionality");
+  public static final Property subFunctionalityOf = property("subFunctionalityOf");
 
   private static Resource resource(final String localName) {
     return ResourceFactory.createResource(uriref(localName));

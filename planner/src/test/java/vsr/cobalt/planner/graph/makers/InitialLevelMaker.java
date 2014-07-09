@@ -8,26 +8,26 @@
 package vsr.cobalt.planner.graph.makers;
 
 import com.google.common.collect.ImmutableSet;
+import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.InitialLevel;
-import vsr.cobalt.planner.graph.TaskProvision;
 import vsr.cobalt.testing.maker.CollectionValue;
 import vsr.cobalt.testing.maker.Maker;
 
-import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aMinimalTaskProvision;
+import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aMinimalFunctionalityProvision;
 
 /**
  * @author Erik Wienhold
  */
 public class InitialLevelMaker implements Maker<InitialLevel> {
 
-  private final CollectionValue<TaskProvision> provisions = new CollectionValue<>();
+  private final CollectionValue<FunctionalityProvision> provisions = new CollectionValue<>();
 
   public static InitialLevelMaker anInitialLevel() {
     return new InitialLevelMaker();
   }
 
   public static InitialLevelMaker aMinimalInitialLevel() {
-    return anInitialLevel().withTaskProvision(aMinimalTaskProvision());
+    return anInitialLevel().withFunctionalityProvision(aMinimalFunctionalityProvision());
   }
 
   @Override
@@ -36,12 +36,12 @@ public class InitialLevelMaker implements Maker<InitialLevel> {
   }
 
   @SafeVarargs
-  public final InitialLevelMaker withTaskProvision(final Maker<TaskProvision>... makers) {
+  public final InitialLevelMaker withFunctionalityProvision(final Maker<FunctionalityProvision>... makers) {
     provisions.add(makers);
     return this;
   }
 
-  public InitialLevelMaker withTaskProvision(final TaskProvision... provisions) {
+  public InitialLevelMaker withFunctionalityProvision(final FunctionalityProvision... provisions) {
     this.provisions.addValues(provisions);
     return this;
   }

@@ -9,9 +9,9 @@
           "type": "uri"
         }
       ],
-      "https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#realizesTask": [
+      "https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#realizesFunctionality": [
         {
-          "value": "urn:example:task:1",
+          "value": "urn:example:fn:1",
           "type": "uri"
         }
       ]

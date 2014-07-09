@@ -11,10 +11,10 @@ import java.util.Set;
 
 import com.hp.hpl.jena.rdf.model.Resource;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Interaction;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PropositionSet;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.models.Widget;
 import vsr.cobalt.repository.semantic.Ontology;
 import vsr.cobalt.repository.semantic.internalizers.ResourceInternalizer;
@@ -30,19 +30,19 @@ public class ActionResourceInternalizer extends ResourceInternalizer<Action> {
 
   private final ResourceInternalizer<Property> properties;
 
-  private final ResourceInternalizer<Task> tasks;
+  private final ResourceInternalizer<Functionality> functionalities;
 
   private final ResourceInternalizer<Interaction> interactions;
 
   public ActionResourceInternalizer(final ResourceInternalizer<Widget> widgets,
                                     final ResourceInternalizer<PropositionSet> propositions,
                                     final ResourceInternalizer<Property> properties,
-                                    final ResourceInternalizer<Task> tasks,
+                                    final ResourceInternalizer<Functionality> functionalities,
                                     final ResourceInternalizer<Interaction> interactions) {
     this.widgets = widgets;
     this.propositions = propositions;
     this.properties = properties;
-    this.tasks = tasks;
+    this.functionalities = functionalities;
     this.interactions = interactions;
   }
 
@@ -52,7 +52,7 @@ public class ActionResourceInternalizer extends ResourceInternalizer<Action> {
     final PropositionSet pre = propositions.internalize(getResourceObject(r, Ontology.hasPreConditions));
     final PropositionSet eff = propositions.internalize(getResourceObject(r, Ontology.hasEffects));
     final Set<Property> ps = properties.internalizeAll(getResourceObjects(r, Ontology.publishesValueOf));
-    final Set<Task> ts = tasks.internalizeAll(getResourceObjects(r, Ontology.realizesTask));
+    final Set<Functionality> ts = functionalities.internalizeAll(getResourceObjects(r, Ontology.realizesFunctionality));
     final Set<Interaction> is = interactions.internalizeAll(getResourceObjects(r, Ontology.hasInteraction));
     return Action.create(w, pre, eff, ps, ts, is);
   }

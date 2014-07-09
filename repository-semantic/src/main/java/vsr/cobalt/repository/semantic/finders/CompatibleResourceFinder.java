@@ -19,11 +19,11 @@ import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Offer;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PublishedProperty;
-import vsr.cobalt.models.RealizedTask;
-import vsr.cobalt.models.Task;
+import vsr.cobalt.models.RealizedFunctionality;
 import vsr.cobalt.repository.semantic.externalizer.IdentifiableExternalizer;
 import vsr.cobalt.repository.semantic.internalizers.CachingResourceInternalizers;
 import vsr.cobalt.repository.semantic.utils.CappedLinkedHashMap;
@@ -36,21 +36,21 @@ public class CompatibleResourceFinder {
 
   public static final int DEFAULT_CACHE_SIZE = 32;
 
-  private final TaskFinder taskFinder;
+  private final FunctionalityFinder functionalityFinder;
 
   private final PropertyFinder propertyFinder;
 
   public CompatibleResourceFinder(final Dataset dataset, final int cacheSize) {
     propertyFinder = new PropertyFinder(dataset, cacheSize);
-    taskFinder = new TaskFinder(dataset, cacheSize);
+    functionalityFinder = new FunctionalityFinder(dataset, cacheSize);
   }
 
   public CompatibleResourceFinder(final Dataset dataset) {
     this(dataset, DEFAULT_CACHE_SIZE);
   }
 
-  public Set<RealizedTask> findCompatibleTasks(final Task task) {
-    return taskFinder.findCompatibleResources(task);
+  public Set<RealizedFunctionality> findCompatibleFunctionalities(final Functionality functionality) {
+    return functionalityFinder.findCompatibleResources(functionality);
   }
 
   public Set<PublishedProperty> findCompatibleProperties(final Property property) {
@@ -113,25 +113,26 @@ public class CompatibleResourceFinder {
 
   }
 
-  private static class TaskFinder extends Finder<Task, RealizedTask> {
+  private static class FunctionalityFinder extends Finder<Functionality, RealizedFunctionality> {
 
-    public TaskFinder(final Dataset dataset, final int cacheSize) {
+    public FunctionalityFinder(final Dataset dataset, final int cacheSize) {
       super(dataset, cacheSize);
     }
 
     @Override
-    protected String getQuery(final Task request, final Model model) {
+    protected String getQuery(final Functionality request, final Model model) {
       final ParameterizedSparqlString pss = new ParameterizedSparqlString(
-          ResourceCache.getInstance().get("/sparql/compatible-tasks.rq"));
+          ResourceCache.getInstance().get("/sparql/compatible-functionalities.rq"));
       pss.setParam("request", IdentifiableExternalizer.externalize(request, model));
       return pss.toString();
     }
 
     @Override
-    protected RealizedTask createOffer(final QuerySolution solution) {
-      final Task offer = CachingResourceInternalizers.tasks.internalize(solution.getResource("offer"));
+    protected RealizedFunctionality createOffer(final QuerySolution solution) {
+      final Functionality offer = CachingResourceInternalizers.functionalities.internalize(solution.getResource
+          ("offer"));
       final Action action = CachingResourceInternalizers.actions.internalize(solution.getResource("action"));
-      return new RealizedTask(offer, action);
+      return new RealizedFunctionality(offer, action);
     }
 
   }

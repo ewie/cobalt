@@ -15,8 +15,8 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
@@ -31,15 +31,15 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
-import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
+import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aGraph;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aMinimalGraph;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
-import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aTaskProvision;
 import static vsr.cobalt.testing.Utilities.make;
 
 @Test
@@ -51,13 +51,13 @@ public class PlannerTest {
   private static final List<Graph> GRAPHS;
 
   static {
-    final Task t = make(aMinimalTask());
+    final Functionality f = make(aMinimalFunctionality());
 
     final Property p1 = make(aMinimalProperty().withName("p1"));
     final Property p2 = make(aMinimalProperty().withName("p2"));
 
     final Action a1 = make(aMinimalAction()
-        .withTask(t)
+        .withFunctionality(f)
         .withPre(aPropositionSet()
             .withCleared(p1)));
 
@@ -73,9 +73,9 @@ public class PlannerTest {
 
     final Graph g = make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withTaskProvision(aTaskProvision()
-                .withRequest(t)
-                .withOffer(t)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(f)
+                .withOffer(f)
                 .withProvidingAction(a1)))
         .withExtensionLevel(anExtensionLevel()
             .withProvision(anActionProvision()
@@ -105,20 +105,20 @@ public class PlannerTest {
   }
 
   /**
-   * Create a minimal graph identified only by the given task.
+   * Create a minimal graph identified only by the given functionality.
    *
-   * @param task a task realized by the graph
+   * @param functionality a functionality realized by the graph
    *
-   * @return a minimal graph realizing the given task
+   * @return a minimal graph realizing the given functionality
    */
-  private static Graph minimalGraph(final Task task) {
+  private static Graph minimalGraph(final Functionality functionality) {
     return make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withTaskProvision(aTaskProvision()
-                .withRequest(task)
-                .withOffer(task)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(functionality)
+                .withOffer(functionality)
                 .withProvidingAction(aMinimalAction()
-                    .withTask(task)))));
+                    .withFunctionality(functionality)))));
   }
 
   @Test
@@ -293,8 +293,8 @@ public class PlannerTest {
       final GraphExtender gx = mock(GraphExtender.class);
       when(gx.extendGraph(GRAPHS.get(0))).thenReturn(GRAPHS.get(1));
 
-      final Graph g1 = minimalGraph(make(aMinimalTask().withIdentifier("t1")));
-      final Graph g2 = minimalGraph(make(aMinimalTask().withIdentifier("t2")));
+      final Graph g1 = minimalGraph(make(aMinimalFunctionality().withIdentifier("f1")));
+      final Graph g2 = minimalGraph(make(aMinimalFunctionality().withIdentifier("f2")));
 
       final Plan p1 = new Plan(g1);
       final Plan p2 = new Plan(g2);

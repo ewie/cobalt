@@ -9,10 +9,10 @@ package vsr.cobalt.service;
 
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Interaction;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.Repository;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.models.Type;
 import vsr.cobalt.planner.Plan;
 import vsr.cobalt.planner.collectors.rating.Rating;
@@ -24,19 +24,19 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aFunctionality;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.models.makers.InteractionMaker.aMinimalInteraction;
 import static vsr.cobalt.models.makers.InteractionMaker.anInteraction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
-import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
-import static vsr.cobalt.models.makers.TaskMaker.aTask;
 import static vsr.cobalt.models.makers.TypeMaker.aType;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
+import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aGraph;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
 import static vsr.cobalt.planner.graph.makers.PropertyProvisionMaker.aPropertyProvision;
-import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aTaskProvision;
 import static vsr.cobalt.testing.Utilities.make;
 
 @Test
@@ -44,13 +44,13 @@ public class DefaultPlanRaterTest {
 
   @Test
   public void returnNullWhenAnyPropertyProvisionUsesPropertiesOfDifferingName() {
-    final Task t = make(aMinimalTask());
+    final Functionality f = make(aMinimalFunctionality());
 
     final Property p1 = make(aMinimalProperty().withName("p1"));
     final Property p2 = make(aMinimalProperty().withName("p2"));
 
     final Action a1 = make(aMinimalAction()
-        .withTask(t)
+        .withFunctionality(f)
         .withPre(aPropositionSet()
             .withFilled(p1)));
 
@@ -58,9 +58,9 @@ public class DefaultPlanRaterTest {
 
     final Plan p = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withTaskProvision(aTaskProvision()
-                .withRequest(t)
-                .withOffer(t)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(f)
+                .withOffer(f)
                 .withProvidingAction(a1)))
         .withExtensionLevel(anExtensionLevel()
             .withProvision(anActionProvision()
@@ -78,15 +78,15 @@ public class DefaultPlanRaterTest {
 
   @Test
   public void allowInitialLevelActionsWithoutInteractions() {
-    final Task t = make(aMinimalTask());
+    final Functionality f = make(aMinimalFunctionality());
 
-    final Action a = make(aMinimalAction().withTask(t));
+    final Action a = make(aMinimalAction().withFunctionality(f));
 
     final Plan p = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withTaskProvision(aTaskProvision()
-                .withRequest(t)
-                .withOffer(t)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(f)
+                .withOffer(f)
                 .withProvidingAction(a)))));
 
     final Repository r = mock(Repository.class);
@@ -97,12 +97,12 @@ public class DefaultPlanRaterTest {
 
   @Test
   public void returnNullWhenAnyExtensionLevelActionHasNoInteractions() {
-    final Task t = make(aMinimalTask());
+    final Functionality f = make(aMinimalFunctionality());
 
     final Property p = make(aMinimalProperty());
 
     final Action a1 = make(aMinimalAction()
-        .withTask(t)
+        .withFunctionality(f)
         .withPre(aPropositionSet()
             .withCleared(p)));
 
@@ -112,9 +112,9 @@ public class DefaultPlanRaterTest {
 
     final Plan pl = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withTaskProvision(aTaskProvision()
-                .withRequest(t)
-                .withOffer(t)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(f)
+                .withOffer(f)
                 .withProvidingAction(a1)))
         .withExtensionLevel(anExtensionLevel()
             .withProvision(anActionProvision()
@@ -128,35 +128,35 @@ public class DefaultPlanRaterTest {
   }
 
   @Test
-  public void favorTaskProvisionsWithMoreConcreteTask() {
-    final Task t1 = make(aTask().withIdentifier("t1"));
-    final Task t2 = make(aTask().withIdentifier("t2"));
+  public void favorFunctionalityProvisionsWithMoreConcreteFunctionality() {
+    final Functionality f1 = make(aFunctionality().withIdentifier("f1"));
+    final Functionality f2 = make(aFunctionality().withIdentifier("f2"));
 
     final Action a1 = make(aMinimalAction()
-        .withTask(t1)
+        .withFunctionality(f1)
         .withInteraction(aMinimalInteraction()));
 
     final Action a2 = make(aMinimalAction()
-        .withTask(t2)
+        .withFunctionality(f2)
         .withInteraction(aMinimalInteraction()));
 
     final Plan p1 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withTaskProvision(aTaskProvision()
-                .withRequest(t1)
-                .withOffer(t1)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(f1)
+                .withOffer(f1)
                 .withProvidingAction(a1)))));
 
     final Plan p2 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withTaskProvision(aTaskProvision()
-                .withRequest(t1)
-                .withOffer(t2)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(f1)
+                .withOffer(f2)
                 .withProvidingAction(a2)))));
 
     final Repository r = mock(Repository.class);
-    when(r.getDistance(t1, t1)).thenReturn(0);
-    when(r.getDistance(t1, t2)).thenReturn(1);
+    when(r.getDistance(f1, f1)).thenReturn(0);
+    when(r.getDistance(f1, f2)).thenReturn(1);
 
     final DefaultPlanRater pr = new DefaultPlanRater(r);
 
@@ -168,7 +168,7 @@ public class DefaultPlanRaterTest {
 
   @Test
   public void favorPropertyProvisionsWithMoreConcreteType() {
-    final Task t = make(aMinimalTask());
+    final Functionality f = make(aMinimalFunctionality());
 
     final Type y1 = make(aType().withIdentifier("y1"));
     final Type y2 = make(aType().withIdentifier("y2"));
@@ -177,7 +177,7 @@ public class DefaultPlanRaterTest {
     final Property p2 = make(aMinimalProperty().withType(y2));
 
     final Action a1 = make(aMinimalAction()
-        .withTask(t)
+        .withFunctionality(f)
         .withInteraction(aMinimalInteraction())
         .withPre(aPropositionSet()
             .withFilled(p1)));
@@ -192,9 +192,9 @@ public class DefaultPlanRaterTest {
 
     final Plan pl1 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withTaskProvision(aTaskProvision()
-                .withRequest(t)
-                .withOffer(t)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(f)
+                .withOffer(f)
                 .withProvidingAction(a1)))
         .withExtensionLevel(anExtensionLevel()
             .withProvision(anActionProvision()
@@ -206,9 +206,9 @@ public class DefaultPlanRaterTest {
 
     final Plan pl2 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withTaskProvision(aTaskProvision()
-                .withRequest(t)
-                .withOffer(t)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(f)
+                .withOffer(f)
                 .withProvidingAction(a1)))
         .withExtensionLevel(anExtensionLevel()
             .withProvision(anActionProvision()
@@ -232,32 +232,32 @@ public class DefaultPlanRaterTest {
 
   @Test
   public void favorLessInteractions() {
-    final Task t = make(aMinimalTask());
+    final Functionality f = make(aMinimalFunctionality());
 
     final Interaction i1 = make(anInteraction().withInstruction("i1"));
     final Interaction i2 = make(anInteraction().withInstruction("i2"));
     final Interaction i3 = make(anInteraction().withInstruction("i3"));
 
     final Action a1 = make(aMinimalAction()
-        .withTask(t)
+        .withFunctionality(f)
         .withInteraction(i1));
 
     final Action a2 = make(aMinimalAction()
-        .withTask(t)
+        .withFunctionality(f)
         .withInteraction(i2, i3));
 
     final Plan p1 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withTaskProvision(aTaskProvision()
-                .withRequest(t)
-                .withOffer(t)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(f)
+                .withOffer(f)
                 .withProvidingAction(a1)))));
 
     final Plan p2 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withTaskProvision(aTaskProvision()
-                .withRequest(t)
-                .withOffer(t)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(f)
+                .withOffer(f)
                 .withProvidingAction(a2)))));
 
     final Repository r = mock(Repository.class);
@@ -272,37 +272,37 @@ public class DefaultPlanRaterTest {
 
   @Test
   public void favorLessActions() {
-    final Task t1 = make(aMinimalTask().withIdentifier("t1"));
-    final Task t2 = make(aMinimalTask().withIdentifier("t2"));
+    final Functionality f1 = make(aMinimalFunctionality().withIdentifier("f1"));
+    final Functionality f2 = make(aMinimalFunctionality().withIdentifier("f2"));
 
     final Action a1 = make(aMinimalAction()
-        .withTask(t1));
+        .withFunctionality(f1));
 
     final Action a2 = make(aMinimalAction()
-        .withTask(t2));
+        .withFunctionality(f2));
 
     final Action a3 = Action.compose(a1, a2);
 
     final Plan p1 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withTaskProvision(aTaskProvision()
-                .withRequest(t1)
-                .withOffer(t1)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(f1)
+                .withOffer(f1)
                 .withProvidingAction(a1))
-            .withTaskProvision(aTaskProvision()
-                .withRequest(t2)
-                .withOffer(t2)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(f2)
+                .withOffer(f2)
                 .withProvidingAction(a2)))));
 
     final Plan p2 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withTaskProvision(aTaskProvision()
-                .withRequest(t1)
-                .withOffer(t1)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(f1)
+                .withOffer(f1)
                 .withProvidingAction(a3))
-            .withTaskProvision(aTaskProvision()
-                .withRequest(t2)
-                .withOffer(t2)
+            .withFunctionalityProvision(aFunctionalityProvision()
+                .withRequest(f2)
+                .withOffer(f2)
                 .withProvidingAction(a3)))));
 
     final Repository r = mock(Repository.class);

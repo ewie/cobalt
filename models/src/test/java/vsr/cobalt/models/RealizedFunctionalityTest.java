@@ -13,27 +13,27 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
-import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.testing.Assert.assertSubClass;
 import static vsr.cobalt.testing.Utilities.make;
 
 @Test
-public class RealizedTaskTest {
+public class RealizedFunctionalityTest {
 
   @Test
   public void extendsOffer() {
-    assertSubClass(RealizedTask.class, Offer.class);
+    assertSubClass(RealizedFunctionality.class, Offer.class);
   }
 
   @Test
   public static class New {
 
     @Test(expectedExceptions = IllegalArgumentException.class,
-        expectedExceptionsMessageRegExp = "expecting task to be realized by given action")
-    public void rejectPropertyNotPublishedByAction() {
+        expectedExceptionsMessageRegExp = "expecting functionality to be realized by given action")
+    public void rejectFunctionalityNotPublishedByAction() {
       final Action a = make(aMinimalAction());
-      final Task t = make(aMinimalTask());
-      new RealizedTask(t, a);
+      final Functionality f = make(aMinimalFunctionality());
+      new RealizedFunctionality(f, a);
     }
 
   }
@@ -41,24 +41,24 @@ public class RealizedTaskTest {
   @Test
   public static class CanEqual {
 
-    RealizedTask rt;
+    RealizedFunctionality rf;
 
     @BeforeMethod
     public void setUp() {
-      final Task t = make(aMinimalTask());
-      final Action a = make(aMinimalAction().withTask(t));
-      rt = new RealizedTask(t, a);
+      final Functionality f = make(aMinimalFunctionality());
+      final Action a = make(aMinimalAction().withFunctionality(f));
+      rf = new RealizedFunctionality(f, a);
     }
 
     @Test
-    public void returnTrueWhenCalledWithRealizedTask() {
-      assertTrue(rt.canEqual(rt));
+    public void returnTrueWhenCalledWithRealizedFunctionality() {
+      assertTrue(rf.canEqual(rf));
     }
 
     @Test
-    public void returnFalseWhenCalledWithNonRealizedTask() {
+    public void returnFalseWhenCalledWithNonRealizedFunctionality() {
       final Object x = new Object();
-      assertFalse(rt.canEqual(x));
+      assertFalse(rf.canEqual(x));
     }
 
   }

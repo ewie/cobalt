@@ -7,10 +7,10 @@
 
 package vsr.cobalt.service.serializers;
 
-import vsr.cobalt.models.Task;
+import vsr.cobalt.models.Functionality;
 
 /**
  * @author Erik Wienhold
  */
-public class JsonTaskSerializer extends JsonIdentifiableSerializer<Task> {
+public class JsonFunctionalitySerializer extends JsonIdentifiableSerializer<Functionality> {
 }

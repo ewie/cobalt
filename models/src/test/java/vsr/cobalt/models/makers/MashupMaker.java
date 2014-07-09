@@ -7,40 +7,40 @@
 
 package vsr.cobalt.models.makers;
 
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Mashup;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.testing.maker.CollectionValue;
 import vsr.cobalt.testing.maker.Maker;
 
-import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 
 /**
  * @author Erik Wienhold
  */
 public class MashupMaker implements Maker<Mashup> {
 
-  private final CollectionValue<Task> tasks = new CollectionValue<>();
+  private final CollectionValue<Functionality> functionalities = new CollectionValue<>();
 
   public static MashupMaker aMashup() {
     return new MashupMaker();
   }
 
   public static MashupMaker aMinimalMashup() {
-    return aMashup().withTask(aMinimalTask());
+    return aMashup().withFunctionality(aMinimalFunctionality());
   }
 
   @Override
   public Mashup make() {
-    return new Mashup(tasks.asSet());
+    return new Mashup(functionalities.asSet());
   }
 
-  public MashupMaker withTask(final Maker<Task> maker) {
-    tasks.add(maker);
+  public MashupMaker withFunctionality(final Maker<Functionality> maker) {
+    functionalities.add(maker);
     return this;
   }
 
-  public MashupMaker withTask(final Task... tasks) {
-    this.tasks.addValues(tasks);
+  public MashupMaker withFunctionality(final Functionality... functionalities) {
+    this.functionalities.addValues(functionalities);
     return this;
   }
 

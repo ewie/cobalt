@@ -19,32 +19,32 @@ import com.google.common.collect.ImmutableSet;
 public final class Mashup {
 
   /**
-   * A non-empty set of tasks to be realized by the mashup.
+   * A non-empty set of functionalities to be realized by the mashup.
    */
-  private final Set<Task> tasks;
+  private final Set<Functionality> functionalities;
 
   /**
    * Create a new mashup.
    *
-   * @param tasks a non-empty set of tasks to be realized by the mashup
+   * @param functionalities a non-empty set of functionalities to be realized by the mashup
    */
-  public Mashup(final Set<Task> tasks) {
-    if (tasks.isEmpty()) {
-      throw new IllegalArgumentException("expecting one or more tasks");
+  public Mashup(final Set<Functionality> functionalities) {
+    if (functionalities.isEmpty()) {
+      throw new IllegalArgumentException("expecting one or more functionalities");
     }
-    this.tasks = ImmutableSet.copyOf(tasks);
+    this.functionalities = ImmutableSet.copyOf(functionalities);
   }
 
   /**
-   * @return the non-empty set of tasks to be realized by this mashup
+   * @return the non-empty set of functionalities to be realized by this mashup
    */
-  public Set<Task> getTasks() {
-    return tasks;
+  public Set<Functionality> getFunctionalities() {
+    return functionalities;
   }
 
   @Override
   public int hashCode() {
-    return tasks.hashCode();
+    return functionalities.hashCode();
   }
 
   @Override
@@ -55,7 +55,7 @@ public final class Mashup {
   }
 
   private boolean equals(final Mashup other) {
-    return tasks.equals(other.tasks);
+    return functionalities.equals(other.functionalities);
   }
 
 }

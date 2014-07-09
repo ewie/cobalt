@@ -9,8 +9,8 @@ package vsr.cobalt.planner.extractors;
 
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.PropertyProvision;
@@ -18,15 +18,15 @@ import vsr.cobalt.planner.graph.PropertyProvision;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
-import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
+import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aGraph;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
 import static vsr.cobalt.planner.graph.makers.PropertyProvisionMaker.aPropertyProvision;
-import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aTaskProvision;
 import static vsr.cobalt.testing.Utilities.make;
 
 @Test
@@ -37,16 +37,16 @@ public class ActionReachabilityIndexTest {
 
     @Test
     public void returnTrueWhenActionHasEmptyPreConditions() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
-      final Action a = make(aMinimalAction().withTask(t));
+      final Action a = make(aMinimalAction().withFunctionality(f));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
+              .withFunctionalityProvision(aFunctionalityProvision()
                   .withProvidingAction(a)
-                  .withOffer(t)
-                  .withRequest(t))));
+                  .withOffer(f)
+                  .withRequest(f))));
 
       final ActionReachabilityIndex index = new ActionReachabilityIndex(g);
 
@@ -55,20 +55,20 @@ public class ActionReachabilityIndexTest {
 
     @Test
     public void returnFalseWhenActionHasUnsatisfiedPreConditions() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
       final Property p = make(aMinimalProperty());
 
       final Action a = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withFilled(p)));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
+              .withFunctionalityProvision(aFunctionalityProvision()
                   .withProvidingAction(a)
-                  .withOffer(t)
-                  .withRequest(t))));
+                  .withOffer(f)
+                  .withRequest(f))));
 
       final ActionReachabilityIndex index = new ActionReachabilityIndex(g);
 
@@ -77,13 +77,13 @@ public class ActionReachabilityIndexTest {
 
     @Test
     public void returnFalseWhenNoActionProvisionCanBeEnabled() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withFilled(p1)));
 
       // a non-enabled precursor action for a1
@@ -98,10 +98,10 @@ public class ActionReachabilityIndexTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
+              .withFunctionalityProvision(aFunctionalityProvision()
                   .withProvidingAction(a1)
-                  .withOffer(t)
-                  .withRequest(t)))
+                  .withOffer(f)
+                  .withRequest(f)))
           .withExtensionLevel(anExtensionLevel()
               .withProvision(anActionProvision()
                   .withPrecursor(a2)
@@ -117,13 +117,13 @@ public class ActionReachabilityIndexTest {
 
     @Test
     public void enableActionProvisionWhenAllRequiredActionsCanBeEnabled() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action request = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withFilled(p1, p2)));
 
       // an enabled precursor action for request
@@ -146,10 +146,10 @@ public class ActionReachabilityIndexTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
+              .withFunctionalityProvision(aFunctionalityProvision()
                   .withProvidingAction(request)
-                  .withOffer(t)
-                  .withRequest(t)))
+                  .withOffer(f)
+                  .withRequest(f)))
           .withExtensionLevel(anExtensionLevel()
               .withProvision(ap)));
 
@@ -161,12 +161,12 @@ public class ActionReachabilityIndexTest {
 
     @Test
     public void doNotEnableActionProvisionWhenPrecursorCannotBeEnabled() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p = make(aMinimalProperty().withName("p"));
 
       final Action request = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withFilled(p)));
 
       // a non-enabled precursor action for request
@@ -181,10 +181,10 @@ public class ActionReachabilityIndexTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
+              .withFunctionalityProvision(aFunctionalityProvision()
                   .withProvidingAction(request)
-                  .withOffer(t)
-                  .withRequest(t)))
+                  .withOffer(f)
+                  .withRequest(f)))
           .withExtensionLevel(anExtensionLevel()
               .withProvision(ap)));
 
@@ -196,13 +196,13 @@ public class ActionReachabilityIndexTest {
 
     @Test
     public void doNotEnableActionProvisionWhenAnyProvidingActionCannotBeEnabled() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action request = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withFilled(p1, p2)));
 
       // an enabled precursor action for request
@@ -234,10 +234,10 @@ public class ActionReachabilityIndexTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
+              .withFunctionalityProvision(aFunctionalityProvision()
                   .withProvidingAction(request)
-                  .withOffer(t)
-                  .withRequest(t)))
+                  .withOffer(f)
+                  .withRequest(f)))
           .withExtensionLevel(anExtensionLevel()
               .withProvision(ap)));
 

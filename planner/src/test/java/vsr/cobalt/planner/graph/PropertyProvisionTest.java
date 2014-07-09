@@ -37,8 +37,8 @@ public class PropertyProvisionTest {
       final Property p = make(aMinimalProperty());
       final Action a = make(aMinimalAction().withPub(p));
       final PublishedProperty pub = new PublishedProperty(p, a);
-      final PropertyProvision tp = new PropertyProvision(pub);
-      assertSame(tp.getRequest(), pub.getSubject());
+      final PropertyProvision pp = new PropertyProvision(pub);
+      assertSame(pp.getRequest(), pub.getSubject());
     }
 
   }

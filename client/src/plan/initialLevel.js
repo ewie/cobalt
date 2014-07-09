@@ -10,22 +10,22 @@
 var Set = require('../util/set');
 var value = require('../util/value');
 
-var TaskProvision = require('./taskProvision');
+var FunctionalityProvision = require('./functionalityProvision');
 
 
 
 module.exports = value.define({
 
-  taskProvisions: {
-    intern: function (v) { return new Set(TaskProvision.fromArray(v)) },
-    extern: function (s) { return TaskProvision.toArray(s) }
+  functionalityProvisions: {
+    intern: function (v) { return new Set(FunctionalityProvision.fromArray(v)) },
+    extern: function (s) { return FunctionalityProvision.toArray(s) }
   }
 
 }, {
 
   get requiredActions() {
-    return this.taskProvisions.reduce(function (actions, tp) {
-      actions.add(tp.provider);
+    return this.functionalityProvisions.reduce(function (actions, fp) {
+      actions.add(fp.provider);
       return actions;
     }, new Set());
   }

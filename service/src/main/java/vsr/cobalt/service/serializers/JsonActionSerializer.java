@@ -13,9 +13,9 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Interaction;
 import vsr.cobalt.models.Property;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.models.Widget;
 import vsr.cobalt.service.JsonSerializer;
 
@@ -25,7 +25,7 @@ import vsr.cobalt.service.JsonSerializer;
 public class JsonActionSerializer extends JsonSerializer<Action> {
 
   private static final String widget = "widget";
-  private static final String realizedTasks = "realizedTasks";
+  private static final String realizedFunctionalities = "realizedFunctionalities";
   private static final String publishedProperties = "publishedProperties";
   private static final String interactions = "interactions";
 
@@ -35,14 +35,14 @@ public class JsonActionSerializer extends JsonSerializer<Action> {
 
   private final JsonSerializer<Interaction> interactionSerializer;
 
-  private final JsonSerializer<Task> taskSerializer;
+  private final JsonSerializer<Functionality> functionalitySerializer;
 
   public JsonActionSerializer(final JsonSerializer<Widget> widgetSerializer,
-                              final JsonSerializer<Task> taskSerializer,
+                              final JsonSerializer<Functionality> functionalitySerializer,
                               final JsonSerializer<Property> propertySerializer,
                               final JsonSerializer<Interaction> interactionSerializer) {
     this.widgetSerializer = widgetSerializer;
-    this.taskSerializer = taskSerializer;
+    this.functionalitySerializer = functionalitySerializer;
     this.propertySerializer = propertySerializer;
     this.interactionSerializer = interactionSerializer;
   }
@@ -51,7 +51,7 @@ public class JsonActionSerializer extends JsonSerializer<Action> {
   public JsonObjectBuilder build(final Action action) {
     return Json.createObjectBuilder()
         .add(widget, serializeWidget(action))
-        .add(realizedTasks, serializeTasks(action))
+        .add(realizedFunctionalities, serializeFunctionalities(action))
         .add(publishedProperties, serializeProperties(action))
         .add(interactions, serializeInteractions(action));
   }
@@ -60,8 +60,8 @@ public class JsonActionSerializer extends JsonSerializer<Action> {
     return widgetSerializer.serialize(action.getWidget());
   }
 
-  private JsonArray serializeTasks(final Action action) {
-    return taskSerializer.serializeAll(action.getRealizedTasks());
+  private JsonArray serializeFunctionalities(final Action action) {
+    return functionalitySerializer.serializeAll(action.getRealizedFunctionalities());
   }
 
   private JsonArray serializeProperties(final Action action) {

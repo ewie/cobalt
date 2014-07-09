@@ -15,8 +15,8 @@ import com.google.common.collect.Iterables;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.models.Widget;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -26,21 +26,21 @@ import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aFunctionality;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
-import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
-import static vsr.cobalt.models.makers.TaskMaker.aTask;
 import static vsr.cobalt.models.makers.WidgetMaker.aWidget;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.aMinimalActionProvision;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.aMinimalExtensionLevel;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
+import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
+import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aMinimalFunctionalityProvision;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aGraph;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aMinimalGraph;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.aMinimalInitialLevel;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
-import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aMinimalTaskProvision;
-import static vsr.cobalt.planner.graph.makers.TaskProvisionMaker.aTaskProvision;
 import static vsr.cobalt.testing.Utilities.make;
 
 @Test
@@ -66,22 +66,22 @@ public class GraphTest {
     }
 
     public void returnAnExtendedGraphWhenCalledWithValidExtensionLevels() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p = make(aMinimalProperty());
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
           .withEffects(aPropositionSet().withCleared(p)));
 
       final InitialLevel il = make(anInitialLevel()
-          .withTaskProvision(aMinimalTaskProvision()
+          .withFunctionalityProvision(aMinimalFunctionalityProvision()
               .withProvidingAction(a1)
-              .withOffer(t)
-              .withRequest(t)));
+              .withOffer(f)
+              .withRequest(f)));
 
       final ExtensionLevel xl = make(anExtensionLevel()
           .withProvision(anActionProvision()
@@ -104,21 +104,21 @@ public class GraphTest {
     public void rejectInsufficientExtensionWhenExtendingSeededGraph() {
       final Widget w = make(aWidget().withIdentifier("w"));
 
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Action a = make(aMinimalAction()
           .withWidget(w)
-          .withTask(t));
+          .withFunctionality(f));
 
       final ExtensionLevel xl = make(anExtensionLevel()
           .withProvision(aMinimalActionProvision()));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aMinimalTaskProvision()
+              .withFunctionalityProvision(aMinimalFunctionalityProvision()
                   .withProvidingAction(a)
-                  .withOffer(t)
-                  .withRequest(t))));
+                  .withOffer(f)
+                  .withRequest(f))));
 
       g.extendWith(xl);
     }
@@ -128,13 +128,13 @@ public class GraphTest {
     public void rejectInsufficientExtensionWhenExtendingAnExtendedGraph() {
       final Widget w = make(aWidget().withIdentifier("w"));
 
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p = make(aMinimalProperty());
 
       final Action a1 = make(aMinimalAction()
           .withWidget(w)
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
@@ -151,10 +151,10 @@ public class GraphTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aMinimalTaskProvision()
+              .withFunctionalityProvision(aMinimalFunctionalityProvision()
                   .withProvidingAction(a1)
-                  .withOffer(t)
-                  .withRequest(t)))
+                  .withOffer(f)
+                  .withRequest(f)))
           .withExtensionLevel(xl1));
 
       g.extendWith(xl2);
@@ -162,12 +162,12 @@ public class GraphTest {
 
     @Test
     public void returnExtendedGraph() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p = make(aMinimalProperty());
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
@@ -181,10 +181,10 @@ public class GraphTest {
 
       final Graph ig = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aMinimalTaskProvision()
+              .withFunctionalityProvision(aMinimalFunctionalityProvision()
                   .withProvidingAction(a1)
-                  .withOffer(t)
-                  .withRequest(t))));
+                  .withOffer(f)
+                  .withRequest(f))));
 
       final Graph xg = ig.extendWith(xl);
 
@@ -198,12 +198,12 @@ public class GraphTest {
 
     @Test
     public void returnExtensionDepthPlusOne() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p = make(aMinimalProperty());
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withCleared(p)));
 
@@ -213,9 +213,9 @@ public class GraphTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a1)))
           .withExtensionLevel(anExtensionLevel()
               .withProvision(anActionProvision()
@@ -232,20 +232,20 @@ public class GraphTest {
 
     @Test
     public void returnFalseWhenAnyActionOfTheLastLevelIsNotEnabled() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p = make(aMinimalProperty());
 
       final Action a = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withCleared(p)));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a))));
 
       assertFalse(g.isSatisfied());
@@ -266,12 +266,12 @@ public class GraphTest {
 
     @BeforeMethod
     public void setUp() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p = make(aMinimalProperty());
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withCleared(p)));
 
@@ -281,9 +281,9 @@ public class GraphTest {
 
       graph = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a1)))
           .withExtensionLevel(anExtensionLevel()
               .withProvision(anActionProvision()
@@ -316,12 +316,12 @@ public class GraphTest {
 
     @BeforeMethod
     public void setUp() {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p = make(aMinimalProperty());
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet()
               .withCleared(p)));
 
@@ -331,9 +331,9 @@ public class GraphTest {
 
       graph = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aTaskProvision()
-                  .withRequest(t)
-                  .withOffer(t)
+              .withFunctionalityProvision(aFunctionalityProvision()
+                  .withRequest(f)
+                  .withOffer(f)
                   .withProvidingAction(a1)))
           .withExtensionLevel(anExtensionLevel()
               .withProvision(anActionProvision()
@@ -472,14 +472,14 @@ public class GraphTest {
 
       @Test
       public void returnFalseWhenInitialLevelDiffers() {
-        final Task t = make(aTask().withIdentifier("t"));
-        final Action a = make(aMinimalAction().withTask(t));
+        final Functionality f = make(aFunctionality().withIdentifier("f"));
+        final Action a = make(aMinimalAction().withFunctionality(f));
 
         final Graph g2 = make(aGraph()
             .withInitialLevel(anInitialLevel()
-                .withTaskProvision(aTaskProvision()
-                    .withRequest(t)
-                    .withOffer(t)
+                .withFunctionalityProvision(aFunctionalityProvision()
+                    .withRequest(f)
+                    .withOffer(f)
                     .withProvidingAction(a))));
 
         assertNotEquals(graph, g2);
@@ -512,13 +512,13 @@ public class GraphTest {
     private static final ActionProvision ap2;
 
     static {
-      final Task t = make(aMinimalTask());
+      final Functionality f = make(aMinimalFunctionality());
 
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action a1 = make(aMinimalAction()
-          .withTask(t)
+          .withFunctionality(f)
           .withPre(aPropositionSet().withCleared(p1)));
 
       final Action a2 = make(aMinimalAction()
@@ -541,10 +541,10 @@ public class GraphTest {
 
       initialGraph = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withTaskProvision(aMinimalTaskProvision()
+              .withFunctionalityProvision(aMinimalFunctionalityProvision()
                   .withProvidingAction(a1)
-                  .withOffer(t)
-                  .withRequest(t))));
+                  .withOffer(f)
+                  .withRequest(f))));
 
       baseGraph = initialGraph.extendWith(xl1);
       graph = baseGraph.extendWith(xl2);

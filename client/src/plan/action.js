@@ -12,7 +12,7 @@ var Set = require('../util/set');
 
 var Interaction = require('./interaction');
 var Property = require('./property');
-var Task = require('./task');
+var Functionality = require('./functionality');
 var Widget = require('./widget');
 
 
@@ -38,7 +38,7 @@ module.exports = value.define({
 
   widget: { type: Widget },
   publishedProperties: conv(Property),
-  realizedTasks: conv(Task),
+  realizedFunctionalities: conv(Functionality),
   interactions: conv(Interaction)
 
 });

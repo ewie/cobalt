@@ -12,18 +12,18 @@ import java.util.Set;
 import com.hp.hpl.jena.query.Dataset;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PublishedProperty;
-import vsr.cobalt.models.RealizedTask;
-import vsr.cobalt.models.Task;
+import vsr.cobalt.models.RealizedFunctionality;
 import vsr.cobalt.models.Type;
 import vsr.cobalt.repository.semantic.finders.CompatibleResourceFinder;
 
 import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.repository.semantic.Datasets.loadDataset;
 import static vsr.cobalt.repository.semantic.Models.action;
+import static vsr.cobalt.repository.semantic.Models.functionality;
 import static vsr.cobalt.repository.semantic.Models.property;
-import static vsr.cobalt.repository.semantic.Models.task;
 import static vsr.cobalt.repository.semantic.Models.type;
 import static vsr.cobalt.repository.semantic.Models.widget;
 import static vsr.cobalt.testing.Utilities.setOf;
@@ -57,22 +57,22 @@ public class CompatibleResourceFinderTest {
   }
 
   @Test
-  public void findCompatibleTasks() {
-    final Dataset ds = loadDataset("compatibility/tasks.n3");
+  public void findCompatibleFunctionalities() {
+    final Dataset ds = loadDataset("compatibility/functionalities.n3");
     final CompatibleResourceFinder finder = new CompatibleResourceFinder(ds);
 
-    final Task t0 = task(0);
-    final Task t1 = task(1);
-    final Task t2 = task(2);
+    final Functionality f0 = functionality(0);
+    final Functionality f1 = functionality(1);
+    final Functionality f2 = functionality(2);
 
-    final Action a1 = action(widget(1), t1);
-    final Action a2 = action(widget(2), t2);
+    final Action a1 = action(widget(1), f1);
+    final Action a2 = action(widget(2), f2);
 
-    final RealizedTask rt1 = new RealizedTask(t1, a1);
-    final RealizedTask rt2 = new RealizedTask(t2, a2);
+    final RealizedFunctionality rt1 = new RealizedFunctionality(f1, a1);
+    final RealizedFunctionality rt2 = new RealizedFunctionality(f2, a2);
 
-    final Set<RealizedTask> xrts = setOf(rt1, rt2);
-    final Set<RealizedTask> rts = finder.findCompatibleTasks(t0);
+    final Set<RealizedFunctionality> xrts = setOf(rt1, rt2);
+    final Set<RealizedFunctionality> rts = finder.findCompatibleFunctionalities(f0);
 
     assertEquals(rts, xrts);
   }

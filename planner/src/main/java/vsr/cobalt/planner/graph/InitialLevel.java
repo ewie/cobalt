@@ -13,79 +13,80 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 import vsr.cobalt.models.Action;
-import vsr.cobalt.models.Task;
+import vsr.cobalt.models.Functionality;
 
 /**
- * A graph level representing the initial required actions determined by task provisions.
+ * A graph level representing the initial required actions determined by functionality provisions.
  *
  * @author Erik Wienhold
  */
 public final class InitialLevel implements Level {
 
   /**
-   * A non-empty set of task provisions.
+   * A non-empty set of functionality provisions.
    */
-  private final ImmutableSet<TaskProvision> taskProvisions;
+  private final ImmutableSet<FunctionalityProvision> functionalityProvisions;
 
   /**
-   * Create an initial level from a set of task provisions.
+   * Create an initial level from a set of functionality provisions.
    *
-   * @param taskProvisions a non-empty set of task provisions
+   * @param functionalityProvisions a non-empty set of functionality provisions
    */
-  public InitialLevel(final Set<TaskProvision> taskProvisions) {
-    if (taskProvisions.isEmpty()) {
-      throw new IllegalArgumentException("expecting one or more task provisions");
+  public InitialLevel(final Set<FunctionalityProvision> functionalityProvisions) {
+    if (functionalityProvisions.isEmpty()) {
+      throw new IllegalArgumentException("expecting one or more functionality provisions");
     }
-    this.taskProvisions = ImmutableSet.copyOf(taskProvisions);
+    this.functionalityProvisions = ImmutableSet.copyOf(functionalityProvisions);
   }
 
   /**
-   * @return the set of task provisions
+   * @return the set of functionality provisions
    */
-  public Set<TaskProvision> getTaskProvisions() {
-    return taskProvisions;
+  public Set<FunctionalityProvision> getFunctionalityProvisions() {
+    return functionalityProvisions;
   }
 
-  public Set<Task> getRequestedTasks() {
-    final Set<Task> ts = new HashSet<>();
-    for (final TaskProvision tp : taskProvisions) {
-      ts.add(tp.getRequest());
+  public Set<Functionality> getRequestedFunctionalities() {
+    final Set<Functionality> fs = new HashSet<>();
+    for (final FunctionalityProvision fp : functionalityProvisions) {
+      fs.add(fp.getRequest());
     }
-    return ts;
+    return fs;
   }
 
   /**
-   * Get all task provisions satisfying the requested task
+   * Get all functionality provisions satisfying the requested functionality
    *
-   * @param task the requested task
+   * @param functionality the requested functionality
    *
-   * @return a set of task provisions with the requested task
+   * @return a set of functionality provisions with the requested functionality
    */
-  public Set<TaskProvision> getTaskProvisionsByRequestedTask(final Task task) {
-    final Set<TaskProvision> tps = new HashSet<>();
-    for (final TaskProvision tp : taskProvisions) {
-      if (tp.getRequest().equals(task)) {
-        tps.add(tp);
+  public Set<FunctionalityProvision> getFunctionalityProvisionsByRequestedFunctionality(final Functionality
+                                                                                            functionality) {
+    final Set<FunctionalityProvision> fps = new HashSet<>();
+    for (final FunctionalityProvision fp : functionalityProvisions) {
+      if (fp.getRequest().equals(functionality)) {
+        fps.add(fp);
       }
     }
-    return tps;
+    return fps;
   }
 
   /**
-   * @return the set of required actions provided by all task provisions
+   * @return the set of required actions provided by all functionality provisions
    */
   @Override
   public Set<Action> getRequiredActions() {
     final Set<Action> as = new HashSet<>();
-    for (final TaskProvision tp : taskProvisions) {
-      as.add(tp.getProvidingAction());
+    for (final FunctionalityProvision fp : functionalityProvisions) {
+      as.add(fp.getProvidingAction());
     }
     return as;
   }
 
   @Override
   public int hashCode() {
-    return taskProvisions.hashCode();
+    return functionalityProvisions.hashCode();
   }
 
   @Override
@@ -96,7 +97,7 @@ public final class InitialLevel implements Level {
   }
 
   private boolean equals(final InitialLevel other) {
-    return Objects.equals(taskProvisions, other.taskProvisions);
+    return Objects.equals(functionalityProvisions, other.functionalityProvisions);
   }
 
 }

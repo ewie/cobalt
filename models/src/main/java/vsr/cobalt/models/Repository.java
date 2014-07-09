@@ -26,13 +26,13 @@ public interface Repository {
   Set<Action> getWidgetActions(Widget widget);
 
   /**
-   * Get action tasks compatible to a requested task.
+   * Get action functionalities compatible to a requested functionality.
    *
-   * @param task the requested task
+   * @param functionality the requested functionality
    *
-   * @return a set of zero or more realized tasks
+   * @return a set of zero or more realized functionalities
    */
-  Set<RealizedTask> findCompatibleTasks(Task task);
+  Set<RealizedFunctionality> findCompatibleFunctionalities(Functionality functionality);
 
   /**
    * Get action properties compatible to a requested property.
@@ -44,17 +44,18 @@ public interface Repository {
   Set<PublishedProperty> findCompatibleProperties(Property property);
 
   /**
-   * Get the distance between two tasks.
+   * Get the distance between two functionalities.
    * <p/>
-   * The distance is measured as the number of inheritance steps from the offered task O up to the requested task R.
-   * For identical tasks the distance is 0. When O subsumes R the distance is undefined.
+   * The distance is measured as the number of inheritance steps from the offered functionality O up to the requested
+   * functionality R.
+   * For identical functionalities the distance is 0. When O subsumes R the distance is undefined.
    *
-   * @param request a requested task
-   * @param offer   an offered task
+   * @param request a requested functionality
+   * @param offer   an offered functionality
    *
-   * @return the distance between the tasks, -1 when not compatible
+   * @return the distance between the functionalities, -1 when not compatible
    */
-  int getDistance(Task request, Task offer);
+  int getDistance(Functionality request, Functionality offer);
 
   /**
    * Get the distance between two types.

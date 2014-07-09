@@ -15,18 +15,18 @@ import vsr.cobalt.planner.collectors.rating.PlanRater;
 import vsr.cobalt.planner.collectors.rating.Rating;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
+import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.Level;
 import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.planner.graph.TaskProvision;
 
 /**
  * The default plan rater using a metric of 3 properties:
  * <ul>
  * <li>favor less interactions</li>
  * <li>favor more concrete published properties (minimal type distance)</li>
- * <li>favor more concrete task realizations (minimal task distance)</li>
+ * <li>favor more concrete functionality realizations (minimal functionality distance)</li>
  * </ul>
  * <p/>
  * In addition, the rater identifies plans not executable by the target environment, i.e.
@@ -68,7 +68,7 @@ public class DefaultPlanRater implements PlanRater {
   }
 
   private int rateInitialLevel(final InitialLevel level) {
-    return rateLevel(level) + rateTaskProvisions(level.getTaskProvisions());
+    return rateLevel(level) + rateFunctionalityProvisions(level.getFunctionalityProvisions());
   }
 
   private int rateLevel(final Level level) {
@@ -87,15 +87,15 @@ public class DefaultPlanRater implements PlanRater {
     return 1 + action.getInteractions().size();
   }
 
-  private int rateTaskProvisions(final Iterable<TaskProvision> provisions) {
+  private int rateFunctionalityProvisions(final Iterable<FunctionalityProvision> provisions) {
     int value = 0;
-    for (final TaskProvision tp : provisions) {
-      value += rateTaskProvision(tp);
+    for (final FunctionalityProvision fp : provisions) {
+      value += rateFunctionalityProvision(fp);
     }
     return value;
   }
 
-  private int rateTaskProvision(final TaskProvision provision) {
+  private int rateFunctionalityProvision(final FunctionalityProvision provision) {
     return repository.getDistance(provision.getRequest(), provision.getOffer().getSubject());
   }
 

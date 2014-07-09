@@ -35,8 +35,8 @@
   rdfs:label "Propositions" ;
   rdfs:comment "a set of propositions specifying the absence or presence of property values" .
 
-:Task a owl:Class ;
-  rdfs:label "Task" ;
+:Functionality a owl:Class ;
+  rdfs:label "Functionality" ;
   rdfs:comment "a functionality realized by actions" .
 
 :Widget a owl:Class ;
@@ -116,15 +116,15 @@
   rdfs:label "publishesValueOf" ;
   rdfs:comment "states an action's published properties" .
 
-:realizesTask a owl:ObjectProperty ;
+:realizesFunctionality a owl:ObjectProperty ;
   rdfs:domain [ a owl:Class ;
     owl:unionOf(:Action :Mashup) ] ;
-  rdfs:range :Task ;
-  rdfs:label "realizesTask" ;
-  rdfs:comment "states an action's or widget's realized tasks" .
+  rdfs:range :Functionality ;
+  rdfs:label "realizesFunctionality" ;
+  rdfs:comment "states an action's or widget's realized functionalities" .
 
-:subTaskOf a owl:TransitiveProperty ;
-  rdfs:domain :Task ;
-  rdfs:range :Task ;
-  rdfs:label "subTaskOf" ;
-  rdfs:comment "states an inheritance relation between two tasks, analogous to sub-classing" .
+:subFunctionalityOf a owl:TransitiveProperty ;
+  rdfs:domain :Functionality ;
+  rdfs:range :Functionality ;
+  rdfs:label "subFunctionalityOf" ;
+  rdfs:comment "states an inheritance relation between two functionalities, analogous to sub-classing" .

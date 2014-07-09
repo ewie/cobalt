@@ -8,6 +8,6 @@ prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 select ?action ?offer
 where {
-  ?action :realizesTask ?offer .
-  ?offer :subTaskOf* ?request .
+  ?action :realizesFunctionality ?offer .
+  ?offer :subFunctionalityOf* ?request .
 }

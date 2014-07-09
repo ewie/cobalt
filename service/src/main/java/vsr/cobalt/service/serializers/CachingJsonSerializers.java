@@ -8,16 +8,16 @@
 package vsr.cobalt.service.serializers;
 
 import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Interaction;
 import vsr.cobalt.models.Property;
-import vsr.cobalt.models.Task;
 import vsr.cobalt.models.Widget;
 import vsr.cobalt.planner.collectors.rating.RatedPlan;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
+import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.planner.graph.TaskProvision;
 import vsr.cobalt.service.CachingJsonSerializer;
 
 /**
@@ -33,26 +33,27 @@ public final class CachingJsonSerializers {
   public static final CachingJsonSerializer<RatedPlan> plans;
   public static final CachingJsonSerializer<Property> properties;
   public static final CachingJsonSerializer<PropertyProvision> propertyProvisions;
-  public static final CachingJsonSerializer<Task> tasks;
-  public static final CachingJsonSerializer<TaskProvision> taskProvisions;
+  public static final CachingJsonSerializer<Functionality> functionalities;
+  public static final CachingJsonSerializer<FunctionalityProvision> functionalityProvisions;
   public static final CachingJsonSerializer<Widget> widgets;
 
   static {
     interactions = new CachingJsonSerializer<>(new JsonInteractionSerializer());
     properties = new CachingJsonSerializer<>(new JsonPropertySerializer());
-    tasks = new CachingJsonSerializer<>(new JsonTaskSerializer());
+    functionalities = new CachingJsonSerializer<>(new JsonFunctionalitySerializer());
     widgets = new CachingJsonSerializer<>(new JsonWidgetSerializer());
 
-    actions = new CachingJsonSerializer<>(new JsonActionSerializer(widgets, tasks, properties, interactions));
+    actions = new CachingJsonSerializer<>(new JsonActionSerializer(widgets, functionalities, properties, interactions));
 
-    taskProvisions = new CachingJsonSerializer<>(new JsonTaskProvisionSerializer(actions, tasks));
+    functionalityProvisions = new CachingJsonSerializer<>(new JsonFunctionalityProvisionSerializer(actions,
+        functionalities));
 
     propertyProvisions = new CachingJsonSerializer<>(new JsonPropertyProvisionSerializer(actions, properties));
 
     actionProvisons = new CachingJsonSerializer<>(
         new JsonActionProvisionSerializer(actions, propertyProvisions));
 
-    initialLevels = new CachingJsonSerializer<>(new JsonInitialLevelSerializer(taskProvisions));
+    initialLevels = new CachingJsonSerializer<>(new JsonInitialLevelSerializer(functionalityProvisions));
     extensionLevels = new CachingJsonSerializer<>(new JsonExtensionLevelSerializer(actionProvisons));
 
     plans = new CachingJsonSerializer<>(new JsonPlanSerializer(initialLevels, extensionLevels));

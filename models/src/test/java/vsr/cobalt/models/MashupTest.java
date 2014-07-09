@@ -14,7 +14,7 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
-import static vsr.cobalt.models.makers.TaskMaker.aMinimalTask;
+import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
@@ -26,31 +26,31 @@ public class MashupTest {
   public static class New {
 
     @Test(expectedExceptions = IllegalArgumentException.class,
-        expectedExceptionsMessageRegExp = "expecting one or more tasks")
-    public void rejectEmptySetOfTasks() {
-      new Mashup(emptySet(Task.class));
+        expectedExceptionsMessageRegExp = "expecting one or more functionalities")
+    public void rejectEmptySetOfFunctionalities() {
+      new Mashup(emptySet(Functionality.class));
     }
 
     @Test
-    public void preventModificationOfTaskProvisions() {
-      final Task t = make(aMinimalTask());
-      final Set<Task> ts = setOf(t);
-      final Mashup m = new Mashup(ts);
-      ts.add(null);
-      assertNotEquals(m.getTasks(), ts);
+    public void preventModificationOfFunctionalities() {
+      final Functionality f = make(aMinimalFunctionality());
+      final Set<Functionality> fs = setOf(f);
+      final Mashup m = new Mashup(fs);
+      fs.add(null);
+      assertNotEquals(m.getFunctionalities(), fs);
     }
 
   }
 
   @Test
-  public static class GetTasks {
+  public static class GetFunctionalities {
 
     @Test
-    public void returnTheTasks() {
-      final Task t = make(aMinimalTask());
-      final Set<Task> ts = setOf(t);
-      final Mashup m = new Mashup(ts);
-      assertEquals(m.getTasks(), ts);
+    public void returnTheFunctionalities() {
+      final Functionality f = make(aMinimalFunctionality());
+      final Set<Functionality> fs = setOf(f);
+      final Mashup m = new Mashup(fs);
+      assertEquals(m.getFunctionalities(), fs);
     }
 
   }
@@ -62,13 +62,13 @@ public class MashupTest {
 
     @BeforeMethod
     public void setUp() {
-      final Task task = make(aMinimalTask());
-      mashup = new Mashup(setOf(task));
+      final Functionality f = make(aMinimalFunctionality());
+      mashup = new Mashup(setOf(f));
     }
 
     @Test
-    public void calculateHastCodeFromTasks() {
-      assertEquals(mashup.hashCode(), mashup.getTasks().hashCode());
+    public void calculateHastCodeFromFunctionalities() {
+      assertEquals(mashup.hashCode(), mashup.getFunctionalities().hashCode());
     }
 
     @Test
@@ -78,15 +78,15 @@ public class MashupTest {
     }
 
     @Test
-    public void notEqualWhenRealizedTasksDiffer() {
-      final Task task = make(aMinimalTask().withIdentifier("task"));
-      final Mashup other = new Mashup(setOf(task));
+    public void notEqualWhenRealizedFunctionalitiesDiffer() {
+      final Functionality f = make(aMinimalFunctionality().withIdentifier("f"));
+      final Mashup other = new Mashup(setOf(f));
       assertNotEquals(mashup, other);
     }
 
     @Test
-    public void equalWhenTasksEqual() {
-      final Mashup other = new Mashup(mashup.getTasks());
+    public void equalWhenFunctionalitiesEqual() {
+      final Mashup other = new Mashup(mashup.getFunctionalities());
       assertEquals(mashup, other);
     }
 
