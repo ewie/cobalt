@@ -153,9 +153,6 @@ public class ShortestPathFinder {
 
     public static final NoPath INSTANCE = new NoPath();
 
-    private NoPath() {
-    }
-
     @Override
     public List<Resource> extract(final Resource target) {
       return Collections.emptyList();

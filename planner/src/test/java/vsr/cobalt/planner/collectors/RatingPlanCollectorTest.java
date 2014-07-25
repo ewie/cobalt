@@ -7,7 +7,6 @@
 
 package vsr.cobalt.planner.collectors;
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
 import vsr.cobalt.planner.Plan;
 import vsr.cobalt.planner.collectors.rating.PlanRater;
@@ -43,7 +42,7 @@ public class RatingPlanCollectorTest {
     final RatingPlanCollector rc = new RatingPlanCollector(pr);
     rc.collect(p);
 
-    Assert.assertEquals(rc.peek(), new RatedPlan(p, r));
+    assertEquals(rc.peek(), new RatedPlan(p, r));
   }
 
   @Test

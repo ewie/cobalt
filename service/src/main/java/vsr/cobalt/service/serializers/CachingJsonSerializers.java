@@ -26,7 +26,7 @@ import vsr.cobalt.service.CachingJsonSerializer;
 public final class CachingJsonSerializers {
 
   public static final CachingJsonSerializer<Action> actions;
-  public static final CachingJsonSerializer<ActionProvision> actionProvisons;
+  public static final CachingJsonSerializer<ActionProvision> actionProvisions;
   public static final CachingJsonSerializer<ExtensionLevel> extensionLevels;
   public static final CachingJsonSerializer<InitialLevel> initialLevels;
   public static final CachingJsonSerializer<Interaction> interactions;
@@ -50,11 +50,11 @@ public final class CachingJsonSerializers {
 
     propertyProvisions = new CachingJsonSerializer<>(new JsonPropertyProvisionSerializer(actions, properties));
 
-    actionProvisons = new CachingJsonSerializer<>(
+    actionProvisions = new CachingJsonSerializer<>(
         new JsonActionProvisionSerializer(actions, propertyProvisions));
 
     initialLevels = new CachingJsonSerializer<>(new JsonInitialLevelSerializer(functionalityProvisions));
-    extensionLevels = new CachingJsonSerializer<>(new JsonExtensionLevelSerializer(actionProvisons));
+    extensionLevels = new CachingJsonSerializer<>(new JsonExtensionLevelSerializer(actionProvisions));
 
     plans = new CachingJsonSerializer<>(new JsonPlanSerializer(initialLevels, extensionLevels));
   }

@@ -32,6 +32,7 @@ public abstract class Identifier {
 
   public abstract URI getUri();
 
+  @Override
   public abstract String toString();
 
   protected abstract boolean equals(Identifier other);
@@ -74,6 +75,7 @@ public abstract class Identifier {
       return uri.hashCode();
     }
 
+    @Override
     protected boolean equals(final Identifier other) {
       return other instanceof UriIdentifier
           && equals((UriIdentifier) other);
@@ -113,6 +115,7 @@ public abstract class Identifier {
       return id.hashCode();
     }
 
+    @Override
     protected boolean equals(final Identifier other) {
       return other instanceof StringIdentifier
           && equals((StringIdentifier) other);

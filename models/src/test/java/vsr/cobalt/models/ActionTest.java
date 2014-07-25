@@ -120,7 +120,7 @@ public class ActionTest {
     }
 
     @Test
-    public void defaultToEmptyIteractions() {
+    public void defaultToEmptyInteractions() {
       final Widget w = make(aMinimalWidget());
       final Action a = Action.create(w);
       assertEmpty(a.getInteractions());

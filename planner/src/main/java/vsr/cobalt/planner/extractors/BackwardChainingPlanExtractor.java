@@ -17,6 +17,7 @@ import vsr.cobalt.planner.graph.Graph;
  */
 public class BackwardChainingPlanExtractor implements PlanExtractor {
 
+  @Override
   public BackwardChainingPlanIterator extractPlans(final Graph graph, final int depth) {
     return new BackwardChainingPlanIterator(graph, depth, depth);
   }

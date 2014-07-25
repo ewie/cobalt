@@ -22,6 +22,7 @@ public class TypeMaker extends IdentifiableMaker<Type> {
     return (TypeMaker) aType().withIdentifier("");
   }
 
+  @Override
   public Type make() {
     return new Type(identifier.get());
   }

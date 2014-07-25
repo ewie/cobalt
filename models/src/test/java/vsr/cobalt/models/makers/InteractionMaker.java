@@ -26,6 +26,7 @@ public class InteractionMaker implements Maker<Interaction> {
     return anInteraction().withInstruction("");
   }
 
+  @Override
   public Interaction make() {
     return new Interaction(instruction.get());
   }

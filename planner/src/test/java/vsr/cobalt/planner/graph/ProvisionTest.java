@@ -11,7 +11,6 @@ import java.util.Objects;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Offer;
 
 import static org.mockito.Matchers.any;
@@ -41,8 +40,8 @@ public class ProvisionTest {
 
   private static class DummyOffer extends Offer<Object> {
 
-    public DummyOffer(final Object subject, final Action action) {
-      super(subject, action);
+    public DummyOffer(final Object subject) {
+      super(subject, null);
     }
 
     @Override
@@ -93,7 +92,7 @@ public class ProvisionTest {
     public void calculateHashCodeFromRequestAndOffer() {
       final Object r = new Object();
 
-      final DummyOffer o = new DummyOffer(null, null);
+      final DummyOffer o = new DummyOffer(null);
 
       final DummyProvision provision = new DummyProvision(r, o);
       assertEquals(provision.hashCode(), Objects.hash(r, o));
@@ -103,7 +102,7 @@ public class ProvisionTest {
     public void equalWhenRequestsAndOffersEqual() {
       final Object r = new Object();
 
-      final DummyOffer o = new DummyOffer(null, null);
+      final DummyOffer o = new DummyOffer(null);
 
       final DummyProvision p1 = new DummyProvision(r, o);
       final DummyProvision p2 = new DummyProvision(r, o);
@@ -152,8 +151,8 @@ public class ProvisionTest {
     public void notEqualWhenOfferDiffers() {
       final Object r = new Object();
 
-      final DummyOffer o1 = new DummyOffer(new Object(), null);
-      final DummyOffer o2 = new DummyOffer(new Object(), null);
+      final DummyOffer o1 = new DummyOffer(new Object());
+      final DummyOffer o2 = new DummyOffer(new Object());
 
       final DummyProvision p1 = new DummyProvision(r, o1);
       final DummyProvision p2 = new DummyProvision(r, o2);

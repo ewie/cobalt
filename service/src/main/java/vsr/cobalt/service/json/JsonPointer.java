@@ -34,6 +34,7 @@ public abstract class JsonPointer {
   /**
    * @return the string representation per RFC 6901
    */
+  @Override
   public abstract String toString();
 
   /**
@@ -75,9 +76,6 @@ public abstract class JsonPointer {
   private static class Root extends JsonPointer {
 
     public static final Root INSTANCE = new Root();
-
-    private Root() {
-    }
 
     @Override
     public boolean isRoot() {

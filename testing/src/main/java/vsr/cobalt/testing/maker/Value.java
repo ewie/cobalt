@@ -12,8 +12,8 @@ package vsr.cobalt.testing.maker;
  */
 public interface Value<T> {
 
-  public T get();
+  T get();
 
-  public void set(T value);
+  void set(T value);
 
 }

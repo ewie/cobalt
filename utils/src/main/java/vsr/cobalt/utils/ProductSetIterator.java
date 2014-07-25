@@ -12,7 +12,6 @@ import java.util.Set;
 
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * Iterator over each product set of a set of sets.
@@ -98,7 +97,7 @@ public class ProductSetIterator<E> extends AbstractIterator<Set<E>> {
     /**
      * The index of the current value.
      */
-    private int index = 0;
+    private int index;
 
     public Counter(final Set<E> values) {
       // convert to a sequence to get random access

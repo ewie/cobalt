@@ -25,10 +25,10 @@ public class SequentialPlanCollectorTest {
 
   @Test
   public void offerCollectedPlan() {
-    final SequentialPlanCollector sc = new SequentialPlanCollector();
+    final SequentialPlanCollector pc = new SequentialPlanCollector();
     final Plan p = new Plan(make(aMinimalGraph()));
-    sc.collect(p);
-    assertSame(sc.peek(), p);
+    pc.collect(p);
+    assertSame(pc.peek(), p);
   }
 
 }

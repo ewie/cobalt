@@ -31,7 +31,7 @@ class ActionReachabilityIndex {
   /**
    * Map levels to their respective reachable actions.
    */
-  public ImmutableSetMultimap<Level, Action> index;
+  private final ImmutableSetMultimap<Level, Action> index;
 
   /**
    * Create a new reachability index for the given graph.

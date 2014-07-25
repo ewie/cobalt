@@ -19,14 +19,11 @@ import java.util.Map;
  */
 public class ResourceCache {
 
-  private static ResourceCache INSTANCE;
+  private static final ResourceCache INSTANCE = new ResourceCache();
 
   private final Map<String, String> index = new HashMap<>();
 
   public static ResourceCache getInstance() {
-    if (INSTANCE == null) {
-      INSTANCE = new ResourceCache();
-    }
     return INSTANCE;
   }
 

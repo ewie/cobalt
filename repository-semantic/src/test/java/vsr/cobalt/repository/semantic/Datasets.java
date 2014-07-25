@@ -22,7 +22,7 @@ public final class Datasets {
    * <p/>
    * The dataset returned by {@link RDFDataMgr#loadDataset(String)} is not transactional.
    *
-   * @param uri
+   * @param uri URI of data to load
    *
    * @return a new dataset
    */
