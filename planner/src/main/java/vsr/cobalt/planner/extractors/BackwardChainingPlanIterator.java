@@ -18,6 +18,7 @@ import com.google.common.collect.AbstractIterator;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Functionality;
 import vsr.cobalt.planner.Plan;
+import vsr.cobalt.planner.graph.ActionMutexIndex;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.FunctionalityProvision;
@@ -55,6 +56,8 @@ class BackwardChainingPlanIterator extends AbstractIterator<Plan> {
 
   private final ActionReachabilityIndex reachabilityIndex;
 
+  private final ActionMutexIndex mutexIndex;
+
   /**
    * Create a new plan iterator using a graph and depth range.
    * <p/>
@@ -79,6 +82,7 @@ class BackwardChainingPlanIterator extends AbstractIterator<Plan> {
     initialFrame = new InitialFrame(graph.getInitialLevel());
     extensionFrames = new ArrayDeque<>(graph.getExtensionDepth());
     reachabilityIndex = new ActionReachabilityIndex(graph);
+    mutexIndex = new ActionMutexIndex(graph);
   }
 
   /**
@@ -195,6 +199,7 @@ class BackwardChainingPlanIterator extends AbstractIterator<Plan> {
         && extensionFrames.size() < graph.getExtensionDepth() // ensure the graph has enough levels
         && !isEnabled() // grow only when the current level is not enabled by itself
         && isReachable() // ensure the current level is reachable, otherwise there would be no plans with more levels
+        && !isMutex() // ensure the current level has no mutexes
         ;
   }
 
@@ -232,7 +237,7 @@ class BackwardChainingPlanIterator extends AbstractIterator<Plan> {
    * @return true when reachable, false otherwise
    */
   private boolean isReachable() {
-    // use the original graph level (the graph level from which the current level is derived) as it was used to built
+    // use the original graph level (the graph level from which the current level is derived) as it was used to build
     // the reachability index
     final Level l = getCurrentFrame().getOriginalLevel();
     for (final Action a : getCurrentLevel().getRequiredActions()) {
@@ -241,6 +246,28 @@ class BackwardChainingPlanIterator extends AbstractIterator<Plan> {
       }
     }
     return true;
+  }
+
+  /**
+   * Check if any two actions in the current level are mutex.
+   *
+   * @return true when any two actions are mutex, false otherwise
+   */
+  private boolean isMutex() {
+    final Level l = getCurrentFrame().getOriginalLevel();
+    if (!mutexIndex.hasMutexActions(l)) {
+      return false;
+    }
+
+    final Set<Action> as = getCurrentLevel().getRequiredActions();
+    for (final Action ai : as) {
+      for (final Action aj : as) {
+        if (mutexIndex.isMutex(l, ai, aj)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private List<ExtensionLevel> getExtensionLevels() {
@@ -315,11 +342,11 @@ class BackwardChainingPlanIterator extends AbstractIterator<Plan> {
 
     private static ProductSet<FunctionalityProvision> createCombinations(final InitialLevel level) {
       final Set<Functionality> fs = level.getRequestedFunctionalities();
-      final Set<Set<FunctionalityProvision>> tps = new HashSet<>();
+      final Set<Set<FunctionalityProvision>> fpss = new HashSet<>();
       for (final Functionality f : fs) {
-        tps.add(level.getFunctionalityProvisionsByRequestedFunctionality(f));
+        fpss.add(level.getFunctionalityProvisionsByRequestedFunctionality(f));
       }
-      return new ProductSet<>(tps);
+      return new ProductSet<>(fpss);
     }
 
   }

@@ -13,6 +13,7 @@ import java.util.Set;
 
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Functionality;
+import vsr.cobalt.planner.graph.ActionMutexIndex;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
@@ -78,6 +79,8 @@ public final class Plan {
     }
 
     assertRequiredActions(il, actions);
+
+    assertMutexAction(graph);
   }
 
   private static void assertInitialLevel(final InitialLevel level) {
@@ -103,6 +106,13 @@ public final class Plan {
           throw new IllegalArgumentException("expecting graph with only satisfied actions");
         }
       }
+    }
+  }
+
+  private static void assertMutexAction(final Graph graph) {
+    final ActionMutexIndex ami = new ActionMutexIndex(graph);
+    if (ami.hasAnyMutexes()) {
+      throw new IllegalArgumentException("expecting graph with only non-mutex actions");
     }
   }
 

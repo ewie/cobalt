@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
+import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.Graph;
 
@@ -154,6 +155,54 @@ public class PlanTest {
               .withProvision(anActionProvision()
                   .withRequest(a1)
                   .withPrecursor(a2))));
+
+      new Plan(g);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class,
+        expectedExceptionsMessageRegExp = "expecting graph with only non-mutex actions")
+    public void rejectGraphContainingAnyActionsBeingMutex() {
+      final Functionality f1 = make(aFunctionality().withIdentifier("f1"));
+      final Functionality f2 = make(aFunctionality().withIdentifier("f2"));
+
+      final Property p = make(aMinimalProperty());
+
+      // a1 and a2 mutex
+
+      final Action a1 = make(aMinimalAction()
+          .withFunctionality(f1)
+          .withPre(aPropositionSet()
+              .withCleared(p)));
+
+      final Action a2 = make(aMinimalAction()
+          .withFunctionality(f2)
+          .withPub(p)
+          .withEffects(aPropositionSet()
+              .withFilled(p)));
+
+      final Action a3 = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withCleared(p)));
+
+      final FunctionalityProvision fp1 = make(aFunctionalityProvision()
+          .withProvidingAction(a1)
+          .withOffer(f1)
+          .withRequest(f1));
+
+      final FunctionalityProvision fp2 = make(aFunctionalityProvision()
+          .withProvidingAction(a2)
+          .withOffer(f2)
+          .withRequest(f2));
+
+      final ActionProvision ap = make(anActionProvision()
+          .withRequest(a1)
+          .withPrecursor(a3));
+
+      final Graph g = make(aGraph()
+          .withInitialLevel(anInitialLevel()
+              .withFunctionalityProvision(fp1, fp2))
+          .withExtensionLevel(anExtensionLevel()
+              .withProvision(ap)));
 
       new Plan(g);
     }
