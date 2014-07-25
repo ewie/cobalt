@@ -504,13 +504,9 @@ public abstract class Action {
 
       private final ImmutableSet.Builder<Action> actions = ImmutableSet.builder();
 
-      private final ImmutableSet.Builder<Property> cleared = ImmutableSet.builder();
+      private final ImmutableSet.Builder<Proposition> pre = ImmutableSet.builder();
 
-      private final ImmutableSet.Builder<Property> filled = ImmutableSet.builder();
-
-      private final ImmutableSet.Builder<Property> toClear = ImmutableSet.builder();
-
-      private final ImmutableSet.Builder<Property> toFill = ImmutableSet.builder();
+      private final ImmutableSet.Builder<Proposition> effects = ImmutableSet.builder();
 
       private final ImmutableSet.Builder<Property> properties = ImmutableSet.builder();
 
@@ -527,11 +523,11 @@ public abstract class Action {
 
         actions.add(action);
 
-        properties.addAll(action.getPublishedProperties());
-        functionalities.addAll(action.getRealizedFunctionalities());
-        interactions.addAll(action.getInteractions());
-        addPreConditions(action.getPreConditions());
-        addEffects(action.getEffects());
+        properties.addAll(action.publishedProperties);
+        functionalities.addAll(action.realizedFunctionalities);
+        interactions.addAll(action.interactions);
+        pre.addAll(action.preConditions);
+        effects.addAll(action.effects);
       }
 
       public ImmutableSet<Action> getActions() {
@@ -543,11 +539,11 @@ public abstract class Action {
       }
 
       public PropositionSet getPreConditions() {
-        return new PropositionSet(cleared.build(), filled.build());
+        return new PropositionSet(pre.build());
       }
 
       public PropositionSet getEffects() {
-        return new PropositionSet(toClear.build(), toFill.build());
+        return new PropositionSet(effects.build());
       }
 
       public ImmutableSet<Property> getPublishedProperties() {
@@ -560,16 +556,6 @@ public abstract class Action {
 
       public ImmutableSet<Interaction> getInteractions() {
         return interactions.build();
-      }
-
-      private void addPreConditions(final PropositionSet pre) {
-        cleared.addAll(pre.getClearedProperties());
-        filled.addAll(pre.getFilledProperties());
-      }
-
-      private void addEffects(final PropositionSet effects) {
-        toClear.addAll(effects.getClearedProperties());
-        toFill.addAll(effects.getFilledProperties());
       }
 
     }

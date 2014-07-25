@@ -7,51 +7,52 @@
 
 package vsr.cobalt.models;
 
+import java.util.AbstractSet;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
-
-import static com.google.common.collect.Sets.difference;
-import static java.util.Collections.disjoint;
+import com.google.common.collect.Sets;
 
 /**
- * A set of propositions specifying the absence or presence of values for specific properties.
+ * A set of propositions specifying the absence or presence of values for certain properties. Ensures that a
+ * proposition cannot be used along with its negation, otherwise we would have zombie cats.
  *
  * @author Erik Wienhold
  */
-public final class PropositionSet {
+public final class PropositionSet extends AbstractSet<Proposition> {
+
+  private static final Set<Proposition> EMPTY_PROPOSITIONS = Collections.emptySet();
 
   private static final Set<Property> EMPTY_PROPERTIES = Collections.emptySet();
 
-  private static final PropositionSet EMPTY = new PropositionSet(EMPTY_PROPERTIES, EMPTY_PROPERTIES);
+  private static final PropositionSet EMPTY = new PropositionSet(EMPTY_PROPOSITIONS);
+
+  private final ImmutableSet<Proposition> propositions;
 
   /**
-   * The set of properties without a value.
-   */
-  private final ImmutableSet<Property> cleared;
-
-  /**
-   * The set of properties with some value.
-   */
-  private final ImmutableSet<Property> filled;
-
-  /**
-   * Create a proposition set with two disjoint set of properties, specifying either the absence or the presence of
-   * each
-   * property's value.
+   * Create a proposition set from a set of propositions.
    *
-   * @param cleared a set of properties with no value
-   * @param filled  a set of properties with some value
+   * @param propositions a set of propositions
+   */
+  public PropositionSet(final Set<Proposition> propositions) {
+    if (anyMutexPropositions(propositions)) {
+      throw new IllegalArgumentException("expecting no proposition to also appear negated");
+    }
+    this.propositions = ImmutableSet.copyOf(propositions);
+  }
+
+  /**
+   * Create a proposition set from two sets of cleared and filled properties.
+   *
+   * @param cleared a set of cleared properties
+   * @param filled  a set of filled properties
    */
   public PropositionSet(final Set<Property> cleared, final Set<Property> filled) {
-    if (!disjoint(cleared, filled)) {
-      throw new IllegalArgumentException("expecting cleared and filled properties to be disjoint sets");
-    }
-    this.cleared = ImmutableSet.copyOf(cleared);
-    this.filled = ImmutableSet.copyOf(filled);
+    this(Sets.union(createPropositions(cleared, Proposition.CLEARED_VALUE), createPropositions(filled, Proposition.FILLED_VALUE)));
   }
 
   /**
@@ -105,7 +106,7 @@ public final class PropositionSet {
    * @return true when the property has no value, false otherwise
    */
   public boolean isCleared(final Property property) {
-    return cleared.contains(property);
+    return propositions.contains(Proposition.cleared(property));
   }
 
   /**
@@ -116,13 +117,26 @@ public final class PropositionSet {
    * @return true when the property has some value, false otherwise
    */
   public boolean isFilled(final Property property) {
-    return filled.contains(property);
+    return propositions.contains(Proposition.filled(property));
+  }
+
+  /**
+   * @return the propositions
+   */
+  public Set<Proposition> getPropositions() {
+    return propositions;
   }
 
   /**
    * @return the set of cleared properties
    */
   public Set<Property> getClearedProperties() {
+    final Set<Property> cleared = new HashSet<>();
+    for (final Proposition p : propositions) {
+      if (!p.isFilled()) {
+        cleared.add(p.getProperty());
+      }
+    }
     return cleared;
   }
 
@@ -130,6 +144,12 @@ public final class PropositionSet {
    * @return the set of filled properties
    */
   public Set<Property> getFilledProperties() {
+    final Set<Property> filled = new HashSet<>();
+    for (final Proposition p : propositions) {
+      if (p.isFilled()) {
+        filled.add(p.getProperty());
+      }
+    }
     return filled;
   }
 
@@ -141,25 +161,28 @@ public final class PropositionSet {
    * @return a proposition set specifying the derived post-conditions
    */
   public PropositionSet createPostConditions(final PropositionSet preConditions) {
-    final Set<Property> cleared = new HashSet<>();
-    final Set<Property> filled = new HashSet<>();
-    cleared.addAll(this.cleared);
-    filled.addAll(this.filled);
-    cleared.addAll(difference(preConditions.getClearedProperties(), this.filled));
-    filled.addAll(difference(preConditions.getFilledProperties(), this.cleared));
-    return new PropositionSet(cleared, filled);
+    final Set<Proposition> postConditions = Sets.newHashSet(propositions);
+    for (final Proposition p : preConditions.propositions) {
+      if (!postConditions.contains(p) && !postConditions.contains(p.negation())) {
+        postConditions.add(p);
+      }
+    }
+    return new PropositionSet(postConditions);
   }
 
-  /**
-   * @return true when no properties are specified
-   */
-  public boolean isEmpty() {
-    return cleared.isEmpty() && filled.isEmpty();
+  @Override
+  public int size() {
+    return propositions.size();
+  }
+
+  @Override
+  public Iterator<Proposition> iterator() {
+    return propositions.iterator();
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(cleared, filled);
+    return propositions.hashCode();
   }
 
   @Override
@@ -170,8 +193,24 @@ public final class PropositionSet {
   }
 
   private boolean equals(final PropositionSet other) {
-    return Objects.equals(cleared, other.cleared)
-        && Objects.equals(filled, other.filled);
+    return Objects.equals(propositions, other.propositions);
+  }
+
+  private static Set<Proposition> createPropositions(final Set<Property> properties, final boolean valueState) {
+    final Set<Proposition> propositions = new HashSet<>(properties.size());
+    for (final Property p : properties) {
+      propositions.add(new Proposition(p, valueState));
+    }
+    return propositions;
+  }
+
+  private static boolean anyMutexPropositions(final Set<Proposition> propositions) {
+    for (final Proposition p : propositions) {
+      if (propositions.contains(p.negation())) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }

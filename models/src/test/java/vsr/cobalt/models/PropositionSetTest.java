@@ -7,9 +7,11 @@
 
 package vsr.cobalt.models;
 
-import java.util.Objects;
+import java.util.AbstractSet;
+import java.util.Iterator;
 import java.util.Set;
 
+import com.google.common.collect.Iterators;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -19,6 +21,7 @@ import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.testing.Assert.assertEmpty;
+import static vsr.cobalt.testing.Assert.assertSubClass;
 import static vsr.cobalt.testing.Utilities.emptySet;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
@@ -27,29 +30,37 @@ import static vsr.cobalt.testing.Utilities.setOf;
 public class PropositionSetTest {
 
   @Test
+  public void extendsAbstractSet() {
+    assertSubClass(PropositionSet.class, AbstractSet.class);
+  }
+
+  @Test
   public static class New {
 
     @Test(expectedExceptions = IllegalArgumentException.class,
-        expectedExceptionsMessageRegExp = "expecting cleared and filled properties to be disjoint sets")
-    public void rejectWhenClearedAndFilledPropertiesAreNotDisjoint() {
+        expectedExceptionsMessageRegExp = "expecting no proposition to also appear negated")
+    public void rejectWhenAnyPropositionIsAlsoNegated() {
       final Property p = make(aMinimalProperty());
-      new PropositionSet(setOf(p), setOf(p));
+      final Proposition q = Proposition.cleared(p);
+      final Proposition r = q.negation();
+      new PropositionSet(setOf(q, r));
     }
 
     @Test
-    public void preventModificationOfPropertiesToClear() {
-      final Set<Property> ps = emptySet();
-      final PropositionSet pps = new PropositionSet(ps, emptySet(Property.class));
+    public void preventModificationOfPropositions() {
+      final Set<Proposition> ps = emptySet();
+      final PropositionSet pps = new PropositionSet(ps);
       ps.add(null);
-      assertNotEquals(pps.getClearedProperties(), ps);
+      assertNotEquals(pps.getPropositions(), ps);
     }
 
     @Test
-    public void preventModificationOfPropertiesToFill() {
-      final Set<Property> ps = emptySet();
-      final PropositionSet pps = new PropositionSet(emptySet(Property.class), ps);
-      ps.add(null);
-      assertNotEquals(pps.getFilledProperties(), ps);
+    public void createFromSetsOfClearedAndFilledProperties() {
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+      final PropositionSet ps = new PropositionSet(setOf(p1), setOf(p2));
+      assertEquals(ps.getClearedProperties(), setOf(p1));
+      assertEquals(ps.getFilledProperties(), setOf(p2));
     }
 
   }
@@ -58,57 +69,58 @@ public class PropositionSetTest {
   public static class Empty {
 
     @Test
-    public void createEmptyPropositions() {
-      final PropositionSet e = PropositionSet.empty();
-      assertEmpty(e.getClearedProperties());
-      assertEmpty(e.getFilledProperties());
+    public void createEmptyPropositionSet() {
+      final PropositionSet ps = PropositionSet.empty();
+      assertEmpty(ps);
     }
 
   }
 
   @Test
-  public static class Clear {
+  public static class Cleared {
 
     @Test
     public void createPropositionsWithOnlyClearedProperties() {
       final Property p = make(aMinimalProperty());
-      final PropositionSet e = PropositionSet.cleared(p);
-      assertEquals(e.getClearedProperties(), setOf(p));
+      final PropositionSet ps = PropositionSet.cleared(p);
+      assertEquals(ps.getClearedProperties(), setOf(p));
     }
 
   }
 
   @Test
-  public static class Fill {
+  public static class Filled {
 
     @Test
     public void createPropositionsWithOnlyFilledProperties() {
       final Property p = make(aMinimalProperty());
-      final PropositionSet e = PropositionSet.filled(p);
-      assertEquals(e.getFilledProperties(), setOf(p));
+      final PropositionSet ps = PropositionSet.filled(p);
+      assertEquals(ps.getFilledProperties(), setOf(p));
     }
 
   }
 
   @Test
-  public static class IsEmpty {
+  public static class Size {
 
     @Test
-    public void returnTrueWhenEmpty() {
-      final PropositionSet ps = make(aPropositionSet());
-      assertTrue(ps.isEmpty());
+    public void returnNumberOfPropositions() {
+      final Property p = make(aMinimalProperty());
+      final PropositionSet ps = make(aPropositionSet().withCleared(p));
+      assertEquals(ps.size(), 1);
     }
 
-    @Test
-    public void returnFalseWithAtLeastOneClearedProperty() {
-      final PropositionSet ps = make(aPropositionSet().withCleared(aMinimalProperty()));
-      assertFalse(ps.isEmpty());
-    }
+  }
+
+  @Test
+  public static class Iterator_ {
 
     @Test
-    public void returnFalseWithAtLeastOneFilledProperty() {
-      final PropositionSet ps = make(aPropositionSet().withFilled(aMinimalProperty()));
-      assertFalse(ps.isEmpty());
+    public void returnIteratorOverPropositions() {
+      final Property p = make(aMinimalProperty());
+      final PropositionSet ps = make(aPropositionSet().withCleared(p));
+      final Iterator<Proposition> it = ps.iterator();
+      assertTrue(Iterators.elementsEqual(it, ps.getPropositions().iterator()));
     }
 
   }
@@ -178,7 +190,9 @@ public class PropositionSetTest {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
-      final PropositionSet eff = new PropositionSet(setOf(p1), setOf(p2));
+      final PropositionSet eff = make(aPropositionSet()
+          .withCleared(p1)
+          .withFilled(p2));
 
       final PropositionSet pre = make(aPropositionSet());
 
@@ -214,46 +228,46 @@ public class PropositionSetTest {
     @Test
     public void overwriteClearedProperty() {
       final Property p = make(aMinimalProperty());
-
       final PropositionSet eff = PropositionSet.cleared(p);
-
       final PropositionSet pre = make(aPropositionSet().withFilled(p));
-
       final PropositionSet post = eff.createPostConditions(pre);
-
       final PropositionSet xpost = make(aPropositionSet().withCleared(p));
-
       assertEquals(post, xpost);
     }
 
     @Test
     public void overwriteFilledProperty() {
       final Property p = make(aMinimalProperty());
-
       final PropositionSet eff = PropositionSet.filled(p);
-
       final PropositionSet pre = make(aPropositionSet().withCleared(p));
-
       final PropositionSet post = eff.createPostConditions(pre);
-
       final PropositionSet xpost = make(aPropositionSet().withFilled(p));
-
       assertEquals(post, xpost);
     }
 
   }
 
   @Test
-  public static class Equals {
+  public static class Equality {
 
     @Test
-    public void returnFalseWhenNotInstanceOfSameClass() {
+    public void hashCodeFromPropositions() {
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+      final PropositionSet ps = make(aPropositionSet()
+          .withCleared(p1)
+          .withFilled(p2));
+      assertEquals(ps.hashCode(), ps.getPropositions().hashCode());
+    }
+
+    @Test
+    public void notEqualToObjectOfDifferentType() {
       final PropositionSet ps = make(aPropositionSet());
       assertFalse(ps.equals(new Object()));
     }
 
     @Test
-    public void returnFalseWhenClearedPropertiesDiffer() {
+    public void notEqualWhenPropositionsDiffer() {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
       final PropositionSet ps1 = make(aPropositionSet().withCleared(p1));
@@ -262,16 +276,7 @@ public class PropositionSetTest {
     }
 
     @Test
-    public void returnFalseWhenFilledPropertiesDiffer() {
-      final Property p1 = make(aMinimalProperty().withName("p1"));
-      final Property p2 = make(aMinimalProperty().withName("p2"));
-      final PropositionSet ps1 = make(aPropositionSet().withFilled(p1));
-      final PropositionSet ps2 = make(aPropositionSet().withFilled(p2));
-      assertNotEquals(ps1, ps2);
-    }
-
-    @Test
-    public void returnTrueWithSameClearedAndFilledProperties() {
+    public void returnTrueWhenPropositionsEqual() {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
       final PropositionSet ps1 = make(aPropositionSet()
@@ -281,21 +286,6 @@ public class PropositionSetTest {
           .withCleared(p1)
           .withFilled(p2));
       assertEquals(ps1, ps2);
-    }
-
-  }
-
-  @Test
-  public static class HashCode {
-
-    @Test
-    public void calculateHashCodeFromClearedAndFilledProperties() {
-      final Property p1 = make(aMinimalProperty().withName("p1"));
-      final Property p2 = make(aMinimalProperty().withName("p2"));
-      final PropositionSet ps = make(aPropositionSet()
-          .withCleared(p1)
-          .withFilled(p2));
-      assertEquals(ps.hashCode(), Objects.hash(ps.getClearedProperties(), ps.getFilledProperties()));
     }
 
   }

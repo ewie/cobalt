@@ -31,9 +31,9 @@ public class PropositionsResourceInternalizer extends ResourceInternalizer<Propo
     if (r == null) {
       return PropositionSet.empty();
     }
-    final Set<Property> c = internalize(r, Ontology.clearValueOf);
-    final Set<Property> f = internalize(r, Ontology.fillValueOf);
-    return new PropositionSet(c, f);
+    final Set<Property> cleared = internalize(r, Ontology.clearValueOf);
+    final Set<Property> filled = internalize(r, Ontology.fillValueOf);
+    return new PropositionSet(cleared, filled);
   }
 
   private Set<Property> internalize(final Resource s, final com.hp.hpl.jena.rdf.model.Property p) {
