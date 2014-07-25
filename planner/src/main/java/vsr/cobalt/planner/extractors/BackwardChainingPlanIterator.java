@@ -241,7 +241,7 @@ class BackwardChainingPlanIterator extends AbstractIterator<Plan> {
     // the reachability index
     final Level l = getCurrentFrame().getOriginalLevel();
     for (final Action a : getCurrentLevel().getRequiredActions()) {
-      if (!reachabilityIndex.isReachable(a, l)) {
+      if (!reachabilityIndex.isReachable(l, a)) {
         return false;
       }
     }

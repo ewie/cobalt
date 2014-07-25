@@ -50,7 +50,7 @@ public class ActionReachabilityIndexTest {
 
       final ActionReachabilityIndex index = new ActionReachabilityIndex(g);
 
-      assertTrue(index.isReachable(a, g.getInitialLevel()));
+      assertTrue(index.isReachable(g.getInitialLevel(), a));
     }
 
     @Test
@@ -72,7 +72,7 @@ public class ActionReachabilityIndexTest {
 
       final ActionReachabilityIndex index = new ActionReachabilityIndex(g);
 
-      assertFalse(index.isReachable(a, g.getInitialLevel()));
+      assertFalse(index.isReachable(g.getInitialLevel(), a));
     }
 
     @Test
@@ -112,7 +112,7 @@ public class ActionReachabilityIndexTest {
 
       final ActionReachabilityIndex index = new ActionReachabilityIndex(g);
 
-      assertFalse(index.isReachable(a1, g.getInitialLevel()));
+      assertFalse(index.isReachable(g.getInitialLevel(), a1));
     }
 
     @Test
@@ -156,7 +156,7 @@ public class ActionReachabilityIndexTest {
       final ActionReachabilityIndex index = new ActionReachabilityIndex(g);
 
       // assert that the provision is enabled by checking that the request is enabled
-      assertTrue(index.isReachable(request, g.getInitialLevel()));
+      assertTrue(index.isReachable(g.getInitialLevel(), request));
     }
 
     @Test
@@ -191,7 +191,7 @@ public class ActionReachabilityIndexTest {
       final ActionReachabilityIndex index = new ActionReachabilityIndex(g);
 
       // assert that the provision is not enabled by checking that the request is not enabled
-      assertFalse(index.isReachable(request, g.getInitialLevel()));
+      assertFalse(index.isReachable(g.getInitialLevel(), request));
     }
 
     @Test
@@ -244,7 +244,7 @@ public class ActionReachabilityIndexTest {
       final ActionReachabilityIndex index = new ActionReachabilityIndex(g);
 
       // assert that the provision is not enabled by checking that the request is not enabled
-      assertFalse(index.isReachable(request, g.getInitialLevel()));
+      assertFalse(index.isReachable(g.getInitialLevel(), request));
     }
 
   }

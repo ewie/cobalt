@@ -10,8 +10,9 @@ package vsr.cobalt.planner.extractors;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSetMultimap;
+import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.planner.graph.ActionProvision;
@@ -22,7 +23,8 @@ import vsr.cobalt.planner.graph.Level;
 
 /**
  * Records which actions are reachable, i.e. the actions whose pre-conditions are empty or satisfied by some reachable
- * actions in the previous level.
+ * actions in the previous level. The term reachability is used with regard to plan execution, i.e. actions which are
+ * reachable during plan execution (which is reverse to graph extension).
  *
  * @author Erik Wienhold
  */
@@ -31,7 +33,7 @@ class ActionReachabilityIndex {
   /**
    * Map levels to their respective reachable actions.
    */
-  private final ImmutableSetMultimap<Level, Action> index;
+  private final SetMultimap<Level, Action> index;
 
   /**
    * Create a new reachability index for the given graph.
@@ -45,17 +47,17 @@ class ActionReachabilityIndex {
   /**
    * Check if an actions is reachable in a given level.
    *
-   * @param action an action to check
    * @param level  a level containing the given action
+   * @param action an action to check
    *
    * @return true when reachable, false otherwise
    */
-  public boolean isReachable(final Action action, final Level level) {
+  public boolean isReachable(final Level level, final Action action) {
     return index.containsEntry(level, action);
   }
 
-  private static ImmutableSetMultimap<Level, Action> buildIndex(final Graph graph) {
-    final ImmutableSetMultimap.Builder<Level, Action> b = ImmutableSetMultimap.builder();
+  private static SetMultimap<Level, Action> buildIndex(final Graph graph) {
+    final SetMultimap<Level, Action> index = HashMultimap.create();
 
     Set<Action> enabledActions = ImmutableSet.of();
 
@@ -65,7 +67,7 @@ class ActionReachabilityIndex {
       enabledActions = getCombinedEnabledActions(xl, enabledActions);
 
       // Associate the actions previously determined to be enabled with the current level.
-      b.putAll(xl, enabledActions);
+      index.putAll(xl, enabledActions);
 
       // Get all actions enabled by the current level.
       // These are a subset of enabled actions in the next level.
@@ -75,9 +77,9 @@ class ActionReachabilityIndex {
     // The initial level remains.
     final InitialLevel il = graph.getInitialLevel();
     enabledActions = getCombinedEnabledActions(il, enabledActions);
-    b.putAll(il, enabledActions);
+    index.putAll(il, enabledActions);
 
-    return b.build();
+    return index;
   }
 
   private static Set<Action> getCombinedEnabledActions(final Level level, final Set<Action> enabledActions) {
