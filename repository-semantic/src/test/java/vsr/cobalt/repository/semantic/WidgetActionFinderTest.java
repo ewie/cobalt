@@ -62,13 +62,11 @@ public class WidgetActionFinderTest {
     final Type y2 = type(2);
     final Type y3 = type(3);
     final Type y4 = type(4);
-    final Type y5 = type(5);
 
     final Property p1 = property(1, y1);
     final Property p2 = property(2, y2);
     final Property p3 = property(3, y3);
     final Property p4 = property(4, y4);
-    final Property p5 = property(5, y5);
 
     final Functionality t1 = functionality(1);
 
@@ -78,7 +76,6 @@ public class WidgetActionFinderTest {
         .withWidget(w)
         .withFunctionality(t1)
         .withInteraction(i1)
-        .withPub(p5)
         .withPre(aPropositionSet()
             .withCleared(p1)
             .withFilled(p2))

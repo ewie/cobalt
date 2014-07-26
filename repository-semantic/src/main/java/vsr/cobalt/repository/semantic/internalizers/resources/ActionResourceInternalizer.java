@@ -13,7 +13,6 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Interaction;
-import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PropositionSet;
 import vsr.cobalt.models.Widget;
 import vsr.cobalt.repository.semantic.Ontology;
@@ -28,20 +27,16 @@ public class ActionResourceInternalizer extends ResourceInternalizer<Action> {
 
   private final ResourceInternalizer<PropositionSet> propositions;
 
-  private final ResourceInternalizer<Property> properties;
-
   private final ResourceInternalizer<Functionality> functionalities;
 
   private final ResourceInternalizer<Interaction> interactions;
 
   public ActionResourceInternalizer(final ResourceInternalizer<Widget> widgets,
                                     final ResourceInternalizer<PropositionSet> propositions,
-                                    final ResourceInternalizer<Property> properties,
                                     final ResourceInternalizer<Functionality> functionalities,
                                     final ResourceInternalizer<Interaction> interactions) {
     this.widgets = widgets;
     this.propositions = propositions;
-    this.properties = properties;
     this.functionalities = functionalities;
     this.interactions = interactions;
   }
@@ -51,10 +46,9 @@ public class ActionResourceInternalizer extends ResourceInternalizer<Action> {
     final Widget w = widgets.internalize(getSubject(r, Ontology.hasAction));
     final PropositionSet pre = propositions.internalize(getResourceObject(r, Ontology.hasPreConditions));
     final PropositionSet eff = propositions.internalize(getResourceObject(r, Ontology.hasEffects));
-    final Set<Property> ps = properties.internalizeAll(getResourceObjects(r, Ontology.publishesValueOf));
     final Set<Functionality> ts = functionalities.internalizeAll(getResourceObjects(r, Ontology.realizesFunctionality));
     final Set<Interaction> is = interactions.internalizeAll(getResourceObjects(r, Ontology.hasInteraction));
-    return Action.create(w, pre, eff, ps, ts, is);
+    return Action.create(w, pre, eff, ts, is);
   }
 
 }

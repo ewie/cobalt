@@ -22,6 +22,7 @@ import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropertyMaker.aProperty;
+import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.planner.graph.makers.PropertyProvisionMaker.aPropertyProvision;
 import static vsr.cobalt.testing.Assert.assertSubClass;
 import static vsr.cobalt.testing.Utilities.make;
@@ -46,7 +47,9 @@ public class ComposingPropertyProvisionProviderTest {
     public void delegateToRepository() {
       final Property p = make(aMinimalProperty());
 
-      final Action a = make(aMinimalAction().withPub(p));
+      final Action a = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p)));
 
       final Set<PublishedProperty> pubs = setOf(publishedProperty(p, a));
 
@@ -66,7 +69,9 @@ public class ComposingPropertyProvisionProviderTest {
     public void createPropertyProvision() {
       final Property p1 = make(aProperty().withName("p1"));
       final Property p2 = make(aProperty().withName("p2"));
-      final Action a = make(aMinimalAction().withPub(p2));
+      final Action a = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p2)));
       final PropertyProvision pp = make(aPropertyProvision()
           .withRequest(p1)
           .withOffer(p2)
@@ -84,7 +89,9 @@ public class ComposingPropertyProvisionProviderTest {
     public void returnPublishedProperties() {
       final Property p1 = make(aProperty().withName("p1"));
       final Property p2 = make(aProperty().withName("p2"));
-      final Action a = make(aMinimalAction().withPub(p1, p2));
+      final Action a = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p1, p2)));
       final ComposingPropertyProvisionProvider ppp = new ComposingPropertyProvisionProvider(null);
       assertEquals(ppp.getOfferedSubjects(a), setOf(p1, p2));
     }

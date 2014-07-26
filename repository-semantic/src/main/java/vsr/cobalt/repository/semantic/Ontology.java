@@ -35,7 +35,6 @@ public final class Ontology {
   public static final Property hasName = property("hasName");
   public static final Property hasPreConditions = property("hasPreConditions");
   public static final Property hasType = property("hasType");
-  public static final Property publishesValueOf = property("publishesValueOf");
   public static final Property realizesFunctionality = property("realizesFunctionality");
   public static final Property subFunctionalityOf = property("subFunctionalityOf");
 

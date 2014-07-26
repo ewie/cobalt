@@ -46,7 +46,7 @@ public final class CachingResourceInternalizers {
     mashups = caching(new MashupResourceInternalizer(functionalities));
     properties = caching(new PropertyResourceInternalizer(types));
     propositions = caching(new PropositionsResourceInternalizer(properties));
-    actions = caching(new ActionResourceInternalizer(widgets, propositions, properties, functionalities, interactions));
+    actions = caching(new ActionResourceInternalizer(widgets, propositions, functionalities, interactions));
   }
 
   private static <T> CachingResourceInternalizer<T> caching(final ResourceInternalizer<T> internalizer) {

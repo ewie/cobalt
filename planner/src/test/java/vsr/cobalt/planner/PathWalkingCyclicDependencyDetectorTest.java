@@ -108,7 +108,9 @@ public class PathWalkingCyclicDependencyDetectorTest {
         .withPre(aPropositionSet()
             .withFilled(p1)));
 
-    final Action a2 = make(aMinimalAction().withPub(p1));
+    final Action a2 = make(aMinimalAction()
+        .withEffects(aPropositionSet()
+            .withFilled(p1)));
 
     final Action a3 = Action.compose(a1,
         make(aMinimalAction()

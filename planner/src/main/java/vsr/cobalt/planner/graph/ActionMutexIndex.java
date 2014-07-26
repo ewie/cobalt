@@ -20,7 +20,7 @@ import vsr.cobalt.models.PropositionSet;
 
 /**
  * Identifies mutually exclusive actions within a graph.
- *
+ * <p/>
  * The information about mutex relations is kept separate from the actual graph structure as it isn't essential to the
  * graph construction but mainly only applies to plan extraction.
  *

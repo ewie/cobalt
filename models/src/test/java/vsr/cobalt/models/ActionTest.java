@@ -41,27 +41,14 @@ public class ActionTest {
   public static class Create {
 
     @Test
-    public void preventModificationOfPublishedProperties() {
-      final Widget w = make(aMinimalWidget());
-      final Property p = make(aMinimalProperty());
-      final PropositionSet pre = make(aPropositionSet().withCleared(p));
-      final PropositionSet ef = make(aPropositionSet().withFilled(p));
-      final Set<Property> pubs = setOf(p);
-      final Action a = Action.create(w, pre, ef, pubs);
-      pubs.add(null);
-      assertNotEquals(a.getPublishedProperties(), pubs);
-    }
-
-    @Test
     public void preventModificationOfRealizedFunctionalities() {
       final Widget w = make(aMinimalWidget());
       final Property p = make(aMinimalProperty());
       final PropositionSet pre = make(aPropositionSet().withCleared(p));
       final PropositionSet ef = make(aPropositionSet().withFilled(p));
-      final Set<Property> pubs = emptySet();
       final Functionality f = make(aMinimalFunctionality());
       final Set<Functionality> fs = setOf(f);
-      final Action a = Action.create(w, pre, ef, pubs, fs);
+      final Action a = Action.create(w, pre, ef, fs);
       fs.add(null);
       assertNotEquals(a.getRealizedFunctionalities(), fs);
     }
@@ -72,11 +59,10 @@ public class ActionTest {
       final Property p = make(aMinimalProperty());
       final PropositionSet pre = make(aPropositionSet().withCleared(p));
       final PropositionSet ef = make(aPropositionSet().withFilled(p));
-      final Set<Property> pubs = emptySet();
       final Set<Functionality> fs = emptySet();
       final Interaction i = make(aMinimalInteraction());
       final Set<Interaction> is = setOf(i);
-      final Action a = Action.create(w, pre, ef, pubs, fs, is);
+      final Action a = Action.create(w, pre, ef, fs, is);
       is.add(null);
       assertNotEquals(a.getInteractions(), is);
     }
@@ -103,13 +89,6 @@ public class ActionTest {
       final Widget w = make(aMinimalWidget());
       final Action a = Action.create(w);
       assertEquals(a.getEffects(), PropositionSet.empty());
-    }
-
-    @Test
-    public void defaultToEmptyPublishedProperties() {
-      final Widget w = make(aMinimalWidget());
-      final Action a = Action.create(w);
-      assertEmpty(a.getPublishedProperties());
     }
 
     @Test
@@ -160,25 +139,22 @@ public class ActionTest {
           .withFilled(Sets.union(a1.getPreConditions().getFilledProperties(),
               a2.getPreConditions().getFilledProperties())));
 
-      final PropositionSet post = make(aPropositionSet()
-          .withCleared(Sets.union(a1.getPostConditions().getClearedProperties(),
-              a2.getPostConditions().getClearedProperties()))
-          .withFilled(Sets.union(a1.getPostConditions().getFilledProperties(),
-              a2.getPostConditions().getFilledProperties())));
+      final PropositionSet eff = make(aPropositionSet()
+          .withCleared(Sets.union(a1.getEffects().getClearedProperties(),
+              a2.getEffects().getClearedProperties()))
+          .withFilled(Sets.union(a1.getEffects().getFilledProperties(),
+              a2.getEffects().getFilledProperties())));
 
       assertEquals(a3.getWidget(), a1.getWidget());
 
       assertEquals(a3.getRealizedFunctionalities(),
           Sets.union(a1.getRealizedFunctionalities(), a2.getRealizedFunctionalities()));
 
-      assertEquals(a3.getPublishedProperties(),
-          Sets.union(a1.getPublishedProperties(), a2.getPublishedProperties()));
-
       assertEquals(a3.getInteractions(),
           Sets.union(a1.getInteractions(), a2.getInteractions()));
 
       assertEquals(a3.getPreConditions(), pre);
-      assertEquals(a3.getPostConditions(), post);
+      assertEquals(a3.getEffects(), eff);
     }
 
     @Test
@@ -297,6 +273,8 @@ public class ActionTest {
   @Test
   public static class Getters {
 
+    private Property property;
+
     private Action action;
 
     private Widget widget;
@@ -305,22 +283,19 @@ public class ActionTest {
 
     private PropositionSet effects;
 
-    private Set<Property> published;
-
     private Set<Functionality> functionalities;
 
     private Set<Interaction> interactions;
 
     @BeforeMethod
     public void setUp() {
-      final Property p = make(aMinimalProperty());
+      property = make(aMinimalProperty());
       widget = make(aMinimalWidget());
-      pre = make(aPropositionSet().withCleared(p));
-      effects = make(aPropositionSet().withFilled(p));
-      published = setOf(make(aMinimalProperty()));
+      pre = make(aPropositionSet().withCleared(property));
+      effects = make(aPropositionSet().withFilled(property));
       functionalities = setOf(make(aMinimalFunctionality()));
       interactions = setOf(make(aMinimalInteraction()));
-      action = Action.create(widget, pre, effects, published, functionalities, interactions);
+      action = Action.create(widget, pre, effects, functionalities, interactions);
     }
 
     @Test
@@ -345,7 +320,7 @@ public class ActionTest {
 
     @Test
     public void getPublishedProperties() {
-      assertEquals(action.getPublishedProperties(), published);
+      assertEquals(action.getPublishedProperties(), setOf(property));
     }
 
     @Test
@@ -475,13 +450,6 @@ public class ActionTest {
   public static class IsMaintenance {
 
     @Test
-    public void returnFalseWhenThereArePublishedProperties() {
-      final Action a = make(aMinimalAction()
-          .withPub(aMinimalProperty()));
-      assertFalse(a.isMaintenance());
-    }
-
-    @Test
     public void returnFalseWhenThereAreRealizedFunctionalities() {
       final Action a = make(aMinimalAction()
           .withFunctionality(aMinimalFunctionality()));
@@ -518,7 +486,9 @@ public class ActionTest {
     @Test
     public void returnTrueWhenTheGivenPropertyIsPublished() {
       final Property p = make(aMinimalProperty());
-      final Action a = make(aMinimalAction().withPub(p));
+      final Action a = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p)));
       assertTrue(a.publishes(p));
     }
 
@@ -695,7 +665,7 @@ public class ActionTest {
     }
 
     @Test
-    public void returnFalseWhenPostConditionsDiffer() {
+    public void returnFalseWhenEffectsDiffer() {
       final Action a1 = make(aMinimalAction()
           .withEffects(aPropositionSet()
               .withCleared(aMinimalProperty()
@@ -705,17 +675,6 @@ public class ActionTest {
           .withEffects(aPropositionSet()
               .withCleared(aMinimalProperty()
                   .withName("p2"))));
-
-      assertNotEquals(a1, a2);
-    }
-
-    @Test
-    public void returnFalseWhenPublishedPropertiesDiffer() {
-      final Action a1 = make(aMinimalAction()
-          .withPub(aMinimalProperty().withName("p1")));
-
-      final Action a2 = make(aMinimalAction()
-          .withPub(aMinimalProperty().withName("p2")));
 
       assertNotEquals(a1, a2);
     }
@@ -762,8 +721,7 @@ public class ActionTest {
       final int h = Objects.hash(
           a.getWidget(),
           a.getPreConditions(),
-          a.getPostConditions(),
-          a.getPublishedProperties(),
+          a.getEffects(),
           a.getRealizedFunctionalities(),
           a.getInteractions());
       assertEquals(a.hashCode(), h);

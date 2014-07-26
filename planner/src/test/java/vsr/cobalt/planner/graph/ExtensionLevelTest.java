@@ -111,7 +111,9 @@ public class ExtensionLevelTest {
       final Action precursor = make(aMinimalAction()
           .withEffects(aPropositionSet().withCleared(p1)));
 
-      final Action provider = make(aMinimalAction().withPub(p2));
+      final Action provider = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p2)));
 
       final ActionProvision ap = make(anActionProvision()
           .withPrecursor(precursor)
@@ -133,7 +135,9 @@ public class ExtensionLevelTest {
       final Action request = make(aMinimalAction()
           .withPre(aPropositionSet().withFilled(p)));
 
-      final Action provider = make(aMinimalAction().withPub(p));
+      final Action provider = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p)));
 
       final ActionProvision ap = make(anActionProvision()
           .withRequest(request)

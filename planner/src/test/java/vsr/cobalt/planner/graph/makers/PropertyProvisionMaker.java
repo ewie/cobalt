@@ -18,6 +18,7 @@ import vsr.cobalt.testing.maker.Maker;
 
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
+import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 
 /**
  * @author Erik Wienhold
@@ -36,7 +37,9 @@ public class PropertyProvisionMaker implements Maker<PropertyProvision> {
 
   public static PropertyProvisionMaker aMinimalPropertyProvision() {
     final PropertyMaker p = aMinimalProperty();
-    final ActionMaker a = aMinimalAction().withPub(p);
+    final ActionMaker a = aMinimalAction()
+        .withEffects(aPropositionSet()
+            .withFilled(p));
     return aPropertyProvision()
         .withProvidingAction(a)
         .withOffer(p)

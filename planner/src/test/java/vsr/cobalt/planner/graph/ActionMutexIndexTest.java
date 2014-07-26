@@ -90,7 +90,6 @@ public class ActionMutexIndexTest {
 
       final Action a1 = make(aMinimalAction()
           .withFunctionality(f1)
-          .withPub(p)
           .withEffects(aPropositionSet()
               .withFilled(p)));
 
@@ -140,12 +139,10 @@ public class ActionMutexIndexTest {
               .withFilled(p2)));
 
       final Action a3 = make(aMinimalAction()
-          .withPub(p1)
           .withEffects(aPropositionSet()
               .withFilled(p1)));
 
       final Action a4 = make(aMinimalAction()
-          .withPub(p2)
           .withEffects(aPropositionSet()
               .withFilled(p2))
           .withPre(aPropositionSet()
@@ -206,19 +203,16 @@ public class ActionMutexIndexTest {
               .withFilled(p2)));
 
       final Action a3 = make(aMinimalAction()
-          .withPub(p1)
           .withEffects(aPropositionSet()
               .withFilled(p1)));
 
       final Action a4 = make(aMinimalAction()
-          .withPub(p2)
           .withEffects(aPropositionSet()
               .withFilled(p2))
           .withPre(aPropositionSet()
               .withCleared(p1)));
 
       final Action a5 = make(aMinimalAction()
-          .withPub(p2)
           .withEffects(aPropositionSet()
               .withFilled(p2)));
 

@@ -176,7 +176,6 @@ public class PlanTest {
 
       final Action a2 = make(aMinimalAction()
           .withFunctionality(f2)
-          .withPub(p)
           .withEffects(aPropositionSet()
               .withFilled(p)));
 

@@ -19,6 +19,7 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
+import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.planner.graph.makers.PropertyProvisionMaker.aPropertyProvision;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
@@ -31,8 +32,13 @@ public class BasicPropertyProvisionProviderTest {
     final Property p1 = make(aMinimalProperty().withName("p1"));
     final Property p2 = make(aMinimalProperty().withName("p2"));
 
-    final Action a1 = make(aMinimalAction().withPub(p1));
-    final Action a2 = make(aMinimalAction().withPub(p2));
+    final Action a1 = make(aMinimalAction()
+        .withEffects(aPropositionSet()
+            .withFilled(p1)));
+
+    final Action a2 = make(aMinimalAction()
+        .withEffects(aPropositionSet()
+            .withFilled(p2)));
 
     final Repository r = mock(Repository.class);
     when(r.findCompatibleProperties(p1)).thenReturn(setOf(publishedProperty(p1, a1)));

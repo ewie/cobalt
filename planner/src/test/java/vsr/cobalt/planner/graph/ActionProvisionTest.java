@@ -55,11 +55,13 @@ public class ActionProvisionTest {
 
       final Action a1 = make(aMinimalAction()
           .withWidget(aWidget().withIdentifier("w1"))
-          .withPub(p1));
+          .withEffects(aPropositionSet()
+              .withFilled(p1)));
 
       final Action a2 = make(aMinimalAction()
           .withWidget(aWidget().withIdentifier("w2"))
-          .withPub(p1));
+          .withEffects(aPropositionSet()
+              .withFilled(p1)));
 
       final PropertyProvision pp1 = make(aPropertyProvision()
           .withProvidingAction(a1)
@@ -148,7 +150,8 @@ public class ActionProvisionTest {
 
       final PropertyProvision pp = make(aPropertyProvision()
           .withProvidingAction(aMinimalAction()
-              .withPub(p1))
+              .withEffects(aPropositionSet()
+                  .withFilled(p1)))
           .withOffer(p1)
           .withRequest(p1));
 
@@ -170,7 +173,9 @@ public class ActionProvisionTest {
               .withCleared(p1)));
 
       final PropertyProvision pp = make(aPropertyProvision()
-          .withProvidingAction(aMinimalAction().withPub(p2))
+          .withProvidingAction(aMinimalAction()
+              .withEffects(aPropositionSet()
+                  .withFilled(p2)))
           .withOffer(p2)
           .withRequest(p2));
 
@@ -214,11 +219,13 @@ public class ActionProvisionTest {
 
       final Action a1 = make(aMinimalAction()
           .withWidget(aWidget().withIdentifier("w1"))
-          .withPub(p));
+          .withEffects(aPropositionSet()
+              .withFilled(p)));
 
       final Action a2 = make(aMinimalAction()
           .withWidget(aWidget().withIdentifier("w2"))
-          .withPub(p));
+          .withEffects(aPropositionSet()
+              .withFilled(p)));
 
       final PropertyProvision pp1 = make(aPropertyProvision()
           .withProvidingAction(a1)
@@ -270,7 +277,9 @@ public class ActionProvisionTest {
               .withFilled(p)));
 
       final PropertyProvision pp = make(aPropertyProvision()
-          .withProvidingAction(aMinimalAction().withPub(p))
+          .withProvidingAction(aMinimalAction()
+              .withEffects(aPropositionSet()
+                  .withFilled(p)))
           .withOffer(p)
           .withRequest(p));
 
@@ -310,7 +319,9 @@ public class ActionProvisionTest {
               .withCleared(p2)));
 
       propertyProvision = make(aPropertyProvision()
-          .withProvidingAction(aMinimalAction().withPub(p1))
+          .withProvidingAction(aMinimalAction()
+              .withEffects(aPropositionSet()
+                  .withFilled(p1)))
           .withOffer(p1)
           .withRequest(p1));
 
@@ -345,8 +356,13 @@ public class ActionProvisionTest {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
-      final Action a1 = make(aMinimalAction().withPub(p1));
-      final Action a2 = make(aMinimalAction().withPub(p2));
+      final Action a1 = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p1)));
+
+      final Action a2 = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p2)));
 
       final Action request = make(aMinimalAction()
           .withPre(aPropositionSet().withFilled(p1, p2)));
@@ -375,8 +391,13 @@ public class ActionProvisionTest {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
-      final Action provider1 = make(aMinimalAction().withPub(p1));
-      final Action provider2 = make(aMinimalAction().withPub(p2));
+      final Action provider1 = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p1)));
+
+      final Action provider2 = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p2)));
 
       final Action request = make(aMinimalAction()
           .withPre(aPropositionSet().withFilled(p1, p2)));
@@ -409,7 +430,9 @@ public class ActionProvisionTest {
           .withEffects(aPropositionSet()
               .withCleared(p1)));
 
-      final Action provider = make(aMinimalAction().withPub(p2));
+      final Action provider = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p2)));
 
       final ActionProvision ap = make(anActionProvision()
           .withRequest(request)
@@ -438,11 +461,15 @@ public class ActionProvisionTest {
       final ActionProvision ap = make(anActionProvision()
           .withRequest(request)
           .withProvision(aPropertyProvision()
-              .withProvidingAction(aMinimalAction().withPub(p1))
+              .withProvidingAction(aMinimalAction()
+                  .withEffects(aPropositionSet()
+                      .withFilled(p1)))
               .withOffer(p1)
               .withRequest(p1))
           .withProvision(aPropertyProvision()
-              .withProvidingAction(aMinimalAction().withPub(p2))
+              .withProvidingAction(aMinimalAction()
+                  .withEffects(aPropositionSet()
+                      .withFilled(p2)))
               .withOffer(p2)
               .withRequest(p2)));
 
@@ -532,7 +559,8 @@ public class ActionProvisionTest {
           .withProvision(aPropertyProvision()
               .withProvidingAction(aMinimalAction()
                   .withWidget(aWidget().withIdentifier("w1"))
-                  .withPub(p2))
+                  .withEffects(aPropositionSet()
+                      .withFilled(p2)))
               .withOffer(p2)
               .withRequest(p2)));
 
@@ -542,7 +570,8 @@ public class ActionProvisionTest {
           .withProvision(aPropertyProvision()
               .withProvidingAction(aMinimalAction()
                   .withWidget(aWidget().withIdentifier("w2"))
-                  .withPub(p2))
+                  .withEffects(aPropositionSet()
+                      .withFilled(p2)))
               .withOffer(p2)
               .withRequest(p2)));
 

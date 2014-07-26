@@ -131,7 +131,9 @@ public class ActionReachabilityIndexTest {
           .withEffects(aPropositionSet().withFilled(p1)));
 
       // an enabled providing action for request
-      final Action provider = make(aMinimalAction().withPub(p2));
+      final Action provider = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p2)));
 
       // a property provision with enabled providing action
       final PropertyProvision pp = make(aPropertyProvision()
@@ -208,12 +210,14 @@ public class ActionReachabilityIndexTest {
       // an enabled precursor action for request
       final Action provider1 = make(aMinimalAction()
           .withPre(aPropositionSet().withCleared(p1))
-          .withPub(p1));
+          .withEffects(aPropositionSet()
+              .withFilled(p1)));
 
       // a non-enabled precursor action for request
       final Action provider2 = make(aMinimalAction()
           .withPre(aPropositionSet().withCleared(p2))
-          .withPub(p2));
+          .withEffects(aPropositionSet()
+              .withFilled(p2)));
 
       // a property provision with enabled action provider
       final PropertyProvision pp1 = make(aPropertyProvision()

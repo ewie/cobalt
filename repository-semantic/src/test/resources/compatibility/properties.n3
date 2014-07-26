@@ -15,9 +15,11 @@
 
   :hasAction [
 
-    :publishesValueOf [
-      :hasName "p1" ;
-      :hasType <urn:example:type:1>
+    :hasEffects [
+      :fillValueOf [
+        :hasName "p1" ;
+        :hasType <urn:example:type:1>
+      ]
     ]
 
   ] .
@@ -26,9 +28,11 @@
 
   :hasAction [
 
-    :publishesValueOf [
-      :hasName "p2" ;
-      :hasType <urn:example:type:2>
+    :hasEffects [
+      :fillValueOf [
+        :hasName "p2" ;
+        :hasType <urn:example:type:2>
+      ]
     ]
 
   ] .
@@ -37,9 +41,11 @@
 
   :hasAction [
 
-    :publishesValueOf [
-      :hasName "p3" ;
-      :hasType <urn:example:type:3>
+    :hasEffects [
+      :fillValueOf [
+        :hasName "p3" ;
+        :hasType <urn:example:type:3>
+      ]
     ]
 
   ] .

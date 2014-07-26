@@ -52,7 +52,8 @@ public final class PropositionSet extends AbstractSet<Proposition> {
    * @param filled  a set of filled properties
    */
   public PropositionSet(final Set<Property> cleared, final Set<Property> filled) {
-    this(Sets.union(createPropositions(cleared, Proposition.CLEARED_VALUE), createPropositions(filled, Proposition.FILLED_VALUE)));
+    this(Sets.union(createPropositions(cleared, Proposition.CLEARED_VALUE),
+        createPropositions(filled, Proposition.FILLED_VALUE)));
   }
 
   /**

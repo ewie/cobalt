@@ -20,6 +20,7 @@ import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertSame;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.PropertyMaker.aProperty;
+import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.testing.Utilities.make;
 
 @Test
@@ -130,10 +131,12 @@ public class OfferTest {
       final Object s = new Object();
 
       final Action a1 = make(aMinimalAction()
-          .withPub(aProperty().withName("p1")));
+          .withEffects(aPropositionSet()
+              .withFilled(aProperty().withName("p1"))));
 
       final Action a2 = make(aMinimalAction()
-          .withPub(aProperty().withName("p2")));
+          .withEffects(aPropositionSet()
+              .withFilled(aProperty().withName("p2"))));
 
       final DummyOffer o1 = new DummyOffer(s, a1);
       final DummyOffer o2 = new DummyOffer(s, a2);

@@ -33,11 +33,6 @@
 
     ] ;
 
-    :publishesValueOf [
-      :hasName "p5" ;
-      :hasType <urn:example:type:5>
-    ] ;
-
     :realizesFunctionality <urn:example:fn:1> ;
 
     :hasInteraction [ :hasInstruction "i1" ]

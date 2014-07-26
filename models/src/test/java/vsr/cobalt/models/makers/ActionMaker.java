@@ -12,7 +12,6 @@ import java.util.Collection;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Interaction;
-import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PropositionSet;
 import vsr.cobalt.models.Widget;
 import vsr.cobalt.testing.maker.AtomicValue;
@@ -32,8 +31,6 @@ public class ActionMaker implements Maker<Action> {
   private final AtomicValue<PropositionSet> pre = new AtomicValue<>();
 
   private final AtomicValue<PropositionSet> effects = new AtomicValue<>();
-
-  private final CollectionValue<Property> pubs = new CollectionValue<>();
 
   private final CollectionValue<Functionality> functionalities = new CollectionValue<>();
 
@@ -56,7 +53,6 @@ public class ActionMaker implements Maker<Action> {
         widget.get(),
         pre.get(),
         effects.get(),
-        pubs.asSet(),
         functionalities.asSet(),
         interactions.asSet());
   }
@@ -88,26 +84,6 @@ public class ActionMaker implements Maker<Action> {
 
   public ActionMaker withEffects(final Maker<PropositionSet> effects) {
     this.effects.set(effects);
-    return this;
-  }
-
-  public ActionMaker withPubs(final Collection<Property> properties) {
-    pubs.set(properties);
-    return this;
-  }
-
-  public ActionMaker withPub(final Maker<Property> property) {
-    pubs.add(property);
-    return this;
-  }
-
-  public ActionMaker withPub(final Property... properties) {
-    pubs.addValues(properties);
-    return this;
-  }
-
-  public ActionMaker withPub(final Property property) {
-    pubs.addValues(property);
     return this;
   }
 

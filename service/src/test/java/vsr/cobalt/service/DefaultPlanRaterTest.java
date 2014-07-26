@@ -54,7 +54,9 @@ public class DefaultPlanRaterTest {
         .withPre(aPropositionSet()
             .withFilled(p1)));
 
-    final Action a2 = make(aMinimalAction().withPub(p2));
+    final Action a2 = make(aMinimalAction()
+        .withEffects(aPropositionSet()
+        .withFilled(p2)));
 
     final Plan p = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
@@ -183,11 +185,13 @@ public class DefaultPlanRaterTest {
             .withFilled(p1)));
 
     final Action a2 = make(aMinimalAction()
-        .withPub(p1)
+        .withEffects(aPropositionSet()
+            .withFilled(p1))
         .withInteraction(aMinimalInteraction()));
 
     final Action a3 = make(aMinimalAction()
-        .withPub(p2)
+        .withEffects(aPropositionSet()
+            .withFilled(p2))
         .withInteraction(aMinimalInteraction()));
 
     final Plan pl1 = new Plan(make(aGraph()

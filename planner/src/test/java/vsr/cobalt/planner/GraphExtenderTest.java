@@ -214,7 +214,9 @@ public class GraphExtenderTest {
               .withFilled(p)));
 
       // a property provider for a1
-      final Action a2 = make(aMinimalAction().withPub(p));
+      final Action a2 = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p)));
 
       final PropertyProvision pp = make(aPropertyProvision()
           .withRequest(p)
@@ -264,7 +266,9 @@ public class GraphExtenderTest {
               .withCleared(p1)));
 
       // a property provider for a1
-      final Action a3 = make(aMinimalAction().withPub(p2));
+      final Action a3 = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p2)));
 
       final PropertyProvision pp = make(aPropertyProvision()
           .withRequest(p2)
@@ -308,8 +312,13 @@ public class GraphExtenderTest {
           .withPre(aPropositionSet()
               .withFilled(p1, p2)));
 
-      final Action a2 = make(aMinimalAction().withPub(p1));
-      final Action a3 = make(aMinimalAction().withPub(p1, p2));
+      final Action a2 = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p1)));
+
+      final Action a3 = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p1, p2)));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
@@ -368,9 +377,13 @@ public class GraphExtenderTest {
           .withFunctionality(f)
           .withPre(aPropositionSet().withFilled(p2)));
 
-      final Action a3 = make(aMinimalAction().withPub(p1));
+      final Action a3 = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p1)));
 
-      final Action a4 = make(aMinimalAction().withPub(p2));
+      final Action a4 = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p2)));
 
       final Action a5 = Action.compose(a3, a4);
 
@@ -594,7 +607,8 @@ public class GraphExtenderTest {
       // an action supporting a1 via a property provision, will be used instead of a2
       final Action a3 = make(aMinimalAction()
           .withWidget(w2)
-          .withPub(p1));
+          .withEffects(aPropositionSet()
+              .withFilled(p1)));
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
@@ -640,10 +654,14 @@ public class GraphExtenderTest {
           .withPre(aPropositionSet()
               .withFilled(p)));
 
-      final Action a2 = make(aMinimalAction().withPub(p));
+      final Action a2 = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p)));
 
       // will cause cyclic dependency with a1
-      final Action a3 = Action.compose(a1, make(aMinimalAction().withPub(p)));
+      final Action a3 = Action.compose(a1, make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p))));
 
       final PropertyProvision pp1 = make(aPropertyProvision()
           .withRequest(p)
@@ -692,9 +710,13 @@ public class GraphExtenderTest {
           .withPre(aPropositionSet()
               .withFilled(p1, p2)));
 
-      final Action a2 = make(aMinimalAction().withPub(p1));
+      final Action a2 = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p1)));
 
-      final Action a3 = make(aMinimalAction().withPub(p2));
+      final Action a3 = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p2)));
 
       final Action a4 = Action.compose(a2, a3);
 

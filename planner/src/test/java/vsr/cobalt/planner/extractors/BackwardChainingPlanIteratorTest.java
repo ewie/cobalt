@@ -256,7 +256,6 @@ public class BackwardChainingPlanIteratorTest {
 
       final Action a1 = make(aMinimalAction()
           .withFunctionality(f1)
-          .withPub(p3)
           .withEffects(aPropositionSet().withFilled(p3))
           .withPre(aPropositionSet().withFilled(p1)));
 
@@ -269,11 +268,9 @@ public class BackwardChainingPlanIteratorTest {
           .withPre(aPropositionSet().withCleared(p3)));
 
       final Action a4 = make(aMinimalAction()
-          .withPub(p1)
           .withEffects(aPropositionSet().withFilled(p1)));
 
       final Action a5 = make(aMinimalAction()
-          .withPub(p2)
           .withEffects(aPropositionSet().withFilled(p2)));
 
       final Action a6 = make(aMinimalAction()

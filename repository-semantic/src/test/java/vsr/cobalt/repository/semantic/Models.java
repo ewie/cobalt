@@ -18,6 +18,7 @@ import vsr.cobalt.models.Widget;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.FunctionalityMaker.aFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aProperty;
+import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.models.makers.TypeMaker.aType;
 import static vsr.cobalt.models.makers.WidgetMaker.aWidget;
 import static vsr.cobalt.testing.Utilities.make;
@@ -42,7 +43,8 @@ public final class Models {
   public static Action action(final Widget w, final Property p) {
     return make(aMinimalAction()
         .withWidget(w)
-        .withPub(p));
+        .withEffects(aPropositionSet()
+            .withFilled(p)));
   }
 
   public static Action action(final Widget w, final Functionality t) {
