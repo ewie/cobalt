@@ -78,7 +78,7 @@ public class GraphTest {
           .withEffects(aPropositionSet().withCleared(p)));
 
       final InitialLevel il = make(anInitialLevel()
-          .withFunctionalityProvision(aMinimalFunctionalityProvision()
+          .withProvision(aMinimalFunctionalityProvision()
               .withProvidingAction(a1)
               .withOffer(f)
               .withRequest(f)));
@@ -115,7 +115,7 @@ public class GraphTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aMinimalFunctionalityProvision()
+              .withProvision(aMinimalFunctionalityProvision()
                   .withProvidingAction(a)
                   .withOffer(f)
                   .withRequest(f))));
@@ -151,7 +151,7 @@ public class GraphTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aMinimalFunctionalityProvision()
+              .withProvision(aMinimalFunctionalityProvision()
                   .withProvidingAction(a1)
                   .withOffer(f)
                   .withRequest(f)))
@@ -181,7 +181,7 @@ public class GraphTest {
 
       final Graph ig = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aMinimalFunctionalityProvision()
+              .withProvision(aMinimalFunctionalityProvision()
                   .withProvidingAction(a1)
                   .withOffer(f)
                   .withRequest(f))));
@@ -213,7 +213,7 @@ public class GraphTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a1)))
@@ -243,7 +243,7 @@ public class GraphTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a))));
@@ -281,7 +281,7 @@ public class GraphTest {
 
       graph = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a1)))
@@ -331,7 +331,7 @@ public class GraphTest {
 
       graph = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a1)))
@@ -477,7 +477,7 @@ public class GraphTest {
 
         final Graph g2 = make(aGraph()
             .withInitialLevel(anInitialLevel()
-                .withFunctionalityProvision(aFunctionalityProvision()
+                .withProvision(aFunctionalityProvision()
                     .withRequest(f)
                     .withOffer(f)
                     .withProvidingAction(a))));
@@ -541,7 +541,7 @@ public class GraphTest {
 
       initialGraph = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aMinimalFunctionalityProvision()
+              .withProvision(aMinimalFunctionalityProvision()
                   .withProvidingAction(a1)
                   .withOffer(f)
                   .withRequest(f))));

@@ -59,7 +59,7 @@ public class PlanTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(fp1, fp2)));
+              .withProvision(fp1, fp2)));
 
       new Plan(g);
     }
@@ -87,7 +87,7 @@ public class PlanTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withProvidingAction(a1)
                   .withOffer(f)
                   .withRequest(f)))
@@ -119,7 +119,7 @@ public class PlanTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(fp)));
+              .withProvision(fp)));
 
       new Plan(g);
     }
@@ -150,7 +150,7 @@ public class PlanTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(fp))
+              .withProvision(fp))
           .withExtensionLevel(anExtensionLevel()
               .withProvision(anActionProvision()
                   .withRequest(a1)
@@ -199,7 +199,7 @@ public class PlanTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(fp1, fp2))
+              .withProvision(fp1, fp2))
           .withExtensionLevel(anExtensionLevel()
               .withProvision(ap)));
 
@@ -252,7 +252,7 @@ public class PlanTest {
 
       final Graph g = make(aMinimalGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withProvidingAction(a)
                   .withOffer(f)
                   .withRequest(f))));

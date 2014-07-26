@@ -93,11 +93,11 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a1))
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a2))));
@@ -128,7 +128,7 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a))));
@@ -154,7 +154,7 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a))));
@@ -183,7 +183,7 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a1))));
@@ -225,7 +225,7 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a1))));
@@ -277,7 +277,7 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a1))));
@@ -322,7 +322,7 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a1))));
@@ -389,11 +389,11 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a1))
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a2))));
@@ -464,11 +464,11 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a1))
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a2))));
@@ -516,7 +516,7 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a1))));
@@ -559,7 +559,7 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a1))));
@@ -612,7 +612,7 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a1))));
@@ -675,7 +675,7 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a1))));
@@ -742,7 +742,7 @@ public class GraphExtenderTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withRequest(f)
                   .withOffer(f)
                   .withProvidingAction(a1))));

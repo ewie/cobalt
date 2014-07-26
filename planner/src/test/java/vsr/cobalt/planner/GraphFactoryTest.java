@@ -76,7 +76,7 @@ public class GraphFactoryTest {
       final GraphFactory gf = new GraphFactory(functionalityProvider(m, setOf(fp)));
       final Graph ig = gf.createGraph(m);
 
-      final InitialLevel il = make(anInitialLevel().withFunctionalityProvision(fp));
+      final InitialLevel il = make(anInitialLevel().withProvision(fp));
 
       assertEquals(ig.getLastLevel(), il);
     }

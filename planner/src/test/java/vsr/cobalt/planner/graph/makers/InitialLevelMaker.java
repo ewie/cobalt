@@ -27,7 +27,7 @@ public class InitialLevelMaker implements Maker<InitialLevel> {
   }
 
   public static InitialLevelMaker aMinimalInitialLevel() {
-    return anInitialLevel().withFunctionalityProvision(aMinimalFunctionalityProvision());
+    return anInitialLevel().withProvision(aMinimalFunctionalityProvision());
   }
 
   @Override
@@ -36,12 +36,12 @@ public class InitialLevelMaker implements Maker<InitialLevel> {
   }
 
   @SafeVarargs
-  public final InitialLevelMaker withFunctionalityProvision(final Maker<FunctionalityProvision>... makers) {
+  public final InitialLevelMaker withProvision(final Maker<FunctionalityProvision>... makers) {
     provisions.add(makers);
     return this;
   }
 
-  public InitialLevelMaker withFunctionalityProvision(final FunctionalityProvision... provisions) {
+  public InitialLevelMaker withProvision(final FunctionalityProvision... provisions) {
     this.provisions.addValues(provisions);
     return this;
   }

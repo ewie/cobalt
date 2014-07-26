@@ -56,7 +56,7 @@ public class InitialLevelTest {
     @Test
     public void returnAllFunctionalityProvisions() {
       final FunctionalityProvision fp = make(aMinimalFunctionalityProvision());
-      final InitialLevel s = make(anInitialLevel().withFunctionalityProvision(fp));
+      final InitialLevel s = make(anInitialLevel().withProvision(fp));
       assertEquals(s.getFunctionalityProvisions(), setOf(fp));
     }
 
@@ -83,7 +83,7 @@ public class InitialLevelTest {
           .withOffer(f2)
           .withRequest(f2));
 
-      final InitialLevel s = make(anInitialLevel().withFunctionalityProvision(fp1, fp2));
+      final InitialLevel s = make(anInitialLevel().withProvision(fp1, fp2));
 
       assertEquals(s.getRequestedFunctionalities(), setOf(f1, f2));
     }
@@ -111,7 +111,7 @@ public class InitialLevelTest {
 
       final FunctionalityProvision fp2 = make(aMinimalFunctionalityProvision());
 
-      final InitialLevel s = make(anInitialLevel().withFunctionalityProvision(fp1, fp2));
+      final InitialLevel s = make(anInitialLevel().withProvision(fp1, fp2));
 
       assertEquals(s.getFunctionalityProvisionsByRequestedFunctionality(f1), setOf(fp1));
     }
@@ -130,10 +130,10 @@ public class InitialLevelTest {
       final Action a2 = make(aMinimalAction().withFunctionality(f2));
 
       final InitialLevel s = make(anInitialLevel()
-          .withFunctionalityProvision(aFunctionalityProvision()
+          .withProvision(aFunctionalityProvision()
               .withProvidingAction(a1)
               .withOffer(f1))
-          .withFunctionalityProvision(aFunctionalityProvision()
+          .withProvision(aFunctionalityProvision()
               .withProvidingAction(a2)
               .withOffer(f2)));
 

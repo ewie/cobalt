@@ -121,15 +121,15 @@ public class BackwardChainingPlanIteratorTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(fp1, fp2)));
+              .withProvision(fp1, fp2)));
 
       final Graph g1 = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(fp1)));
+              .withProvision(fp1)));
 
       final Graph g2 = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(fp2)));
+              .withProvision(fp2)));
 
       final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g);
 
@@ -171,7 +171,7 @@ public class BackwardChainingPlanIteratorTest {
           .withPrecursor(a3));
 
       final Graph g = make(aGraph()
-          .withInitialLevel(anInitialLevel().withFunctionalityProvision(fp))
+          .withInitialLevel(anInitialLevel().withProvision(fp))
           .withExtensionLevel(anExtensionLevel().withProvision(ap1))
           .withExtensionLevel(anExtensionLevel().withProvision(ap2)));
 
@@ -224,12 +224,12 @@ public class BackwardChainingPlanIteratorTest {
           .withPrecursor(a4));
 
       final Graph g1 = make(aGraph()
-          .withInitialLevel(anInitialLevel().withFunctionalityProvision(fp))
+          .withInitialLevel(anInitialLevel().withProvision(fp))
           .withExtensionLevel(anExtensionLevel().withProvision(ap1, ap2))
           .withExtensionLevel(anExtensionLevel().withProvision(ap3)));
 
       final Graph g2 = make(aGraph()
-          .withInitialLevel(anInitialLevel().withFunctionalityProvision(fp))
+          .withInitialLevel(anInitialLevel().withProvision(fp))
           .withExtensionLevel(anExtensionLevel().withProvision(ap1))
           .withExtensionLevel(anExtensionLevel().withProvision(ap3)));
 
@@ -310,11 +310,11 @@ public class BackwardChainingPlanIteratorTest {
           .withPrecursor(a6));
 
       final Graph g1 = make(aGraph()
-          .withInitialLevel(anInitialLevel().withFunctionalityProvision(fp1, fp2, fp3))
+          .withInitialLevel(anInitialLevel().withProvision(fp1, fp2, fp3))
           .withExtensionLevel(anExtensionLevel().withProvision(ap1, ap2, ap3)));
 
       final Graph g2 = make(aGraph()
-          .withInitialLevel(anInitialLevel().withFunctionalityProvision(fp1, fp2))
+          .withInitialLevel(anInitialLevel().withProvision(fp1, fp2))
           .withExtensionLevel(anExtensionLevel().withProvision(ap1, ap2)));
 
       final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g1);
@@ -355,11 +355,11 @@ public class BackwardChainingPlanIteratorTest {
           .withPrecursor(a3));
 
       final Graph g1 = make(aGraph()
-          .withInitialLevel(anInitialLevel().withFunctionalityProvision(fp1, fp2))
+          .withInitialLevel(anInitialLevel().withProvision(fp1, fp2))
           .withExtensionLevel(anExtensionLevel().withProvision(ap)));
 
       final Graph g2 = make(aGraph()
-          .withInitialLevel(anInitialLevel().withFunctionalityProvision(fp1))
+          .withInitialLevel(anInitialLevel().withProvision(fp1))
           .withExtensionLevel(anExtensionLevel().withProvision(ap)));
 
       final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g1, 2, 2);
@@ -393,7 +393,7 @@ public class BackwardChainingPlanIteratorTest {
           .withPrecursor(a2));
 
       final Graph g = make(aGraph()
-          .withInitialLevel(anInitialLevel().withFunctionalityProvision(fp))
+          .withInitialLevel(anInitialLevel().withProvision(fp))
           .withExtensionLevel(anExtensionLevel().withProvision(ap)));
 
       final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g, 1, 1);

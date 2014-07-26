@@ -73,7 +73,7 @@ public class PlannerTest {
 
     final Graph g = make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f)
                 .withOffer(f)
                 .withProvidingAction(a1)))
@@ -114,7 +114,7 @@ public class PlannerTest {
   private static Graph minimalGraph(final Functionality functionality) {
     return make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(functionality)
                 .withOffer(functionality)
                 .withProvidingAction(aMinimalAction()

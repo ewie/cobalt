@@ -43,7 +43,7 @@ public class ActionReachabilityIndexTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withProvidingAction(a)
                   .withOffer(f)
                   .withRequest(f))));
@@ -65,7 +65,7 @@ public class ActionReachabilityIndexTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withProvidingAction(a)
                   .withOffer(f)
                   .withRequest(f))));
@@ -98,7 +98,7 @@ public class ActionReachabilityIndexTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withProvidingAction(a1)
                   .withOffer(f)
                   .withRequest(f)))
@@ -148,7 +148,7 @@ public class ActionReachabilityIndexTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withProvidingAction(request)
                   .withOffer(f)
                   .withRequest(f)))
@@ -183,7 +183,7 @@ public class ActionReachabilityIndexTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withProvidingAction(request)
                   .withOffer(f)
                   .withRequest(f)))
@@ -238,7 +238,7 @@ public class ActionReachabilityIndexTest {
 
       final Graph g = make(aGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(aFunctionalityProvision()
+              .withProvision(aFunctionalityProvision()
                   .withProvidingAction(request)
                   .withOffer(f)
                   .withRequest(f)))

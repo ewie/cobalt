@@ -49,7 +49,7 @@ public class PathWalkingCyclicDependencyDetectorTest {
 
     final Graph g = make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f)
                 .withOffer(f)
                 .withProvidingAction(a1))));
@@ -82,7 +82,7 @@ public class PathWalkingCyclicDependencyDetectorTest {
 
     final Graph g = make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f)
                 .withOffer(f)
                 .withProvidingAction(a1)))
@@ -119,7 +119,7 @@ public class PathWalkingCyclicDependencyDetectorTest {
 
     final Graph g = make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f)
                 .withOffer(f)
                 .withProvidingAction(a1)))
@@ -172,7 +172,7 @@ public class PathWalkingCyclicDependencyDetectorTest {
 
     final Graph g = make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f)
                 .withOffer(f)
                 .withProvidingAction(a1)))

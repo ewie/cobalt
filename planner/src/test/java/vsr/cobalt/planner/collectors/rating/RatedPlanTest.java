@@ -91,7 +91,7 @@ public class RatedPlanTest {
     final Action a = make(aMinimalAction().withFunctionality(f));
     final Graph g = make(aMinimalGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f)
                 .withOffer(f)
                 .withProvidingAction(a))));

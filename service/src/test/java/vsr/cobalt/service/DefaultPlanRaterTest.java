@@ -60,7 +60,7 @@ public class DefaultPlanRaterTest {
 
     final Plan p = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f)
                 .withOffer(f)
                 .withProvidingAction(a1)))
@@ -86,7 +86,7 @@ public class DefaultPlanRaterTest {
 
     final Plan p = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f)
                 .withOffer(f)
                 .withProvidingAction(a)))));
@@ -114,7 +114,7 @@ public class DefaultPlanRaterTest {
 
     final Plan pl = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f)
                 .withOffer(f)
                 .withProvidingAction(a1)))
@@ -144,14 +144,14 @@ public class DefaultPlanRaterTest {
 
     final Plan p1 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f1)
                 .withOffer(f1)
                 .withProvidingAction(a1)))));
 
     final Plan p2 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f1)
                 .withOffer(f2)
                 .withProvidingAction(a2)))));
@@ -196,7 +196,7 @@ public class DefaultPlanRaterTest {
 
     final Plan pl1 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f)
                 .withOffer(f)
                 .withProvidingAction(a1)))
@@ -210,7 +210,7 @@ public class DefaultPlanRaterTest {
 
     final Plan pl2 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f)
                 .withOffer(f)
                 .withProvidingAction(a1)))
@@ -252,14 +252,14 @@ public class DefaultPlanRaterTest {
 
     final Plan p1 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f)
                 .withOffer(f)
                 .withProvidingAction(a1)))));
 
     final Plan p2 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f)
                 .withOffer(f)
                 .withProvidingAction(a2)))));
@@ -289,22 +289,22 @@ public class DefaultPlanRaterTest {
 
     final Plan p1 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f1)
                 .withOffer(f1)
                 .withProvidingAction(a1))
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f2)
                 .withOffer(f2)
                 .withProvidingAction(a2)))));
 
     final Plan p2 = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f1)
                 .withOffer(f1)
                 .withProvidingAction(a3))
-            .withFunctionalityProvision(aFunctionalityProvision()
+            .withProvision(aFunctionalityProvision()
                 .withRequest(f2)
                 .withOffer(f2)
                 .withProvidingAction(a3)))));

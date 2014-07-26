@@ -41,7 +41,7 @@ public class ActionMutexIndexTest {
 
       final Graph g = make(aMinimalGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(
+              .withProvision(
                   aFunctionalityProvision()
                       .withRequest(f)
                       .withOffer(f)
@@ -64,12 +64,12 @@ public class ActionMutexIndexTest {
 
       final Graph g = make(aMinimalGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(
+              .withProvision(
                   aFunctionalityProvision()
                       .withRequest(f1)
                       .withOffer(f1)
                       .withProvidingAction(a1))
-              .withFunctionalityProvision(
+              .withProvision(
                   aFunctionalityProvision()
                       .withRequest(f2)
                       .withOffer(f2)
@@ -100,12 +100,12 @@ public class ActionMutexIndexTest {
 
       final Graph g = make(aMinimalGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(
+              .withProvision(
                   aFunctionalityProvision()
                       .withRequest(f1)
                       .withOffer(f1)
                       .withProvidingAction(a1))
-              .withFunctionalityProvision(
+              .withProvision(
                   aFunctionalityProvision()
                       .withRequest(f2)
                       .withOffer(f2)
@@ -150,12 +150,12 @@ public class ActionMutexIndexTest {
 
       final Graph g = make(aMinimalGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(
+              .withProvision(
                   aFunctionalityProvision()
                       .withRequest(f1)
                       .withOffer(f1)
                       .withProvidingAction(a1))
-              .withFunctionalityProvision(
+              .withProvision(
                   aFunctionalityProvision()
                       .withRequest(f2)
                       .withOffer(f2)
@@ -218,12 +218,12 @@ public class ActionMutexIndexTest {
 
       final Graph g = make(aMinimalGraph()
           .withInitialLevel(anInitialLevel()
-              .withFunctionalityProvision(
+              .withProvision(
                   aFunctionalityProvision()
                       .withRequest(f1)
                       .withOffer(f1)
                       .withProvidingAction(a1))
-              .withFunctionalityProvision(
+              .withProvision(
                   aFunctionalityProvision()
                       .withRequest(f2)
                       .withOffer(f2)
