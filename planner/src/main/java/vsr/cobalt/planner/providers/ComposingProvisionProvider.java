@@ -57,6 +57,8 @@ abstract class ComposingProvisionProvider<T, O extends Offer<T>, P extends Provi
         final Set<Action> actions = it.next();
         if (Action.isComposable(actions)) {
           provisions.addAll(index.createProvisions(Action.compose(actions)));
+        } else {
+          it.excludeSuperSetsOf(actions);
         }
       }
     }
