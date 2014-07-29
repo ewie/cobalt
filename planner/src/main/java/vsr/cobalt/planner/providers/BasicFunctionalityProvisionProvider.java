@@ -19,8 +19,7 @@ import vsr.cobalt.planner.graph.FunctionalityProvision;
 
 /**
  * A functionality provision provider which simply delegates every functionality request to a repository and collects
- * all found
- * provisions.
+ * all found provisions.
  *
  * @author Erik Wienhold
  */

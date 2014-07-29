@@ -29,7 +29,8 @@ import vsr.cobalt.utils.OrderedPowerSetIterator;
  *
  * @author Erik Wienhold
  */
-abstract class ComposingProvisionProvider<T, O extends Offer<T>, P extends Provision<T>> {
+abstract class ComposingProvisionProvider<T, O extends Offer<T>, P extends Provision<T>>
+    implements ProvisionProvider<T, P> {
 
   /**
    * Get provisions matching any given request. The resulting provisions may have composite providing actions.
@@ -38,6 +39,7 @@ abstract class ComposingProvisionProvider<T, O extends Offer<T>, P extends Provi
    *
    * @return a set of provisions
    */
+  @Override
   public Set<P> getProvisionsFor(final Set<T> requests) {
     final Set<P> provisions = new HashSet<>();
 
