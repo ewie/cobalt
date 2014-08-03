@@ -33,7 +33,7 @@
       "properties": {
         "mediaType": {
           "type": "string",
-          "pattern": "^(?:application|audio|image|text|video)[^\x00-\x20\x7F()<>@,;:\\"/\[\]?.=]+$"
+          "pattern": "^(?:application|audio|image|text|video)[^\x00-\x20\x7F()<>@,;:\\\"/[\\]?.=]+$"
         },
         "content": { "type": "string" }
       },

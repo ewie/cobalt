@@ -49,7 +49,7 @@
       "properties": {
         "request": { "$ref": "#/definitions/action" },
         "precursor": { "$ref": "#/definitions/action" },
-        "properties":
+        "properties": {
           "type": "array",
           "items": { "$ref": "#/definitions/propertyProvision" },
           "minItems": 1
