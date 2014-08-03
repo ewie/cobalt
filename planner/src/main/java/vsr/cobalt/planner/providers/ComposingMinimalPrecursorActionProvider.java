@@ -118,10 +118,10 @@ public class ComposingMinimalPrecursorActionProvider implements PrecursorActionP
    * Test if an action is a partial precursor for another action, i.e. it satisfies a subset of requirements for which
    * a precursor action is required.
    *
-   * @param candidate an action to test
+   * @param candidate a candidate action to test
    * @param action    an action requiring a precursor
    *
-   * @return true when
+   * @return true when the candidate is a partial precursor, false otherwise
    */
   private static boolean isPartialPrecursor(final Action candidate, final Action action) {
     final PropositionSet post = candidate.getPostConditions();

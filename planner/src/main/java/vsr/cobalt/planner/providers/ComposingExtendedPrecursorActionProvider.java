@@ -62,6 +62,15 @@ public class ComposingExtendedPrecursorActionProvider implements PrecursorAction
     return precursorActionProvider.getPrecursorActionsFor(action);
   }
 
+  /**
+   * Create a set of extended precursor actions by composing an existing precursor with combinations from a set of
+   * actions.
+   *
+   * @param precursor an existing precursor action
+   * @param actions   a set of actions to form combinations
+   *
+   * @return a set of extended precursor actions, an empty set when no action is composable with the existing precursor
+   */
   private static Set<Action> createExtendedPrecursors(final Action precursor, final Set<Action> actions) {
     final Set<Action> precursors = new HashSet<>();
     final OrderedPowerSetIterator<Action> it = new OrderedPowerSetIterator<>(actions);
@@ -102,6 +111,14 @@ public class ComposingExtendedPrecursorActionProvider implements PrecursorAction
     return filling;
   }
 
+  /**
+   * Test if an action fills any property required filled by an action.
+   *
+   * @param candidate a candidate action to test
+   * @param action    an action requiring filled properties
+   *
+   * @return true when the candidate fills required properties, false otherwise
+   */
   private static boolean isFillingAction(final Action candidate, final Action action) {
     return !Collections.disjoint(candidate.getPostConditions().getFilledProperties(),
         action.getPreConditions().getFilledProperties());
