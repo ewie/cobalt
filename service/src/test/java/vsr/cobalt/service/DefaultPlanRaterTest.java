@@ -15,7 +15,7 @@ import vsr.cobalt.models.Property;
 import vsr.cobalt.models.Repository;
 import vsr.cobalt.models.Type;
 import vsr.cobalt.planner.Plan;
-import vsr.cobalt.planner.collectors.rating.Rating;
+import vsr.cobalt.planner.rating.Rating;
 import vsr.cobalt.service.planner.DefaultPlanRater;
 
 import static org.mockito.Mockito.mock;
@@ -56,7 +56,7 @@ public class DefaultPlanRaterTest {
 
     final Action a2 = make(aMinimalAction()
         .withEffects(aPropositionSet()
-        .withFilled(p2)));
+            .withFilled(p2)));
 
     final Plan p = new Plan(make(aGraph()
         .withInitialLevel(anInitialLevel()

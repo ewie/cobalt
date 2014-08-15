@@ -7,7 +7,7 @@
 
 package vsr.cobalt.service.planner;
 
-import vsr.cobalt.planner.collectors.rating.RatedPlan;
+import vsr.cobalt.planner.rating.RatedPlan;
 
 /**
  * @author Erik Wienhold

@@ -9,9 +9,9 @@ package vsr.cobalt.planner.collectors;
 
 import org.testng.annotations.Test;
 import vsr.cobalt.planner.Plan;
-import vsr.cobalt.planner.collectors.rating.PlanRater;
-import vsr.cobalt.planner.collectors.rating.RatedPlan;
-import vsr.cobalt.planner.collectors.rating.Rating;
+import vsr.cobalt.planner.rating.PlanRater;
+import vsr.cobalt.planner.rating.RatedPlan;
+import vsr.cobalt.planner.rating.Rating;
 
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;

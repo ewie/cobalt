@@ -12,12 +12,12 @@ import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Interaction;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.Widget;
-import vsr.cobalt.planner.collectors.rating.RatedPlan;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.PropertyProvision;
+import vsr.cobalt.planner.rating.RatedPlan;
 import vsr.cobalt.service.CachingJsonSerializer;
 
 /**

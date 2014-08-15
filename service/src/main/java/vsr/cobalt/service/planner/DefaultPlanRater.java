@@ -11,8 +11,6 @@ import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.Repository;
 import vsr.cobalt.planner.Plan;
-import vsr.cobalt.planner.collectors.rating.PlanRater;
-import vsr.cobalt.planner.collectors.rating.Rating;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.FunctionalityProvision;
@@ -20,6 +18,8 @@ import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.Level;
 import vsr.cobalt.planner.graph.PropertyProvision;
+import vsr.cobalt.planner.rating.PlanRater;
+import vsr.cobalt.planner.rating.Rating;
 
 /**
  * The default plan rater using a metric of 3 properties:

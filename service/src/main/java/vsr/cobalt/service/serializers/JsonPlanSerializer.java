@@ -10,10 +10,10 @@ package vsr.cobalt.service.serializers;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 
-import vsr.cobalt.planner.collectors.rating.RatedPlan;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
+import vsr.cobalt.planner.rating.RatedPlan;
 import vsr.cobalt.service.JsonSerializer;
 
 /**

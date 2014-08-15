@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner.collectors.rating;
+package vsr.cobalt.planner.rating;
 
 import vsr.cobalt.planner.Plan;
 
