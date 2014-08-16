@@ -22,11 +22,13 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  * Finds the shortest path of a defined property between two resources of a model. The length of the path is
- * determined by the number of edges, i.e. each edge has weight 1.
+ * determined by the number of edges, i.e. each edge has length 1.
  *
  * @author Erik Wienhold
  */
 public class ShortestPathFinder {
+
+  private static final int LENGTH = 1;
 
   private final Model model;
 
@@ -85,10 +87,11 @@ public class ShortestPathFinder {
 
       while (ns.hasNext()) {
         final Resource v = ns.next();
-        final int alt = dist.get(u) + 1;
-        if (alt < dist.get(v)) {
-          queue.updatePriority(v, dist.get(v), alt);
-          dist.set(v, alt);
+        final int d1 = dist.get(v);
+        final int d2 = dist.get(u) + LENGTH;
+        if (d2 < d1) {
+          queue.updatePriority(v, d1, d2);
+          dist.set(v, d2);
           precursors.put(v, u);
         }
       }
