@@ -4,7 +4,6 @@
 # Licensed under Creative Commons (CC BY-SA 4.0).
 
 prefix :     <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 select ?action ?offer
 where {
