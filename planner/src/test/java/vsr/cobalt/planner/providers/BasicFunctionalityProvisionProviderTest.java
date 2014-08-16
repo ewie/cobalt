@@ -35,8 +35,8 @@ public class BasicFunctionalityProvisionProviderTest {
     final Action a2 = make(aMinimalAction().withFunctionality(f2));
 
     final Repository r = mock(Repository.class);
-    when(r.findCompatibleFunctionalities(f1)).thenReturn(setOf(realizedFunctionality(f1, a1)));
-    when(r.findCompatibleFunctionalities(f2)).thenReturn(setOf(realizedFunctionality(f2, a2)));
+    when(r.findCompatibleOffers(f1)).thenReturn(setOf(realizedFunctionality(f1, a1)));
+    when(r.findCompatibleOffers(f2)).thenReturn(setOf(realizedFunctionality(f2, a2)));
 
     final BasicFunctionalityProvisionProvider tpp = new BasicFunctionalityProvisionProvider(r);
 

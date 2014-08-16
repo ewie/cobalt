@@ -41,8 +41,8 @@ public class BasicPropertyProvisionProviderTest {
             .withFilled(p2)));
 
     final Repository r = mock(Repository.class);
-    when(r.findCompatibleProperties(p1)).thenReturn(setOf(publishedProperty(p1, a1)));
-    when(r.findCompatibleProperties(p2)).thenReturn(setOf(publishedProperty(p2, a2)));
+    when(r.findCompatibleOffers(p1)).thenReturn(setOf(publishedProperty(p1, a1)));
+    when(r.findCompatibleOffers(p2)).thenReturn(setOf(publishedProperty(p2, a2)));
 
     final BasicPropertyProvisionProvider ppp = new BasicPropertyProvisionProvider(r);
 

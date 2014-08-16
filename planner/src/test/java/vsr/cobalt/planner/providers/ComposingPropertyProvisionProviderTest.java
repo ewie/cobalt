@@ -54,7 +54,7 @@ public class ComposingPropertyProvisionProviderTest {
       final Set<PublishedProperty> pubs = setOf(publishedProperty(p, a));
 
       final Repository r = mock(Repository.class);
-      when(r.findCompatibleProperties(p)).thenReturn(pubs);
+      when(r.findCompatibleOffers(p)).thenReturn(pubs);
 
       final ComposingPropertyProvisionProvider ppp = new ComposingPropertyProvisionProvider(r);
       assertEquals(ppp.getOffersFor(p), pubs);

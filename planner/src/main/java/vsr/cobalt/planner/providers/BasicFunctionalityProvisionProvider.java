@@ -38,7 +38,7 @@ public class BasicFunctionalityProvisionProvider implements FunctionalityProvisi
   public Set<FunctionalityProvision> getProvisionsFor(final Set<Functionality> functionalities) {
     final Set<FunctionalityProvision> tps = new HashSet<>();
     for (final Functionality f : functionalities) {
-      tps.addAll(createProvisions(f, repository.findCompatibleFunctionalities(f)));
+      tps.addAll(createProvisions(f, repository.findCompatibleOffers(f)));
     }
     return tps;
   }

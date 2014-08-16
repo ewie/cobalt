@@ -49,12 +49,12 @@ public class CompatibleResourceFinder {
     this(dataset, DEFAULT_CACHE_SIZE);
   }
 
-  public Set<RealizedFunctionality> findCompatibleFunctionalities(final Functionality functionality) {
-    return functionalityFinder.findCompatibleResources(functionality);
+  public Set<RealizedFunctionality> findCompatibleOffers(final Functionality request) {
+    return functionalityFinder.findCompatibleResources(request);
   }
 
-  public Set<PublishedProperty> findCompatibleProperties(final Property property) {
-    return propertyFinder.findCompatibleResources(property);
+  public Set<PublishedProperty> findCompatibleOffers(final Property request) {
+    return propertyFinder.findCompatibleResources(request);
   }
 
   private static abstract class Finder<T, O extends Offer<T>> {
@@ -93,8 +93,8 @@ public class CompatibleResourceFinder {
       dataset.begin(ReadWrite.READ);
 
       try {
-        final Model model = dataset.getDefaultModel();
 
+        final Model model = dataset.getDefaultModel();
         final QueryExecution qx = QueryExecutionFactory.create(getQuery(request, model), dataset);
 
         try {
@@ -105,9 +105,11 @@ public class CompatibleResourceFinder {
         } finally {
           qx.close();
         }
+
       } finally {
         dataset.end();
       }
+
       return offers;
     }
 

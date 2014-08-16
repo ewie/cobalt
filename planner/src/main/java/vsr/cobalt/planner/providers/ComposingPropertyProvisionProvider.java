@@ -30,7 +30,7 @@ public class ComposingPropertyProvisionProvider
 
   @Override
   protected Set<PublishedProperty> getOffersFor(final Property request) {
-    return repository.findCompatibleProperties(request);
+    return repository.findCompatibleOffers(request);
   }
 
   @Override

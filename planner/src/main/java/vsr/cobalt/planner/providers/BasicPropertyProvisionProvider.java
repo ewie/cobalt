@@ -38,7 +38,7 @@ public class BasicPropertyProvisionProvider implements PropertyProvisionProvider
   public Set<PropertyProvision> getProvisionsFor(final Set<Property> properties) {
     final Set<PropertyProvision> pps = new HashSet<>();
     for (final Property p : properties) {
-      pps.addAll(createProvisions(p, repository.findCompatibleProperties(p)));
+      pps.addAll(createProvisions(p, repository.findCompatibleOffers(p)));
     }
     return pps;
   }

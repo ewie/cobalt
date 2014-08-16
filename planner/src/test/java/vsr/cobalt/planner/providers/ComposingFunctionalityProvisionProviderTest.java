@@ -51,7 +51,7 @@ public class ComposingFunctionalityProvisionProviderTest {
       final Set<RealizedFunctionality> rfs = setOf(realizedFunctionality(f, a));
 
       final Repository r = mock(Repository.class);
-      when(r.findCompatibleFunctionalities(f)).thenReturn(rfs);
+      when(r.findCompatibleOffers(f)).thenReturn(rfs);
 
       final ComposingFunctionalityProvisionProvider tpp = new ComposingFunctionalityProvisionProvider(r);
       assertEquals(tpp.getOffersFor(f), rfs);

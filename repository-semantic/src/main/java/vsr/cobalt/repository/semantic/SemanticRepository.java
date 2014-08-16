@@ -64,13 +64,13 @@ public class SemanticRepository implements Repository {
   }
 
   @Override
-  public Set<RealizedFunctionality> findCompatibleFunctionalities(final Functionality functionality) {
-    return compatibleResourceFinder.findCompatibleFunctionalities(functionality);
+  public Set<RealizedFunctionality> findCompatibleOffers(final Functionality request) {
+    return compatibleResourceFinder.findCompatibleOffers(request);
   }
 
   @Override
-  public Set<PublishedProperty> findCompatibleProperties(final Property property) {
-    return compatibleResourceFinder.findCompatibleProperties(property);
+  public Set<PublishedProperty> findCompatibleOffers(final Property request) {
+    return compatibleResourceFinder.findCompatibleOffers(request);
   }
 
   @Override

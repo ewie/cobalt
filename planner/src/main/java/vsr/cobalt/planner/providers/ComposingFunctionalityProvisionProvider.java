@@ -30,7 +30,7 @@ public class ComposingFunctionalityProvisionProvider
 
   @Override
   protected Set<RealizedFunctionality> getOffersFor(final Functionality functionality) {
-    return repository.findCompatibleFunctionalities(functionality);
+    return repository.findCompatibleOffers(functionality);
   }
 
   @Override

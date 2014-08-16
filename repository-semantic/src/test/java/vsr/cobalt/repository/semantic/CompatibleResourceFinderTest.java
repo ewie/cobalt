@@ -51,7 +51,7 @@ public class CompatibleResourceFinderTest {
     final PublishedProperty pp2 = new PublishedProperty(p2, a2);
 
     final Set<PublishedProperty> xpps = setOf(pp1, pp2);
-    final Set<PublishedProperty> pps = finder.findCompatibleProperties(p0);
+    final Set<PublishedProperty> pps = finder.findCompatibleOffers(p0);
 
     assertEquals(pps, xpps);
   }
@@ -72,7 +72,7 @@ public class CompatibleResourceFinderTest {
     final RealizedFunctionality rt2 = new RealizedFunctionality(f2, a2);
 
     final Set<RealizedFunctionality> xrts = setOf(rt1, rt2);
-    final Set<RealizedFunctionality> rts = finder.findCompatibleFunctionalities(f0);
+    final Set<RealizedFunctionality> rts = finder.findCompatibleOffers(f0);
 
     assertEquals(rts, xrts);
   }

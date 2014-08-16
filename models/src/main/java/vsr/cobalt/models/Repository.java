@@ -26,22 +26,22 @@ public interface Repository {
   Set<Action> getWidgetActions(Widget widget);
 
   /**
-   * Get action functionalities compatible to a requested functionality.
+   * Get realized functionalities compatible to a requested functionality.
    *
-   * @param functionality the requested functionality
+   * @param request the requested functionality
    *
    * @return a set of zero or more realized functionalities
    */
-  Set<RealizedFunctionality> findCompatibleFunctionalities(Functionality functionality);
+  Set<RealizedFunctionality> findCompatibleOffers(Functionality request);
 
   /**
-   * Get action properties compatible to a requested property.
+   * Get published properties compatible to a requested property.
    *
-   * @param property the requested property
+   * @param request the requested property
    *
    * @return a set of zero or more published properties
    */
-  Set<PublishedProperty> findCompatibleProperties(Property property);
+  Set<PublishedProperty> findCompatibleOffers(Property request);
 
   /**
    * Get the distance between two functionalities.
