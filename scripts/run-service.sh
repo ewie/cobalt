@@ -9,9 +9,10 @@ usage() {
 	cat <<-EOF
 	Cobalt user interface mashup planner
 	Copyright (c) 2014 Erik Wienhold
-	
+
 	  -d --dataset [DIR]  dataset directory (default in memory dataset)
 	  -h --help           this help
+	  -j --java-opts      optional java options
 	  -p --port [PORT]    port number (default 9000)
 	  -s --seed           seed the dataset with models found under widgets directory
 	  -w --widgets [DIR]  directory to recursively search for widgets (default current directory)
@@ -24,6 +25,7 @@ DATASET=--mem--
 PORT=9000
 SEED=false
 WIDGETS=.
+JAVA_OPTS=""
 
 while [ "$1" != "" ]; do
   case "$1" in
@@ -34,6 +36,10 @@ while [ "$1" != "" ]; do
     -h|--help)
       usage
       exit
+      ;;
+    -j|--java-opts)
+      JAVA_OPTS=$2
+      shift 2
       ;;
     -p|--port)
       PORT=$2
@@ -53,6 +59,8 @@ while [ "$1" != "" ]; do
       ;;
   esac
 done
+
+export MAVEN_OPTS="$JAVA_OPTS"
 
 mvn -pl service jetty:run \
   -Djetty.port=$PORT \
