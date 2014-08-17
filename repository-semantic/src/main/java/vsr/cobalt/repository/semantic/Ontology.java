@@ -19,11 +19,11 @@ public final class Ontology {
   public static final String NAMESPACE = "https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#";
 
   public static final Resource Action = resource("Action");
+  public static final Resource Functionality = resource("Functionality");
   public static final Resource Interaction = resource("Interaction");
   public static final Resource Mashup = resource("Mashup");
   public static final Resource Property = resource("Property");
   public static final Resource Propositions = resource("Propositions");
-  public static final Resource Functionality = resource("Functionality");
   public static final Resource Widget = resource("Widget");
 
   public static final Property clearValueOf = property("clearValueOf");
