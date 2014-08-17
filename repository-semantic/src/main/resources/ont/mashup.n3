@@ -87,8 +87,7 @@
   owl:minCardinality 0 ;
   owl:maxCardinality 1 ;
   rdfs:label "hasName" ;
-  rdfs:comment """states a property's unique name,
-                  optional in which case the identifier of it's type is used as it's name""" .
+  rdfs:comment "states a property's unique name, optional, in which case its type identifier is used as its name" .
 
 :hasPreConditions a owl:ObjectProperty ;
   rdfs:domain :Action ;
