@@ -30,14 +30,18 @@
     "text": {
       "description": "RDF in any textual representation",
       "type": "object",
+      "required": [ "mediaType", "content" ],
       "properties": {
         "mediaType": {
           "type": "string",
-          "pattern": "^(?:application|audio|image|text|video)[^\x00-\x20\x7F()<>@,;:\\\"/[\\]?.=]+$"
+          "enum": [
+            "application/rdf+json",
+            "application/rdf+xml",
+            "text/turtle"
+          ]
         },
         "content": { "type": "string" }
-      },
-      "required": [ "mediaType", "content" ]
+      }
     }
   }
 }

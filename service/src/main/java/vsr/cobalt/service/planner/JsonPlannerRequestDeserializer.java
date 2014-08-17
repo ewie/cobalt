@@ -61,6 +61,8 @@ public class JsonPlannerRequestDeserializer {
     final Lang lang;
     final String data;
     if (mashupObj.containsKey(mediaType)) {
+      // XXX accept any supported language, although the request schema only allows a subset (application/rdf+json,
+      // application/rdf+xml, text/turtle).
       lang = RDFLanguages.nameToLang(mashupObj.getString(mediaType));
       if (lang == null) {
         throw new IllegalArgumentException("unsupported media type");
