@@ -107,14 +107,14 @@
     },
     "interaction": {
       "type": "object",
-      "required": [ "instruction" ]
+      "required": [ "instruction" ],
       "properties": {
         "instruction": { "type": "string" }
       }
     },
     "property": {
       "type": "object",
-      "required": [ "name", "type" ]
+      "required": [ "name", "type" ],
       "properties": {
         "name": { "type": "string" },
         "type": { "$ref": "#/definitions/type" }

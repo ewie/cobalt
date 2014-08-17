@@ -25,7 +25,7 @@
   "definitions": {
     "rdfjson": {
       "description": "embedded RDF/JSON",
-      "type": "object"
+      "type": { "$ref": "rdf.schema.json" }
     },
     "text": {
       "description": "RDF in any textual representation",
