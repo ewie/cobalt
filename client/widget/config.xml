@@ -2,7 +2,7 @@
 <widget xmlns="http://www.w3.org/ns/widgets"
   id="https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/widget">
 
- <name>Cobalt Mashup Planner</name>
+ <name>Cobalt Mashup Composer</name>
  <description>Consumes the Cobalt planning service and configures a mashup within Apache Rave</description>
 
  <author email="ewie@hrz.tu-chemnitz.de">Erik Wienhold</author>
