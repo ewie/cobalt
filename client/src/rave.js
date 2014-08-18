@@ -135,7 +135,7 @@ function renderWidget(id) {
 function removeRegionWidget(widget) {
   return $.Deferred.promise(function (dfd) {
     _rave.api.rpc.removeWidget({
-      widgetId: widget.widgetId,
+      regionWidgetId: widget.regionWidgetId,
       successCallback: function () {
         // properly unregister the widget
         _rave.unregisterWidget(widget);
