@@ -47,6 +47,7 @@ var getWookieWidget = (function () {
                 return widget.url === uri;
               });
               if (widget) {
+                cache[uri] = widget;
                 dfd.resolve(widget);
               } else {
                 dfd.reject({ message: "cannot find Wookie widget for URI " + uri });
