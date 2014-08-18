@@ -8,38 +8,38 @@
 package vsr.cobalt.planner.rating;
 
 /**
- * Represents a rating based on a signed integer value.
+ * Represents a rating based on a double-precision value.
  * <p/>
- * The natural order of a rating is determined by the natural order of its value.
+ * The natural order of ratings is determined by the value's natural order.
  *
  * @author Erik Wienhold
  */
 public final class Rating implements Comparable<Rating> {
 
-  private final int value;
+  private final double value;
 
   /**
    * @param value the rating's value
    */
-  public Rating(final int value) {
+  public Rating(final double value) {
     this.value = value;
   }
 
   /**
    * @return the rating's value
    */
-  public int getValue() {
+  public double getValue() {
     return value;
   }
 
   @Override
   public int compareTo(final Rating other) {
-    return Integer.compare(value, other.value);
+    return Double.compare(value, other.value);
   }
 
   @Override
   public int hashCode() {
-    return value;
+    return Double.valueOf(value).hashCode();
   }
 
   @Override

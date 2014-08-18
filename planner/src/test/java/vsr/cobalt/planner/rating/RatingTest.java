@@ -19,13 +19,13 @@ public class RatingTest {
   public void compareByValue() {
     final Rating r1 = new Rating(1);
     final Rating r2 = new Rating(3);
-    assertEquals(r1.compareTo(r2), Integer.compare(r1.getValue(), r2.getValue()));
+    assertEquals(r1.compareTo(r2), Double.compare(r1.getValue(), r2.getValue()));
   }
 
   @Test
   public void calculateHashCodeFromValue() {
     final Rating r = new Rating(13);
-    assertEquals(r.hashCode(), 13);
+    assertEquals(r.hashCode(), Double.valueOf(13).hashCode());
   }
 
   @Test
