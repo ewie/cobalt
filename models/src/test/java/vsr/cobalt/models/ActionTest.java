@@ -271,46 +271,25 @@ public class ActionTest {
   }
 
   @Test
-  public static class Getters {
-
-    private Property property;
+  public static class ComputingGetters {
 
     private Action action;
 
-    private Widget widget;
+    private Property property;
 
     private PropositionSet pre;
 
     private PropositionSet effects;
 
-    private Set<Functionality> functionalities;
-
-    private Set<Interaction> interactions;
-
     @BeforeMethod
     public void setUp() {
+      final Widget widget = make(aMinimalWidget());
+
       property = make(aMinimalProperty());
-      widget = make(aMinimalWidget());
       pre = make(aPropositionSet().withCleared(property));
       effects = make(aPropositionSet().withFilled(property));
-      functionalities = setOf(make(aMinimalFunctionality()));
-      interactions = setOf(make(aMinimalInteraction()));
-      action = Action.create(widget, pre, effects, functionalities, interactions);
-    }
 
-    @Test
-    public void getWidget() {
-      assertEquals(action.getWidget(), widget);
-    }
-
-    @Test
-    public void getPreConditions() {
-      assertEquals(action.getPreConditions(), pre);
-    }
-
-    @Test
-    public void getEffects() {
-      assertEquals(action.getEffects(), effects);
+      action = Action.create(widget, pre, effects);
     }
 
     @Test
@@ -321,16 +300,6 @@ public class ActionTest {
     @Test
     public void getPublishedProperties() {
       assertEquals(action.getPublishedProperties(), setOf(property));
-    }
-
-    @Test
-    public void getRealizedFunctionalities() {
-      assertEquals(action.getRealizedFunctionalities(), functionalities);
-    }
-
-    @Test
-    public void getInteractions() {
-      assertEquals(action.getInteractions(), interactions);
     }
 
   }

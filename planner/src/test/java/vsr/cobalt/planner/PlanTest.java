@@ -209,18 +209,6 @@ public class PlanTest {
   }
 
   @Test
-  public static class Getters {
-
-    @Test
-    public void getGraph() {
-      final Graph g = make(aMinimalGraph());
-      final Plan p = new Plan(g);
-      assertSame(p.getGraph(), g);
-    }
-
-  }
-
-  @Test
   public static class Equality {
 
     @Test

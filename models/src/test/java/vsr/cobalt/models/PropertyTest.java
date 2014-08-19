@@ -9,12 +9,10 @@ package vsr.cobalt.models;
 
 import java.util.Objects;
 
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropertyMaker.aProperty;
@@ -24,36 +22,6 @@ import static vsr.cobalt.testing.Utilities.make;
 
 @Test
 public class PropertyTest {
-
-  @Test
-  public static class Getters {
-
-    private Property property;
-
-    private String name;
-
-    private Type type;
-
-    @BeforeMethod
-    public void setUp() {
-      name = "p";
-      type = make(aMinimalType());
-      property = make(aProperty()
-          .withName(name)
-          .withType(type));
-    }
-
-    @Test
-    public void getName() {
-      assertEquals(property.getName(), name);
-    }
-
-    @Test
-    public void getType() {
-      assertSame(property.getType(), type);
-    }
-
-  }
 
   @Test
   public static class Equals {

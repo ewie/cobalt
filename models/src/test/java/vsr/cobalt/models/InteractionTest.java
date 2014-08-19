@@ -22,18 +22,6 @@ import static vsr.cobalt.testing.Utilities.make;
 public class InteractionTest {
 
   @Test
-  public static class Getters {
-
-    @Test
-    public void getInstructionText() {
-      final String s = "foo";
-      final Interaction i = new Interaction(s);
-      assertEquals(i.getInstructionText(), s);
-    }
-
-  }
-
-  @Test
   public static class Equals {
 
     @Test

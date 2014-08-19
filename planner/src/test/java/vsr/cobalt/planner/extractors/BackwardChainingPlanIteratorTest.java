@@ -72,32 +72,6 @@ public class BackwardChainingPlanIteratorTest {
   }
 
   @Test
-  public static class Getters {
-
-    @Test
-    public void getGraph() {
-      final Graph g = make(aMinimalGraph());
-      final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g, 1, 1);
-      assertSame(pi.getGraph(), g);
-    }
-
-    @Test
-    public void getMinDepth() {
-      final Graph g = make(aMinimalGraph());
-      final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g, 1, 1);
-      assertEquals(pi.getMinDepth(), 1);
-    }
-
-    @Test
-    public void getMaxDepth() {
-      final Graph g = make(aMinimalGraph());
-      final BackwardChainingPlanIterator pi = new BackwardChainingPlanIterator(g, 1, 2);
-      assertEquals(pi.getMaxDepth(), 2);
-    }
-
-  }
-
-  @Test
   public static class Iteration {
 
     @Test

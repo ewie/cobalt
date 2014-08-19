@@ -9,7 +9,6 @@ package vsr.cobalt.models;
 
 import java.util.Objects;
 
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Matchers.any;
@@ -17,7 +16,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
-import static org.testng.Assert.assertSame;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.PropertyMaker.aProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
@@ -35,34 +33,6 @@ public class OfferTest {
     @Override
     public boolean canEqual(final Object other) {
       return true;
-    }
-
-  }
-
-  @Test
-  public static class Getters {
-
-    private DummyOffer offer;
-
-    private Object subject;
-
-    private Action action;
-
-    @BeforeMethod
-    public void setUp() {
-      subject = new Object();
-      action = make(aMinimalAction());
-      offer = new DummyOffer(subject, action);
-    }
-
-    @Test
-    public void getProvidingAction() {
-      assertSame(offer.getAction(), action);
-    }
-
-    @Test
-    public void getSubject() {
-      assertSame(offer.getSubject(), subject);
     }
 
   }

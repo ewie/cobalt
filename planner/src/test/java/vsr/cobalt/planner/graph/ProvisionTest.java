@@ -9,7 +9,6 @@ package vsr.cobalt.planner.graph;
 
 import java.util.Objects;
 
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Offer;
 
@@ -52,34 +51,17 @@ public class ProvisionTest {
   }
 
   @Test
-  public static class Getters {
-
-    private DummyProvision provision;
-
-    private Object request;
-
-    private DummyOffer offer;
-
-    @BeforeMethod
-    public void setUp() {
-      request = new Object();
-      offer = mock(DummyOffer.class);
-      when(offer.getAction()).thenReturn(make(aMinimalAction()));
-      provision = new DummyProvision(request, offer);
-    }
-
-    @Test
-    public void getRequest() {
-      assertSame(provision.getRequest(), request);
-    }
-
-    @Test
-    public void getOffer() {
-      assertSame(provision.getOffer(), offer);
-    }
+  public static class ComputingGetters {
 
     @Test
     public void getProvidingAction() {
+      final Object request = new Object();
+
+      final DummyOffer offer = mock(DummyOffer.class);
+      when(offer.getAction()).thenReturn(make(aMinimalAction()));
+
+      final DummyProvision provision = new DummyProvision(request, offer);
+
       assertSame(provision.getProvidingAction(), offer.getAction());
     }
 

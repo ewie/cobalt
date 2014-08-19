@@ -164,20 +164,20 @@ public class PropositionSetTest {
   }
 
   @Test
-  public static class Getters {
+  public static class ComputingGetters {
 
-    private final Property p = make(aMinimalProperty());
+    private final Property property = make(aMinimalProperty());
 
     @Test
     public void getClearedProperties() {
-      final PropositionSet ps = make(aPropositionSet().withCleared(p));
-      assertEquals(ps.getClearedProperties(), setOf(p));
+      final PropositionSet ps = make(aPropositionSet().withCleared(property));
+      assertEquals(ps.getClearedProperties(), setOf(property));
     }
 
     @Test
     public void getFilledProperties() {
-      final PropositionSet ps = make(aPropositionSet().withFilled(p));
-      assertEquals(ps.getFilledProperties(), setOf(p));
+      final PropositionSet ps = make(aPropositionSet().withFilled(property));
+      assertEquals(ps.getFilledProperties(), setOf(property));
     }
 
   }

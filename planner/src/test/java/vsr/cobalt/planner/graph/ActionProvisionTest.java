@@ -10,14 +10,12 @@ package vsr.cobalt.planner.graph;
 import java.util.Objects;
 import java.util.Set;
 
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
-import static org.testng.Assert.assertSame;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
@@ -289,61 +287,6 @@ public class ActionProvisionTest {
       pps.add(null);
 
       assertNotEquals(ap.getPropertyProvisions(), pps);
-    }
-
-  }
-
-  @Test
-  public static class Getters {
-
-    private ActionProvision actionProvision;
-
-    private Action requested;
-
-    private Action precursor;
-
-    private PropertyProvision propertyProvision;
-
-    @BeforeMethod
-    public void setUp() {
-      final Property p1 = make(aMinimalProperty().withName("p1"));
-      final Property p2 = make(aMinimalProperty().withName("p2"));
-
-      requested = make(aMinimalAction()
-          .withPre(aPropositionSet()
-              .withFilled(p1)
-              .withCleared(p2)));
-
-      precursor = make(aMinimalAction()
-          .withEffects(aPropositionSet()
-              .withCleared(p2)));
-
-      propertyProvision = make(aPropertyProvision()
-          .withProvidingAction(aMinimalAction()
-              .withEffects(aPropositionSet()
-                  .withFilled(p1)))
-          .withOffer(p1)
-          .withRequest(p1));
-
-      actionProvision = make(anActionProvision()
-          .withRequest(requested)
-          .withPrecursor(precursor)
-          .withProvision(propertyProvision));
-    }
-
-    @Test
-    public void getRequestedAction() throws Exception {
-      assertSame(actionProvision.getRequestedAction(), requested);
-    }
-
-    @Test
-    public void getPrecursorAction() throws Exception {
-      assertSame(actionProvision.getPrecursorAction(), precursor);
-    }
-
-    @Test
-    public void getPropertyProvisions() throws Exception {
-      assertEquals(actionProvision.getPropertyProvisions(), setOf(propertyProvision));
     }
 
   }

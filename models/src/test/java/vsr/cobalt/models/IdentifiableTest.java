@@ -7,7 +7,6 @@
 
 package vsr.cobalt.models;
 
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Matchers.any;
@@ -28,26 +27,6 @@ public class IdentifiableTest {
     @Override
     public boolean canEqual(final Object other) {
       return true;
-    }
-
-  }
-
-  @Test
-  public static class Getters {
-
-    private DummyIdentifiable identifiable;
-
-    private Identifier identifier;
-
-    @BeforeMethod
-    public void setUp() {
-      identifier = Identifier.create("foo");
-      identifiable = new DummyIdentifiable(identifier);
-    }
-
-    @Test
-    public void getIdentifier() {
-      assertEquals(identifiable.getIdentifier(), identifier);
     }
 
   }
