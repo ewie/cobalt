@@ -276,7 +276,7 @@ public class PropositionSetTest {
     }
 
     @Test
-    public void returnTrueWhenPropositionsEqual() {
+    public void equalWhenPropositionsEqual() {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
       final PropositionSet ps1 = make(aPropositionSet()

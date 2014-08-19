@@ -35,14 +35,14 @@ public class IdentifiableTest {
   public static class Equality {
 
     @Test
-    public void returnHashValue() {
+    public void calculateHashCode() {
       final Identifier id = Identifier.create("baz");
       final DummyIdentifiable provision = new DummyIdentifiable(id);
       assertEquals(provision.hashCode(), id.hashCode());
     }
 
     @Test
-    public void returnTrueWhenIdentifiersEqual() {
+    public void equalWhenIdentifiersEqual() {
       final Identifier id = Identifier.create("bar");
       final DummyIdentifiable i1 = new DummyIdentifiable(id);
       final DummyIdentifiable i2 = new DummyIdentifiable(id);
@@ -50,14 +50,14 @@ public class IdentifiableTest {
     }
 
     @Test
-    public void returnFalseWhenOtherIsNoIdentifiable() {
+    public void notEqualWhenOtherIsNoIdentifiable() {
       final DummyIdentifiable i = new DummyIdentifiable(Identifier.create(""));
       final Object x = new Object();
       assertNotEquals(i, x);
     }
 
     @Test
-    public void returnFalseWhenOtherCanEqualReturnsFalse() {
+    public void notEqualWhenOtherCanEqualReturnsFalse() {
       final DummyIdentifiable i1 = new DummyIdentifiable(Identifier.create(""));
       final DummyIdentifiable i2 = mock(DummyIdentifiable.class);
 

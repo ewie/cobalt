@@ -598,17 +598,29 @@ public class ActionTest {
   }
 
   @Test
-  public static class Equals {
+  public static class Equality {
 
     @Test
-    public void returnFalseWhenComparedWithNonAction() {
+    public void calculateHashCode() {
+      final Action a = make(aMinimalAction());
+      final int h = Objects.hash(
+          a.getWidget(),
+          a.getPreConditions(),
+          a.getEffects(),
+          a.getRealizedFunctionalities(),
+          a.getInteractions());
+      assertEquals(a.hashCode(), h);
+    }
+
+    @Test
+    public void notEqualWhenComparedWithNonAction() {
       final Action a = make(aMinimalAction());
       final Object x = new Object();
       assertNotEquals(a, x);
     }
 
     @Test
-    public void returnFalseWhenWidgetDiffers() {
+    public void notEqualWhenWidgetDiffers() {
       final Action a1 = make(aMinimalAction()
           .withWidget(aWidget().withIdentifier("w1")));
 
@@ -619,7 +631,7 @@ public class ActionTest {
     }
 
     @Test
-    public void returnFalseWhenPreConditionsDiffer() {
+    public void notEqualWhenPreConditionsDiffer() {
       final Action a1 = make(aMinimalAction()
           .withPre(aPropositionSet()
               .withCleared(aMinimalProperty()
@@ -634,7 +646,7 @@ public class ActionTest {
     }
 
     @Test
-    public void returnFalseWhenEffectsDiffer() {
+    public void notEqualWhenEffectsDiffer() {
       final Action a1 = make(aMinimalAction()
           .withEffects(aPropositionSet()
               .withCleared(aMinimalProperty()
@@ -649,7 +661,7 @@ public class ActionTest {
     }
 
     @Test
-    public void returnFalseWhenRealizedFunctionalitiesDiffer() {
+    public void notEqualWhenRealizedFunctionalitiesDiffer() {
       final Action a1 = make(aMinimalAction()
           .withFunctionality(aFunctionality().withIdentifier("t1")));
 
@@ -660,7 +672,7 @@ public class ActionTest {
     }
 
     @Test
-    public void returnFalseWhenInteractionsDiffer() {
+    public void notEqualWhenInteractionsDiffer() {
       final Action a1 = make(aMinimalAction()
           .withInteraction(anInteraction()
               .withInstruction("i1")));
@@ -673,27 +685,10 @@ public class ActionTest {
     }
 
     @Test
-    public void returnTrueWhenEqual() {
+    public void equal() {
       final Action a1 = make(aMinimalAction());
       final Action a2 = make(aMinimalAction());
       assertEquals(a1, a2);
-    }
-
-  }
-
-  @Test
-  public static class HashCode {
-
-    @Test
-    public void returnHashValue() {
-      final Action a = make(aMinimalAction());
-      final int h = Objects.hash(
-          a.getWidget(),
-          a.getPreConditions(),
-          a.getEffects(),
-          a.getRealizedFunctionalities(),
-          a.getInteractions());
-      assertEquals(a.hashCode(), h);
     }
 
   }

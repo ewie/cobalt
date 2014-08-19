@@ -465,13 +465,13 @@ public class GraphTest {
       }
 
       @Test
-      public void returnFalseWhenComparedWithNonGraph() {
+      public void notEqualWhenComparedWithNonGraph() {
         final Object x = new Object();
         assertNotEquals(graph, x);
       }
 
       @Test
-      public void returnFalseWhenInitialLevelDiffers() {
+      public void notEqualWhenInitialLevelDiffers() {
         final Functionality f = make(aFunctionality().withIdentifier("f"));
         final Action a = make(aMinimalAction().withFunctionality(f));
 
@@ -486,7 +486,7 @@ public class GraphTest {
       }
 
       @Test
-      public void returnTrueWhenInitialLevelsEqual() {
+      public void equalWhenInitialLevelsEqual() {
         // simply create a duplicate graph
         final Graph g2 = make(aGraph().withInitialLevel(initialLevel));
         assertEquals(graph, g2);
@@ -670,13 +670,13 @@ public class GraphTest {
       }
 
       @Test
-      public void returnFalseWhenComparedWithNonGraph() {
+      public void notEqualWhenComparedWithNonGraph() {
         final Object x = new Object();
         assertNotEquals(graph, x);
       }
 
       @Test
-      public void returnFalseWhenAnyLevelDiffers() {
+      public void notEqualWhenAnyLevelDiffers() {
         final Property p2 = make(aMinimalProperty().withName("p2"));
         final Property p3 = make(aMinimalProperty().withName("p3"));
 
@@ -694,7 +694,7 @@ public class GraphTest {
       }
 
       @Test
-      public void returnTrueWhenAllLevelsEqual() {
+      public void equalWhenAllLevelsEqual() {
         // simply create a duplicate graph
         final Graph g2 = baseGraph.extendWith(xl2);
         assertEquals(graph, g2);

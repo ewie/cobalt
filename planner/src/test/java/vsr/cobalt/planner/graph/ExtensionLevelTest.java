@@ -307,21 +307,21 @@ public class ExtensionLevelTest {
     }
 
     @Test
-    public void returnTrueWhenActionProvisionSetsAreEqual() {
+    public void equalWhenActionProvisionSetsAreEqual() {
       final ExtensionLevel xl1 = new ExtensionLevel(setOf(make(aMinimalActionProvision())));
       final ExtensionLevel xl2 = new ExtensionLevel(setOf(make(aMinimalActionProvision())));
       assertEquals(xl1, xl2);
     }
 
     @Test
-    public void returnFalseWhenComparedWithNonExtensionLevel() {
+    public void notEqualWhenComparedWithNonExtensionLevel() {
       final ExtensionLevel xl = new ExtensionLevel(setOf(make(aMinimalActionProvision())));
       final Object x = new Object();
       assertNotEquals(xl, x);
     }
 
     @Test
-    public void returnFalseWhenActionProvisionSetsDiffer() {
+    public void notEqualWhenActionProvisionSetsDiffer() {
       final Property p = make(aMinimalProperty().withName("p"));
 
       final Action a1 = make(aMinimalAction()

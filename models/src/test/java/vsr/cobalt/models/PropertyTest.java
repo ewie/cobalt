@@ -24,49 +24,44 @@ import static vsr.cobalt.testing.Utilities.make;
 public class PropertyTest {
 
   @Test
-  public static class Equals {
+  public static class Equality {
 
     @Test
-    public void returnFalseWhenNotInstanceOfSameClass() {
-      final Property p = make(aMinimalProperty());
-      final Object x = new Object();
-      assertFalse(p.equals(x));
-    }
-
-    @Test
-    public void returnFalseWhenNameDiffers() {
-      final Property p1 = make(aMinimalProperty().withName("p1"));
-      final Property p2 = make(aMinimalProperty().withName("p2"));
-      assertFalse(p1.equals(p2));
-    }
-
-    @Test
-    public void returnFalseWhenTypeDiffers() {
-      final Property p1 = make(aMinimalProperty().withType(aType().withIdentifier("t1")));
-      final Property p2 = make(aMinimalProperty().withType(aType().withIdentifier("t2")));
-      assertFalse(p1.equals(p2));
-    }
-
-    @Test
-    public void returnTrueWhenEqual() {
-      final Property p1 = make(aMinimalProperty());
-      final Property p2 = make(aMinimalProperty());
-      assertTrue(p1.equals(p2));
-    }
-
-  }
-
-  @Test
-  public static class HashCode {
-
-    @Test
-    public void useNameAndType() {
+    public void calculateHashCode() {
       final String name = "baz";
       final Type type = make(aMinimalType());
       final Property property = make(aProperty()
           .withName(name)
           .withType(type));
       assertEquals(property.hashCode(), Objects.hash(name, type));
+    }
+
+    @Test
+    public void notEqualWhenNotInstanceOfSameClass() {
+      final Property p = make(aMinimalProperty());
+      final Object x = new Object();
+      assertFalse(p.equals(x));
+    }
+
+    @Test
+    public void notEqualWhenNameDiffers() {
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+      assertFalse(p1.equals(p2));
+    }
+
+    @Test
+    public void notEqualWhenTypeDiffers() {
+      final Property p1 = make(aMinimalProperty().withType(aType().withIdentifier("t1")));
+      final Property p2 = make(aMinimalProperty().withType(aType().withIdentifier("t2")));
+      assertFalse(p1.equals(p2));
+    }
+
+    @Test
+    public void equal() {
+      final Property p1 = make(aMinimalProperty());
+      final Property p2 = make(aMinimalProperty());
+      assertTrue(p1.equals(p2));
     }
 
   }

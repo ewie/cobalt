@@ -152,21 +152,21 @@ public class InitialLevelTest {
     }
 
     @Test
-    public void returnTrueWhenFunctionalityProvisionSetsAreEqual() {
+    public void equalWhenFunctionalityProvisionSetsAreEqual() {
       final InitialLevel il1 = new InitialLevel(setOf(make(aMinimalFunctionalityProvision())));
       final InitialLevel il2 = new InitialLevel(setOf(make(aMinimalFunctionalityProvision())));
       assertEquals(il1, il2);
     }
 
     @Test
-    public void returnFalseWhenComparedWithNonInitialLevel() {
+    public void notEqualWhenComparedWithNonInitialLevel() {
       final InitialLevel il = new InitialLevel(setOf(make(aMinimalFunctionalityProvision())));
       final Object x = new Object();
       assertNotEquals(il, x);
     }
 
     @Test
-    public void returnFalseWhenFunctionalityProvisionSetsDiffer() {
+    public void notEqualWhenFunctionalityProvisionSetsDiffer() {
       final Functionality f = make(aMinimalFunctionality().withIdentifier("f"));
 
       final Action a = make(aMinimalAction().withFunctionality(f));

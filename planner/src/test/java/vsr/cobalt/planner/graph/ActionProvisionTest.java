@@ -425,21 +425,21 @@ public class ActionProvisionTest {
   public static class Equality {
 
     @Test
-    public void useActionAndPrecursorAndPropertyProvisionsForHashCode() {
+    public void calculateHashCode() {
       final ActionProvision ap = make(aMinimalActionProvision());
       final int hashCode = Objects.hash(ap.getRequestedAction(), ap.getPrecursorAction(), ap.getPropertyProvisions());
       assertEquals(ap.hashCode(), hashCode);
     }
 
     @Test
-    public void returnFalseWhenComparedWithNonActionProvision() {
+    public void notEqualWhenComparedWithNonActionProvision() {
       final ActionProvision ap = make(aMinimalActionProvision());
       final Object x = new Object();
       assertNotEquals(ap, x);
     }
 
     @Test
-    public void returnFalseWhenRequestedActionDiffers() {
+    public void notEqualWhenRequestedActionDiffers() {
       final Property p = make(aMinimalProperty().withName("p"));
 
       final Action precursor = make(aMinimalAction()
@@ -461,7 +461,7 @@ public class ActionProvisionTest {
     }
 
     @Test
-    public void returnFalseWhenPrecursorActionDiffers() {
+    public void notEqualWhenPrecursorActionDiffers() {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
@@ -484,7 +484,7 @@ public class ActionProvisionTest {
     }
 
     @Test
-    public void returnFalseWhenPropertyProvisionsDiffer() throws Exception {
+    public void notEqualWhenPropertyProvisionsDiffer() throws Exception {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
@@ -522,7 +522,7 @@ public class ActionProvisionTest {
     }
 
     @Test
-    public void returnTrueWhenEqual() {
+    public void equal() {
       final ActionProvision ap1 = make(aMinimalActionProvision());
       final ActionProvision ap2 = make(aMinimalActionProvision());
       assertEquals(ap1, ap2);

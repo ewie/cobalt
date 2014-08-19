@@ -22,40 +22,35 @@ import static vsr.cobalt.testing.Utilities.make;
 public class InteractionTest {
 
   @Test
-  public static class Equals {
+  public static class Equality {
 
     @Test
-    public void returnFalseWhenNotInstanceOfSameClass() {
+    public void calculateHashCode() {
+      final String instruction = "foo";
+      final Interaction interaction = make(anInteraction()
+          .withInstruction(instruction));
+      assertEquals(interaction.hashCode(), Objects.hash(instruction));
+    }
+
+    @Test
+    public void notEqualWhenNotInstanceOfSameClass() {
       final Interaction i = make(aMinimalInteraction());
       final Object x = new Object();
       assertFalse(i.equals(x));
     }
 
     @Test
-    public void returnFalseWhenInstructionTextDiffers() {
+    public void notEqualFalseWhenInstructionTextDiffers() {
       final Interaction i1 = make(anInteraction().withInstruction("i1"));
       final Interaction i2 = make(anInteraction().withInstruction("i2"));
       assertFalse(i1.equals(i2));
     }
 
     @Test
-    public void returnTrueWhenEqual() {
+    public void equal() {
       final Interaction i1 = make(aMinimalInteraction());
       final Interaction i2 = make(aMinimalInteraction());
       assertTrue(i1.equals(i2));
-    }
-
-  }
-
-  @Test
-  public static class HashCode {
-
-    @Test
-    public void useInteractionText() {
-      final String instruction = "foo";
-      final Interaction interaction = make(anInteraction()
-          .withInstruction(instruction));
-      assertEquals(interaction.hashCode(), Objects.hash(instruction));
     }
 
   }
