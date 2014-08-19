@@ -23,6 +23,7 @@ import org.eclipse.jetty.http.HttpMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vsr.cobalt.models.Functionality;
+import vsr.cobalt.planner.PlanningProblem;
 import vsr.cobalt.service.json.RefJsonWriter;
 import vsr.cobalt.service.planner.JsonPlannerRequestDeserializer;
 import vsr.cobalt.service.planner.JsonPlannerResponseSerializer;
@@ -98,12 +99,14 @@ public class PlannerServlet extends HttpServlet {
     final StringWriter sw = new StringWriter();
     final PrintWriter pw = new PrintWriter(sw);
 
-    for (final Functionality f : request.getGoalMashup().getFunctionalities()) {
+    final PlanningProblem p = request.getPlanningProblem();
+
+    for (final Functionality f : p.getGoalMashup().getFunctionalities()) {
       pw.printf("    functionality: %s", f.getIdentifier()).println();
     }
 
     logger.info("planner request:\n  minDepth: {}\n  maxDepth: {}\n  mashup:\n{}",
-        request.getMinDepth(), request.getMaxDepth(), sw);
+        p.getMinDepth(), p.getMaxDepth(), sw);
   }
 
 }

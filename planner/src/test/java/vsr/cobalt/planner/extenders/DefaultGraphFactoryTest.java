@@ -5,13 +5,14 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner;
+package vsr.cobalt.planner.extenders;
 
 import java.util.Set;
 
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Mashup;
+import vsr.cobalt.planner.PlanningException;
 import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
@@ -32,7 +33,7 @@ import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 
 @Test
-public class GraphFactoryTest {
+public class DefaultGraphFactoryTest {
 
   @Test
   public static class CreateGraph {
@@ -42,7 +43,7 @@ public class GraphFactoryTest {
     public void rejectWhenNoFunctionalityCanBeRealized() throws Exception {
       final Mashup m = make(aMinimalMashup());
 
-      final GraphFactory gf = new GraphFactory(functionalityProvider(m));
+      final DefaultGraphFactory gf = new DefaultGraphFactory(functionalityProvider(m));
       gf.createGraph(m);
     }
 
@@ -59,7 +60,7 @@ public class GraphFactoryTest {
           .withOffer(f1)
           .withProvidingAction(aMinimalAction().withFunctionality(f1)));
 
-      final GraphFactory gf = new GraphFactory(functionalityProvider(m, setOf(fp)));
+      final DefaultGraphFactory gf = new DefaultGraphFactory(functionalityProvider(m, setOf(fp)));
       gf.createGraph(m);
     }
 
@@ -73,7 +74,7 @@ public class GraphFactoryTest {
           .withOffer(f)
           .withProvidingAction(aMinimalAction().withFunctionality(f)));
 
-      final GraphFactory gf = new GraphFactory(functionalityProvider(m, setOf(fp)));
+      final DefaultGraphFactory gf = new DefaultGraphFactory(functionalityProvider(m, setOf(fp)));
       final Graph ig = gf.createGraph(m);
 
       final InitialLevel il = make(anInitialLevel().withProvision(fp));

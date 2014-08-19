@@ -10,14 +10,15 @@ package vsr.cobalt.service.planner;
 import vsr.cobalt.models.Repository;
 import vsr.cobalt.planner.GraphExtender;
 import vsr.cobalt.planner.GraphFactory;
-import vsr.cobalt.planner.PathWalkingCyclicDependencyDetector;
 import vsr.cobalt.planner.PlanCollector;
 import vsr.cobalt.planner.PlanExtractor;
-import vsr.cobalt.planner.Planner;
 import vsr.cobalt.planner.PlanningException;
+import vsr.cobalt.planner.PlanningTask;
 import vsr.cobalt.planner.collectors.RatingPlanCollector;
+import vsr.cobalt.planner.extenders.DefaultGraphExtender;
+import vsr.cobalt.planner.extenders.DefaultGraphFactory;
+import vsr.cobalt.planner.extenders.PathWalkingCyclicDependencyDetector;
 import vsr.cobalt.planner.extractors.BackwardChainingPlanExtractor;
-import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.providers.BasicPrecursorActionProvider;
 import vsr.cobalt.planner.providers.ComposingExtendedPrecursorActionProvider;
 import vsr.cobalt.planner.providers.ComposingFunctionalityProvisionProvider;
@@ -38,16 +39,8 @@ public class PlannerJob {
   }
 
   public PlannerResponse run() {
-    final Graph graph;
-
-    try {
-      graph = createGraph();
-    } catch (final PlanningException ex) {
-      return new PlannerFailure(ex);
-    }
-
     final RatingPlanCollector plans = createPlanCollector();
-    final Planner planner = createPlanner(graph, plans);
+    final PlanningTask planner = createPlanningTask(plans);
 
     while (!planner.isDone()) {
       try {
@@ -60,23 +53,19 @@ public class PlannerJob {
     return new PlannerSuccess(plans);
   }
 
-  private Graph createGraph() throws PlanningException {
-    final GraphFactory f = new GraphFactory(new ComposingFunctionalityProvisionProvider(repository));
-    return f.createGraph(request.getGoalMashup());
-  }
-
   private RatingPlanCollector createPlanCollector() {
     return new RatingPlanCollector(new DefaultPlanRater(repository));
   }
 
-  private Planner createPlanner(final Graph graph, final PlanCollector plans) {
-    final GraphExtender gx = new GraphExtender(
+  private PlanningTask createPlanningTask(final PlanCollector collector) {
+    final GraphFactory gf = new DefaultGraphFactory(new ComposingFunctionalityProvisionProvider(repository));
+    final GraphExtender gx = new DefaultGraphExtender(
         new ComposingExtendedPrecursorActionProvider(repository,
             new BasicPrecursorActionProvider(repository)),
         new ComposingPropertyProvisionProvider(repository),
         new PathWalkingCyclicDependencyDetector());
     final PlanExtractor px = new BackwardChainingPlanExtractor();
-    return new Planner(graph, gx, px, plans, request.getMinDepth(), request.getMaxDepth());
+    return new PlanningTask(request.getPlanningProblem(), gf, gx, px, collector);
   }
 
 }

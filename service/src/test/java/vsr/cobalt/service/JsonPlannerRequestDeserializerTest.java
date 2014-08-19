@@ -22,6 +22,7 @@ import javax.json.JsonStructure;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Mashup;
+import vsr.cobalt.planner.PlanningProblem;
 import vsr.cobalt.service.planner.JsonPlannerRequestDeserializer;
 import vsr.cobalt.service.planner.PlannerRequest;
 
@@ -122,9 +123,7 @@ public class JsonPlannerRequestDeserializerTest {
       final PlannerRequest r = d.deserialize(obj);
       final Set<Functionality> ts = setOf(make(aFunctionality()
           .withIdentifier(URI.create("urn:example:fn:bar"))));
-      assertEquals(r.getGoalMashup(), new Mashup(ts));
-      assertEquals(r.getMinDepth(), 2);
-      assertEquals(r.getMaxDepth(), 3);
+      assertEquals(r.getPlanningProblem(), new PlanningProblem(new Mashup(ts), 2, 3));
     }
 
     @Test
@@ -134,7 +133,7 @@ public class JsonPlannerRequestDeserializerTest {
       final PlannerRequest r = d.deserialize(obj);
       final Set<Functionality> ts = setOf(make(aFunctionality()
           .withIdentifier(URI.create("urn:example:fn:foo"))));
-      assertEquals(r.getGoalMashup(), new Mashup(ts));
+      assertEquals(r.getPlanningProblem().getGoalMashup(), new Mashup(ts));
     }
 
     @Test
@@ -142,7 +141,7 @@ public class JsonPlannerRequestDeserializerTest {
       final JsonPlannerRequestDeserializer d = new JsonPlannerRequestDeserializer();
       final JsonStructure obj = load("request/without-depth.json");
       final PlannerRequest r = d.deserialize(obj);
-      assertEquals(r.getMinDepth(), 1);
+      assertEquals(r.getPlanningProblem().getMinDepth(), 1);
     }
 
     @Test
@@ -150,7 +149,7 @@ public class JsonPlannerRequestDeserializerTest {
       final JsonPlannerRequestDeserializer d = new JsonPlannerRequestDeserializer();
       final JsonStructure obj = load("request/without-depth.json");
       final PlannerRequest r = d.deserialize(obj);
-      assertEquals(r.getMaxDepth(), Integer.MAX_VALUE);
+      assertEquals(r.getPlanningProblem().getMaxDepth(), Integer.MAX_VALUE);
     }
 
   }

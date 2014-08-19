@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner;
+package vsr.cobalt.planner.extenders;
 
 import vsr.cobalt.models.Action;
 import vsr.cobalt.planner.graph.Graph;

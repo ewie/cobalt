@@ -5,13 +5,14 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner;
+package vsr.cobalt.planner.extenders;
 
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.Widget;
+import vsr.cobalt.planner.PlanningException;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.PropertyProvision;
@@ -42,7 +43,7 @@ import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
 
 @Test
-public class GraphExtenderTest {
+public class DefaultGraphExtenderTest {
 
   private static final PrecursorActionProvider NO_PRECURSORS = emptyPrecursorActionProvider();
 
@@ -75,7 +76,7 @@ public class GraphExtenderTest {
         expectedExceptionsMessageRegExp = "cannot extend satisfied graph")
     public void rejectSatisfiedGraph() throws Exception {
       final Graph g = make(aMinimalGraph());
-      final GraphExtender gx = new GraphExtender(NO_PRECURSORS, NO_PROPERTIES, NO_CYCLES);
+      final DefaultGraphExtender gx = new DefaultGraphExtender(NO_PRECURSORS, NO_PROPERTIES, NO_CYCLES);
       gx.extendGraph(g);
     }
 
@@ -105,7 +106,7 @@ public class GraphExtenderTest {
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
       when(pap.getPrecursorActionsFor(a2)).thenReturn(emptySet(Action.class));
 
-      final GraphExtender gx = new GraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
+      final DefaultGraphExtender gx = new DefaultGraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
 
       try {
         gx.extendGraph(g);
@@ -136,7 +137,7 @@ public class GraphExtenderTest {
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
       when(pap.getPrecursorActionsFor(a)).thenReturn(emptySet(Action.class));
 
-      final GraphExtender gx = new GraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
+      final DefaultGraphExtender gx = new DefaultGraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
 
       gx.extendGraph(g);
     }
@@ -162,7 +163,7 @@ public class GraphExtenderTest {
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
       when(pap.getPrecursorActionsFor(a)).thenReturn(emptySet(Action.class));
 
-      final GraphExtender gx = new GraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
+      final DefaultGraphExtender gx = new DefaultGraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
 
       gx.extendGraph(g);
     }
@@ -191,7 +192,7 @@ public class GraphExtenderTest {
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
       when(pap.getPrecursorActionsFor(a1)).thenReturn(setOf(a2));
 
-      final GraphExtender gx = new GraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
+      final DefaultGraphExtender gx = new DefaultGraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
       final Graph xg = gx.extendGraph(g);
 
       final ExtensionLevel xl = make(anExtensionLevel()
@@ -236,7 +237,7 @@ public class GraphExtenderTest {
       final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
       when(ppr.getProvisionsFor(setOf(p))).thenReturn(setOf(pp));
 
-      final GraphExtender gx = new GraphExtender(pap, ppr, NO_CYCLES);
+      final DefaultGraphExtender gx = new DefaultGraphExtender(pap, ppr, NO_CYCLES);
       final Graph xg = gx.extendGraph(g);
 
       final ExtensionLevel xl = make(anExtensionLevel()
@@ -288,7 +289,7 @@ public class GraphExtenderTest {
       final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
       when(ppr.getProvisionsFor(setOf(p2))).thenReturn(setOf(pp));
 
-      final GraphExtender gx = new GraphExtender(pap, ppr, NO_CYCLES);
+      final DefaultGraphExtender gx = new DefaultGraphExtender(pap, ppr, NO_CYCLES);
       final Graph xg = gx.extendGraph(g);
 
       final ExtensionLevel xl = make(anExtensionLevel()
@@ -348,7 +349,7 @@ public class GraphExtenderTest {
       final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
       when(ppr.getProvisionsFor(setOf(p1, p2))).thenReturn(setOf(pp1, pp2, pp3));
 
-      final GraphExtender gx = new GraphExtender(pap, ppr, NO_CYCLES);
+      final DefaultGraphExtender gx = new DefaultGraphExtender(pap, ppr, NO_CYCLES);
       final Graph xg = gx.extendGraph(g);
 
       final ExtensionLevel xl = make(anExtensionLevel()
@@ -424,7 +425,7 @@ public class GraphExtenderTest {
       final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
       when(ppr.getProvisionsFor(setOf(p1, p2))).thenReturn(setOf(pp1, pp2, pp3, pp4));
 
-      final GraphExtender gx = new GraphExtender(pap, ppr, NO_CYCLES);
+      final DefaultGraphExtender gx = new DefaultGraphExtender(pap, ppr, NO_CYCLES);
       final Graph xg = gx.extendGraph(g);
 
       final ExtensionLevel xl = make(anExtensionLevel()
@@ -477,7 +478,7 @@ public class GraphExtenderTest {
       when(pap.getPrecursorActionsFor(a1)).thenReturn(emptySet(Action.class));
       when(pap.getPrecursorActionsFor(a2)).thenReturn(setOf(a3));
 
-      final GraphExtender gx = new GraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
+      final DefaultGraphExtender gx = new DefaultGraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
 
       final Graph xg = gx.extendGraph(g);
 
@@ -524,7 +525,7 @@ public class GraphExtenderTest {
       final PrecursorActionProvider pap = mock(PrecursorActionProvider.class);
       when(pap.getPrecursorActionsFor(a1)).thenReturn(setOf(a2, a3));
 
-      final GraphExtender gx = new GraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
+      final DefaultGraphExtender gx = new DefaultGraphExtender(pap, NO_PROPERTIES, NO_CYCLES);
 
       final Graph xg = gx.extendGraph(g);
 
@@ -570,7 +571,7 @@ public class GraphExtenderTest {
       final CyclicDependencyDetector cdd = mock(CyclicDependencyDetector.class);
       when(cdd.createsCyclicDependencyVia(a3, a1, g)).thenReturn(true);
 
-      final GraphExtender gx = new GraphExtender(pap, NO_PROPERTIES, cdd);
+      final DefaultGraphExtender gx = new DefaultGraphExtender(pap, NO_PROPERTIES, cdd);
 
       final Graph xg = gx.extendGraph(g);
 
@@ -631,7 +632,7 @@ public class GraphExtenderTest {
       final CyclicDependencyDetector cdd = mock(CyclicDependencyDetector.class);
       when(cdd.createsCyclicDependencyVia(a2, a1, g)).thenReturn(true);
 
-      final GraphExtender gx = new GraphExtender(pap, ppr, cdd);
+      final DefaultGraphExtender gx = new DefaultGraphExtender(pap, ppr, cdd);
 
       final Graph xg = gx.extendGraph(g);
 
@@ -686,7 +687,7 @@ public class GraphExtenderTest {
       final CyclicDependencyDetector cdd = mock(CyclicDependencyDetector.class);
       when(cdd.createsCyclicDependencyVia(a3, a1, g)).thenReturn(true);
 
-      final GraphExtender gx = new GraphExtender(NO_PRECURSORS, ppr, cdd);
+      final DefaultGraphExtender gx = new DefaultGraphExtender(NO_PRECURSORS, ppr, cdd);
 
       final Graph xg = gx.extendGraph(g);
 
@@ -750,7 +751,7 @@ public class GraphExtenderTest {
       final PropertyProvisionProvider ppr = mock(PropertyProvisionProvider.class);
       when(ppr.getProvisionsFor(setOf(p1, p2))).thenReturn(setOf(pp1, pp2, pp3, pp4));
 
-      final GraphExtender gx = new GraphExtender(NO_PRECURSORS, ppr, NO_CYCLES);
+      final DefaultGraphExtender gx = new DefaultGraphExtender(NO_PRECURSORS, ppr, NO_CYCLES);
 
       final Graph xg = gx.extendGraph(g);
 

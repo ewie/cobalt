@@ -7,106 +7,38 @@
 
 package vsr.cobalt.planner;
 
-import java.util.Iterator;
-
-import vsr.cobalt.planner.graph.Graph;
-
 /**
- * Realizes the planning process as an alternating sequence between graph extension and plan extraction.
+ * A planner is the combined strategy of graph creation, extension, and plan extraction.
  *
  * @author Erik Wienhold
  */
 public class Planner {
 
+  private final GraphFactory factory;
+
   private final GraphExtender extender;
 
   private final PlanExtractor extractor;
 
-  private final PlanCollector collector;
-
-  private final int maxDepth;
-
   /**
-   * The depth the graph should be extended to.
+   * @param factory   a graph factory
+   * @param extender  a graph extender
+   * @param extractor a plan extractor
    */
-  private int targetDepth;
-
-  /**
-   * The graph from the most recent extension.
-   */
-  private Graph graph;
-
-  /**
-   * @param graph     a graph of arbitrary depth
-   * @param extender  extends the graph by one level
-   * @param extractor extract plans from a graph
-   * @param collector a collector of extracted plans
-   * @param minDepth  the minimum depth of extracted plans
-   * @param maxDepth  the maximum depth of extracted plans
-   */
-  public Planner(final Graph graph, final GraphExtender extender, final PlanExtractor extractor,
-                 final PlanCollector collector, final int minDepth, final int maxDepth) {
-    if (minDepth < 1) {
-      throw new IllegalArgumentException("expecting positive minimum depth");
-    }
-    if (minDepth > maxDepth) {
-      throw new IllegalArgumentException("expecting minimum depth to be less than or equal to maximum depth");
-    }
+  public Planner(final GraphFactory factory, final GraphExtender extender, final PlanExtractor extractor) {
+    this.factory = factory;
     this.extender = extender;
     this.extractor = extractor;
-    this.collector = collector;
-    this.maxDepth = maxDepth;
-    this.graph = graph;
-    targetDepth = minDepth;
   }
 
   /**
-   * @return the current graph
-   */
-  public Graph getGraph() {
-    return graph;
-  }
-
-  /**
-   * Check if the planning process is done, i.e. there are no more plans to extract.
+   * Create a planning task using this planner's strategy.
    *
-   * @return true when the planner is done, false otherwise
+   * @param problem   a planning problem
+   * @param collector a plan collector
    */
-  public boolean isDone() {
-    return targetDepth > maxDepth
-        || targetDepth > graph.getDepth() && graph.isSatisfied();
-  }
-
-  /**
-   * Advance in the planning process, i.e. extend the graph and extract plans.
-   *
-   * @throws PlanningException
-   */
-  public void advance() throws PlanningException {
-    evolveGraph();
-    extractPlans();
-  }
-
-  /**
-   * Extract and collect plans from {@link #graph}.
-   */
-  private void extractPlans() {
-    final Iterator<Plan> plans = extractor.extractPlans(graph, targetDepth);
-    while (plans.hasNext()) {
-      collector.collect(plans.next());
-    }
-    targetDepth += 1;
-  }
-
-  /**
-   * Extend {@link #graph} to reach a depth of {@link #targetDepth}.
-   *
-   * @throws PlanningException
-   */
-  private void evolveGraph() throws PlanningException {
-    while (graph.getDepth() < targetDepth && !graph.isSatisfied()) {
-      graph = extender.extendGraph(graph);
-    }
+  public PlanningTask createTask(final PlanningProblem problem, final PlanCollector collector) {
+    return new PlanningTask(problem, factory, extender, extractor, collector);
   }
 
 }
