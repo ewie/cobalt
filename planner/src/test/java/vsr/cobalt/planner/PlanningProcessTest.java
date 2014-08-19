@@ -19,8 +19,8 @@ import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Mashup;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.planner.graph.ExtensionLevel;
-import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
+import vsr.cobalt.planner.graph.Graph;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
@@ -40,16 +40,16 @@ import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
 import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
-import static vsr.cobalt.planner.graph.makers.GraphMaker.aGraph;
-import static vsr.cobalt.planner.graph.makers.GraphMaker.aMinimalGraph;
 import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
+import static vsr.cobalt.planner.graph.makers.GraphMaker.aMinimalGraph;
+import static vsr.cobalt.planner.graph.makers.GraphMaker.aGraph;
 import static vsr.cobalt.testing.Utilities.make;
 
 @Test
-public class PlanningTaskTest {
+public class PlanningProcessTest {
 
   /**
-   * A list of graphs, each being an extension of the previous graph.
+   * A list of planning graphs, each being an extension of its predecessor.
    */
   private static final List<Graph> GRAPHS;
 
@@ -131,7 +131,7 @@ public class PlanningTaskTest {
     public void returnNullWhenNew() {
       final Mashup m = make(aMinimalMashup());
       final PlanningProblem pp = new PlanningProblem(m, 1, 1);
-      final PlanningTask pt = new PlanningTask(pp, (GraphFactory) null, null, null, null);
+      final PlanningProcess pt = new PlanningProcess(null, null, pp);
       assertNull(pt.getGraph());
     }
 
@@ -140,15 +140,13 @@ public class PlanningTaskTest {
       final Mashup m = make(aMinimalMashup());
       final PlanningProblem pp = new PlanningProblem(m, 1, 2);
 
-      final GraphFactory gf = mock(GraphFactory.class);
-      when(gf.createGraph(m)).thenReturn(GRAPHS.get(0));
-
-      final PlanExtractor px = mock(PlanExtractor.class);
-      when(px.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.createGraph(m)).thenReturn(GRAPHS.get(0));
+      when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
 
       final PlanCollector pc = mock(PlanCollector.class);
 
-      final PlanningTask pt = new PlanningTask(pp, gf, null, px, pc);
+      final PlanningProcess pt = new PlanningProcess(mp, pc, pp);
       pt.advance();
 
       assertSame(pt.getGraph(), GRAPHS.get(0));
@@ -159,18 +157,14 @@ public class PlanningTaskTest {
       final Mashup m = make(aMinimalMashup());
       final PlanningProblem pp = new PlanningProblem(m, 1, 2);
 
-      final GraphFactory gf = mock(GraphFactory.class);
-      when(gf.createGraph(m)).thenReturn(GRAPHS.get(0));
-
-      final GraphExtender gx = mock(GraphExtender.class);
-      when(gx.extendGraph(GRAPHS.get(0))).thenReturn(GRAPHS.get(1));
-
-      final PlanExtractor px = mock(PlanExtractor.class);
-      when(px.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.createGraph(m)).thenReturn(GRAPHS.get(0));
+      when(mp.extendGraph(GRAPHS.get(0))).thenReturn(GRAPHS.get(1));
+      when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
 
       final PlanCollector pc = mock(PlanCollector.class);
 
-      final PlanningTask pt = new PlanningTask(pp, gf, gx, px, pc);
+      final PlanningProcess pt = new PlanningProcess(mp, pc, pp);
       pt.advance();
       pt.advance();
 
@@ -186,28 +180,21 @@ public class PlanningTaskTest {
     public void returnFalseWhenNew() {
       final Mashup m = make(aMinimalMashup());
       final PlanningProblem pp = new PlanningProblem(m, 1, 1);
-      final PlanningTask pt = new PlanningTask(pp, (GraphFactory) null, null, null, null);
+      final PlanningProcess pt = new PlanningProcess(null, null, pp);
       assertFalse(pt.isDone());
     }
 
     @Test
     public void returnFalseWhenPlansOfMaxDepthHaveNotYetBeenSearched() throws Exception {
       final Mashup m = make(aMinimalMashup());
-      final PlanningProblem pp = new PlanningProblem(m, 1, 2);
+      final PlanningProblem pp = new PlanningProblem(m, 1, 1);
 
-      final GraphFactory gf = mock(GraphFactory.class);
-      when(gf.createGraph(m)).thenReturn(GRAPHS.get(0));
-
-      final GraphExtender gx = mock(GraphExtender.class);
-      when(gx.extendGraph(GRAPHS.get(0))).thenReturn(GRAPHS.get(1));
-
-      final PlanExtractor px = mock(PlanExtractor.class);
-      when(px.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
 
       final PlanCollector pc = mock(PlanCollector.class);
 
-      final PlanningTask pt = new PlanningTask(pp, gf, gx, px, pc);
-      pt.advance();
+      final PlanningProcess pt = new PlanningProcess(mp, pc, pp, GRAPHS.get(0));
 
       assertFalse(pt.isDone());
     }
@@ -217,18 +204,14 @@ public class PlanningTaskTest {
       final Mashup m = make(aMinimalMashup());
       final PlanningProblem pp = new PlanningProblem(m, 1, 1);
 
-      final GraphFactory gf = mock(GraphFactory.class);
-      when(gf.createGraph(m)).thenReturn(GRAPHS.get(0));
-
-      final GraphExtender gx = mock(GraphExtender.class);
-      when(gx.extendGraph(GRAPHS.get(0))).thenReturn(GRAPHS.get(1));
-
-      final PlanExtractor px = mock(PlanExtractor.class);
-      when(px.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.createGraph(m)).thenReturn(GRAPHS.get(0));
+      when(mp.extendGraph(GRAPHS.get(0))).thenReturn(GRAPHS.get(1));
+      when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
 
       final PlanCollector pc = mock(PlanCollector.class);
 
-      final PlanningTask pt = new PlanningTask(pp, gf, gx, px, pc);
+      final PlanningProcess pt = new PlanningProcess(mp, pc, pp);
       pt.advance();
 
       assertTrue(pt.isDone());
@@ -241,15 +224,13 @@ public class PlanningTaskTest {
 
       final Graph g = make(aMinimalGraph());
 
-      final GraphFactory gf = mock(GraphFactory.class);
-      when(gf.createGraph(m)).thenReturn(g);
-
-      final PlanExtractor px = mock(PlanExtractor.class);
-      when(px.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.createGraph(m)).thenReturn(g);
+      when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
 
       final PlanCollector pc = mock(PlanCollector.class);
 
-      final PlanningTask pt = new PlanningTask(pp, gf, null, px, pc);
+      final PlanningProcess pt = new PlanningProcess(mp, pc, pp);
       pt.advance();
 
       assertTrue(pt.isDone());
@@ -261,24 +242,22 @@ public class PlanningTaskTest {
   public static class Advance {
 
     @Test
-    public void createGraphOnFirstCallWhenFactoryIsGiven() throws Exception {
+    public void createGraphOnFirstCallWhenNull() throws Exception {
       final Mashup m = make(aMinimalMashup());
       final PlanningProblem pp = new PlanningProblem(m, 1, 1);
 
       final Graph g = make(aMinimalGraph());
 
-      final GraphFactory gf = mock(GraphFactory.class);
-      when(gf.createGraph(m)).thenReturn(g);
-
-      final PlanExtractor px = mock(PlanExtractor.class);
-      when(px.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.createGraph(m)).thenReturn(g);
+      when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
 
       final PlanCollector pc = mock(PlanCollector.class);
 
-      final PlanningTask pt = new PlanningTask(pp, gf, null, px, pc);
+      final PlanningProcess pt = new PlanningProcess(mp, pc, pp);
       pt.advance();
 
-      verify(gf).createGraph(m);
+      assertSame(pt.getGraph(), g);
     }
 
     @Test
@@ -286,20 +265,17 @@ public class PlanningTaskTest {
       final Mashup m = make(aMinimalMashup());
       final PlanningProblem pp = new PlanningProblem(m, 3, 3);
 
-      final GraphExtender gx = mock(GraphExtender.class);
-      when(gx.extendGraph(GRAPHS.get(0))).thenReturn(GRAPHS.get(1));
-      when(gx.extendGraph(GRAPHS.get(1))).thenReturn(GRAPHS.get(2));
-
-      final PlanExtractor px = mock(PlanExtractor.class);
-      when(px.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.extendGraph(GRAPHS.get(0))).thenReturn(GRAPHS.get(1));
+      when(mp.extendGraph(GRAPHS.get(1))).thenReturn(GRAPHS.get(2));
+      when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
 
       final PlanCollector pc = mock(PlanCollector.class);
 
-      final PlanningTask pt = new PlanningTask(pp, GRAPHS.get(0), gx, px, pc);
+      final PlanningProcess pt = new PlanningProcess(mp, pc, pp, GRAPHS.get(0));
       pt.advance();
 
-      verify(gx).extendGraph(GRAPHS.get(0));
-      verify(gx).extendGraph(GRAPHS.get(1));
+      assertSame(pt.getGraph(), GRAPHS.get(2));
     }
 
     @Test
@@ -307,24 +283,21 @@ public class PlanningTaskTest {
       final Mashup m = make(aMinimalMashup());
       final PlanningProblem pp = new PlanningProblem(m, 1, 3);
 
-      final PlanExtractor px = mock(PlanExtractor.class);
-      when(px.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
 
       final PlanCollector pc = mock(PlanCollector.class);
 
-      final PlanningTask pt = new PlanningTask(pp, GRAPHS.get(2), null, px, pc);
+      final PlanningProcess pt = new PlanningProcess(mp, pc, pp, GRAPHS.get(2));
       pt.advance();
 
-      verify(px).extractPlans(GRAPHS.get(2), 1);
+      verify(mp).extractPlans(GRAPHS.get(2), 1);
     }
 
     @Test
     public void collectExtractedPlans() throws Exception {
       final Mashup m = make(aMinimalMashup());
       final PlanningProblem pp = new PlanningProblem(m, 1, 3);
-
-      final GraphExtender gx = mock(GraphExtender.class);
-      when(gx.extendGraph(GRAPHS.get(0))).thenReturn(GRAPHS.get(1));
 
       // not the actual plans to be found in the planning graph
       final Graph g1 = minimalGraph(make(aMinimalFunctionality().withIdentifier("f1")));
@@ -335,12 +308,13 @@ public class PlanningTaskTest {
 
       final Iterator<Plan> it = asList(p1, p2).iterator();
 
-      final PlanExtractor px = mock(PlanExtractor.class);
-      when(px.extractPlans(GRAPHS.get(0), 1)).thenReturn(it);
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.extendGraph(GRAPHS.get(0))).thenReturn(GRAPHS.get(1));
+      when(mp.extractPlans(GRAPHS.get(0), 1)).thenReturn(it);
 
       final PlanCollector pc = mock(PlanCollector.class);
 
-      final PlanningTask pt = new PlanningTask(pp, GRAPHS.get(0), gx, px, pc);
+      final PlanningProcess pt = new PlanningProcess(mp, pc, pp, GRAPHS.get(0));
       pt.advance();
 
       verify(pc).collect(p1);
@@ -354,15 +328,13 @@ public class PlanningTaskTest {
 
       final Graph g = make(aMinimalGraph());
 
-      final GraphExtender gx = mock(GraphExtender.class);
-      when(gx.extendGraph(g)).thenThrow(new PlanningException());
-
-      final PlanExtractor px = mock(PlanExtractor.class);
-      when(px.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.extendGraph(g)).thenThrow(new PlanningException());
+      when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
 
       final PlanCollector pc = mock(PlanCollector.class);
 
-      final PlanningTask pt = new PlanningTask(pp, g, gx, px, pc);
+      final PlanningProcess pt = new PlanningProcess(mp, pc, pp, g);
       pt.advance();
 
       assertSame(pt.getGraph(), g);

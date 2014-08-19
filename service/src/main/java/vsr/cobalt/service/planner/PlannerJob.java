@@ -8,12 +8,13 @@
 package vsr.cobalt.service.planner;
 
 import vsr.cobalt.models.Repository;
+import vsr.cobalt.planner.DefaultMashupPlanner;
 import vsr.cobalt.planner.GraphExtender;
 import vsr.cobalt.planner.GraphFactory;
 import vsr.cobalt.planner.PlanCollector;
 import vsr.cobalt.planner.PlanExtractor;
 import vsr.cobalt.planner.PlanningException;
-import vsr.cobalt.planner.PlanningTask;
+import vsr.cobalt.planner.PlanningProcess;
 import vsr.cobalt.planner.collectors.RatingPlanCollector;
 import vsr.cobalt.planner.extenders.DefaultGraphExtender;
 import vsr.cobalt.planner.extenders.DefaultGraphFactory;
@@ -40,11 +41,11 @@ public class PlannerJob {
 
   public PlannerResponse run() {
     final RatingPlanCollector plans = createPlanCollector();
-    final PlanningTask planner = createPlanningTask(plans);
+    final PlanningProcess process = createPlanningTask(createPlanner(), plans);
 
-    while (!planner.isDone()) {
+    while (!process.isDone()) {
       try {
-        planner.advance();
+        process.advance();
       } catch (final PlanningException ex) {
         return new PlannerFailure(ex);
       }
@@ -57,15 +58,28 @@ public class PlannerJob {
     return new RatingPlanCollector(new DefaultPlanRater(repository));
   }
 
-  private PlanningTask createPlanningTask(final PlanCollector collector) {
-    final GraphFactory gf = new DefaultGraphFactory(new ComposingFunctionalityProvisionProvider(repository));
-    final GraphExtender gx = new DefaultGraphExtender(
+  private PlanningProcess createPlanningTask(final DefaultMashupPlanner planner, final PlanCollector collector) {
+    return planner.createPlanningProcess(request.getPlanningProblem(), collector);
+  }
+
+  private DefaultMashupPlanner createPlanner() {
+    return new DefaultMashupPlanner(createGraphFactory(), createGraphExtender(), createPlanExtractor());
+  }
+
+  private GraphFactory createGraphFactory() {
+    return new DefaultGraphFactory(new ComposingFunctionalityProvisionProvider(repository));
+  }
+
+  private GraphExtender createGraphExtender() {
+    return new DefaultGraphExtender(
         new ComposingExtendedPrecursorActionProvider(repository,
             new BasicPrecursorActionProvider(repository)),
         new ComposingPropertyProvisionProvider(repository),
         new PathWalkingCyclicDependencyDetector());
-    final PlanExtractor px = new BackwardChainingPlanExtractor();
-    return new PlanningTask(request.getPlanningProblem(), gf, gx, px, collector);
+  }
+
+  private PlanExtractor createPlanExtractor() {
+    return new BackwardChainingPlanExtractor();
   }
 
 }
