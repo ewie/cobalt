@@ -19,11 +19,11 @@ import vsr.cobalt.planner.collectors.RatingPlanCollector;
 import vsr.cobalt.planner.extenders.DefaultGraphExtender;
 import vsr.cobalt.planner.extenders.DefaultGraphFactory;
 import vsr.cobalt.planner.extenders.PathWalkingCyclicDependencyDetector;
+import vsr.cobalt.planner.extenders.providers.BasicPrecursorActionProvider;
+import vsr.cobalt.planner.extenders.providers.ComposingExtendedPrecursorActionProvider;
+import vsr.cobalt.planner.extenders.providers.ComposingFunctionalityProvisionProvider;
+import vsr.cobalt.planner.extenders.providers.ComposingPropertyProvisionProvider;
 import vsr.cobalt.planner.extractors.BackwardChainingPlanExtractor;
-import vsr.cobalt.planner.providers.BasicPrecursorActionProvider;
-import vsr.cobalt.planner.providers.ComposingExtendedPrecursorActionProvider;
-import vsr.cobalt.planner.providers.ComposingFunctionalityProvisionProvider;
-import vsr.cobalt.planner.providers.ComposingPropertyProvisionProvider;
 
 /**
  * @author Erik Wienhold

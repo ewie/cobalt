@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.planner.providers;
+package vsr.cobalt.planner.extenders.providers;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

@@ -14,10 +14,10 @@ import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Mashup;
 import vsr.cobalt.planner.GraphFactory;
 import vsr.cobalt.planner.PlanningException;
+import vsr.cobalt.planner.extenders.providers.FunctionalityProvisionProvider;
 import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
-import vsr.cobalt.planner.providers.FunctionalityProvisionProvider;
 
 /**
  * The default graph factory creates an initial graph from a mashup description by discovering and selecting actions

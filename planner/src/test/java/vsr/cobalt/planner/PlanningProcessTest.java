@@ -19,8 +19,8 @@ import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Mashup;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.planner.graph.ExtensionLevel;
-import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.Graph;
+import vsr.cobalt.planner.graph.InitialLevel;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
@@ -40,9 +40,9 @@ import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
 import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
-import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
-import static vsr.cobalt.planner.graph.makers.GraphMaker.aMinimalGraph;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aGraph;
+import static vsr.cobalt.planner.graph.makers.GraphMaker.aMinimalGraph;
+import static vsr.cobalt.planner.graph.makers.InitialLevelMaker.anInitialLevel;
 import static vsr.cobalt.testing.Utilities.make;
 
 @Test

@@ -8,4 +8,4 @@
 /**
  * @author Erik Wienhold
  */
-package vsr.cobalt.planner.providers;
+package vsr.cobalt.planner.extenders.providers;

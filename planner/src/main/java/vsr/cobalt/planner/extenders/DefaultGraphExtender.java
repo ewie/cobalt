@@ -18,12 +18,12 @@ import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.planner.GraphExtender;
 import vsr.cobalt.planner.PlanningException;
+import vsr.cobalt.planner.extenders.providers.PrecursorActionProvider;
+import vsr.cobalt.planner.extenders.providers.PropertyProvisionProvider;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.planner.providers.PrecursorActionProvider;
-import vsr.cobalt.planner.providers.PropertyProvisionProvider;
 import vsr.cobalt.utils.ProductSet;
 
 /**
