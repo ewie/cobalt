@@ -31,6 +31,7 @@ public class PlanningProcess {
 
   /**
    * The plan depth for the next planning step.
+   * May overflow when {@link PlanningProblem#MAX_DEPTH} is reached.
    */
   private int targetDepth;
 
@@ -94,13 +95,6 @@ public class PlanningProcess {
   }
 
   /**
-   * @return the target depth of the next call to {@link #advance()}
-   */
-  public int getTargetDepth() {
-    return targetDepth;
-  }
-
-  /**
    * Check if the planning process is done, i.e. there are no more plans to extract.
    *
    * @return true when the planner is done, false otherwise
@@ -113,17 +107,26 @@ public class PlanningProcess {
   /**
    * Advance in the planning process, i.e. create/extend the graph and extract plans.
    *
-   * @throws PlanningException
+   * @throws PlanningException when the graph cannot be created or extended or the maximal plan depth is exceeded
    */
   public void advance() throws PlanningException {
+    // The max depth is exceeded when target depth overflowed. Also check if the target depth exceeds max depth by
+    // value, in case max depth is not constrained by data type limitations.
+    if (targetDepth < 0 || targetDepth > PlanningProblem.MAX_DEPTH) {
+      throw new PlanningException("maximal plan depth exceeded");
+    }
+
     evolveGraph();
     extractPlans();
+
+    // increase target depth for next graph extension
+    targetDepth += 1;
   }
 
   /**
    * Extend {@link #graph} to reach a depth of {@link #targetDepth}.
    *
-   * @throws PlanningException
+   * @throws PlanningException when the graph cannot be created or extended
    */
   private void evolveGraph() throws PlanningException {
     if (graph == null) {
@@ -142,8 +145,6 @@ public class PlanningProcess {
     while (plans.hasNext()) {
       collector.collect(plans.next());
     }
-    // increase target depth for next graph extension
-    targetDepth += 1;
   }
 
   /**
