@@ -26,6 +26,7 @@ import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertFalse;
@@ -200,13 +201,28 @@ public class PlanningProcessTest {
     }
 
     @Test
+    public void returnFalseWhenGraphIsSatisfiedBeforeMaxDepthIsReached() throws Exception {
+      final Mashup m = make(aMinimalMashup());
+      final PlanningProblem pp = new PlanningProblem(m, 1, 2);
+
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
+
+      final PlanCollector pc = mock(PlanCollector.class);
+
+      final PlanningProcess pt = new PlanningProcess(mp, pc, pp, make(aMinimalGraph()));
+      pt.advance();
+
+      assertTrue(pt.isDone());
+    }
+
+    @Test
     public void returnTrueWhenPlansOfMaxDepthHaveBeenSearched() throws Exception {
       final Mashup m = make(aMinimalMashup());
       final PlanningProblem pp = new PlanningProblem(m, 1, 1);
 
       final MashupPlanner mp = mock(MashupPlanner.class);
       when(mp.createGraph(m)).thenReturn(GRAPHS.get(0));
-      when(mp.extendGraph(GRAPHS.get(0))).thenReturn(GRAPHS.get(1));
       when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
 
       final PlanCollector pc = mock(PlanCollector.class);
@@ -218,17 +234,19 @@ public class PlanningProcessTest {
     }
 
     @Test
-    public void returnFalseWhenGraphIsSatisfiedBeforeMaxDepthIsReached() throws Exception {
+    public void returnTrueWhenPlanCollectorRequestedStop() throws Exception {
       final Mashup m = make(aMinimalMashup());
       final PlanningProblem pp = new PlanningProblem(m, 1, 2);
 
-      final Graph g = make(aMinimalGraph());
+      // not the actual plan to be found in the planning graph
+      final Plan p = new Plan(minimalGraph(make(aMinimalFunctionality().withIdentifier("f2"))));
 
       final MashupPlanner mp = mock(MashupPlanner.class);
-      when(mp.createGraph(m)).thenReturn(g);
-      when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
+      when(mp.createGraph(m)).thenReturn(GRAPHS.get(0));
+      when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.forArray(p));
 
       final PlanCollector pc = mock(PlanCollector.class);
+      when(pc.collect(any(Plan.class))).thenReturn(PlanCollector.Result.STOP);
 
       final PlanningProcess pt = new PlanningProcess(mp, pc, pp);
       pt.advance();
@@ -241,15 +259,31 @@ public class PlanningProcessTest {
   @Test
   public static class Advance {
 
+    @Test(expectedExceptions = PlanningException.class,
+        expectedExceptionsMessageRegExp = "planning process is already done")
+    public void throwWhenDone() throws Exception {
+      final Mashup m = make(aMinimalMashup());
+      final PlanningProblem pp = new PlanningProblem(m, 1, 1);
+
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
+
+      final PlanCollector pc = mock(PlanCollector.class);
+
+      final PlanningProcess pt = new PlanningProcess(mp, pc, pp, GRAPHS.get(0));
+      pt.advance();
+
+      // causes exception
+      pt.advance();
+    }
+
     @Test
     public void createGraphOnFirstCallWhenNull() throws Exception {
       final Mashup m = make(aMinimalMashup());
       final PlanningProblem pp = new PlanningProblem(m, 1, 1);
 
-      final Graph g = make(aMinimalGraph());
-
       final MashupPlanner mp = mock(MashupPlanner.class);
-      when(mp.createGraph(m)).thenReturn(g);
+      when(mp.createGraph(m)).thenReturn(GRAPHS.get(0));
       when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
 
       final PlanCollector pc = mock(PlanCollector.class);
@@ -257,7 +291,7 @@ public class PlanningProcessTest {
       final PlanningProcess pt = new PlanningProcess(mp, pc, pp);
       pt.advance();
 
-      assertSame(pt.getGraph(), g);
+      assertSame(pt.getGraph(), GRAPHS.get(0));
     }
 
     @Test
@@ -276,6 +310,25 @@ public class PlanningProcessTest {
       pt.advance();
 
       assertSame(pt.getGraph(), GRAPHS.get(2));
+    }
+
+    @Test
+    public void doNotExtendSatisfiedGraph() throws Exception {
+      final Mashup m = make(aMinimalMashup());
+      final PlanningProblem pp = new PlanningProblem(m, 1, 2);
+
+      final Graph g = make(aMinimalGraph());
+
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.extendGraph(g)).thenThrow(new PlanningException());
+      when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
+
+      final PlanCollector pc = mock(PlanCollector.class);
+
+      final PlanningProcess pt = new PlanningProcess(mp, pc, pp, g);
+      pt.advance();
+
+      assertSame(pt.getGraph(), g);
     }
 
     @Test
@@ -300,19 +353,14 @@ public class PlanningProcessTest {
       final PlanningProblem pp = new PlanningProblem(m, 1, 3);
 
       // not the actual plans to be found in the planning graph
-      final Graph g1 = minimalGraph(make(aMinimalFunctionality().withIdentifier("f1")));
-      final Graph g2 = minimalGraph(make(aMinimalFunctionality().withIdentifier("f2")));
-
-      final Plan p1 = new Plan(g1);
-      final Plan p2 = new Plan(g2);
-
-      final Iterator<Plan> it = asList(p1, p2).iterator();
+      final Plan p1 = new Plan(minimalGraph(make(aMinimalFunctionality().withIdentifier("f1"))));
+      final Plan p2 = new Plan(minimalGraph(make(aMinimalFunctionality().withIdentifier("f2"))));
 
       final MashupPlanner mp = mock(MashupPlanner.class);
-      when(mp.extendGraph(GRAPHS.get(0))).thenReturn(GRAPHS.get(1));
-      when(mp.extractPlans(GRAPHS.get(0), 1)).thenReturn(it);
+      when(mp.extractPlans(GRAPHS.get(0), 1)).thenReturn(Iterators.forArray(p1, p2));
 
       final PlanCollector pc = mock(PlanCollector.class);
+      when(pc.collect(any(Plan.class))).thenReturn(PlanCollector.Result.CONTINUE);
 
       final PlanningProcess pt = new PlanningProcess(mp, pc, pp, GRAPHS.get(0));
       pt.advance();
@@ -322,22 +370,54 @@ public class PlanningProcessTest {
     }
 
     @Test
-    public void doNotExtendSatisfiedGraph() throws Exception {
+    public void skipLevelWhenPlanCollectorRequestsSkip() throws Exception {
       final Mashup m = make(aMinimalMashup());
-      final PlanningProblem pp = new PlanningProblem(m, 1, 2);
+      final PlanningProblem pp = new PlanningProblem(m, 1, 3);
 
-      final Graph g = make(aMinimalGraph());
+      // not the actual plans to be found in the planning graph
+      final Plan p1 = new Plan(minimalGraph(make(aMinimalFunctionality().withIdentifier("f1"))));
+      final Plan p2 = new Plan(minimalGraph(make(aMinimalFunctionality().withIdentifier("f2"))));
 
       final MashupPlanner mp = mock(MashupPlanner.class);
-      when(mp.extendGraph(g)).thenThrow(new PlanningException());
-      when(mp.extractPlans(any(Graph.class), anyInt())).thenReturn(Iterators.<Plan>emptyIterator());
+      when(mp.extendGraph(GRAPHS.get(0))).thenReturn(GRAPHS.get(1));
+      when(mp.extractPlans(GRAPHS.get(0), 1)).thenReturn(Iterators.forArray(p1));
+      when(mp.extractPlans(GRAPHS.get(1), 2)).thenReturn(Iterators.<Plan>emptyIterator());
 
       final PlanCollector pc = mock(PlanCollector.class);
+      when(pc.collect(p1)).thenReturn(PlanCollector.Result.SKIP_LEVEL);
 
-      final PlanningProcess pt = new PlanningProcess(mp, pc, pp, g);
+      final PlanningProcess pt = new PlanningProcess(mp, pc, pp, GRAPHS.get(0));
       pt.advance();
 
-      assertSame(pt.getGraph(), g);
+      verify(pc, never()).collect(p2);
+
+      pt.advance();
+
+      assertSame(pt.getGraph(), GRAPHS.get(1));
+    }
+
+    @Test
+    public void skipLevelWhenPlanCollectorRequestsStop() throws Exception {
+      final Mashup m = make(aMinimalMashup());
+      final PlanningProblem pp = new PlanningProblem(m, 1, 3);
+
+      // not the actual plans to be found in the planning graph
+      final Plan p1 = new Plan(minimalGraph(make(aMinimalFunctionality().withIdentifier("f1"))));
+      final Plan p2 = new Plan(minimalGraph(make(aMinimalFunctionality().withIdentifier("f2"))));
+
+      final Iterator<Plan> it = asList(p1, p2).iterator();
+
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.extractPlans(GRAPHS.get(0), 1)).thenReturn(it);
+      when(mp.extractPlans(GRAPHS.get(1), 2)).thenReturn(Iterators.<Plan>emptyIterator());
+
+      final PlanCollector pc = mock(PlanCollector.class);
+      when(pc.collect(p1)).thenReturn(PlanCollector.Result.STOP);
+
+      final PlanningProcess pt = new PlanningProcess(mp, pc, pp, GRAPHS.get(0));
+      pt.advance();
+
+      verify(pc, never()).collect(p2);
     }
 
   }

@@ -9,10 +9,12 @@ package vsr.cobalt.planner.collectors;
 
 import org.testng.annotations.Test;
 import vsr.cobalt.planner.Plan;
+import vsr.cobalt.planner.PlanCollector;
 import vsr.cobalt.planner.rating.PlanRater;
 import vsr.cobalt.planner.rating.RatedPlan;
 import vsr.cobalt.planner.rating.Rating;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -28,6 +30,17 @@ public class RatingPlanCollectorTest {
   @Test
   public void extendsQueueingPlanCollector() {
     assertSubClass(RatingPlanCollector.class, QueueingPlanCollector.class);
+  }
+
+  @Test
+  public void returnContinue() {
+    final PlanRater pr = mock(PlanRater.class);
+    when(pr.rate(any(Plan.class))).thenReturn(new Rating(0));
+
+    final RatingPlanCollector rc = new RatingPlanCollector(pr);
+
+    final Plan p = new Plan(make(aMinimalGraph()));
+    assertEquals(rc.collect(p), PlanCollector.Result.CONTINUE);
   }
 
   @Test

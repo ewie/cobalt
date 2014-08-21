@@ -32,11 +32,12 @@ public class RatingPlanCollector extends QueueingPlanCollector<RatedPlan> {
   }
 
   @Override
-  public void collect(final Plan plan) {
+  public Result collect(final Plan plan) {
     final Rating rating = rater.rate(plan);
     if (rating != null) {
       offer(new RatedPlan(plan, rating));
     }
+    return Result.CONTINUE;
   }
 
 }

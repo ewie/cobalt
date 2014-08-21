@@ -9,7 +9,9 @@ package vsr.cobalt.planner.collectors;
 
 import org.testng.annotations.Test;
 import vsr.cobalt.planner.Plan;
+import vsr.cobalt.planner.PlanCollector;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 import static vsr.cobalt.planner.graph.makers.GraphMaker.aMinimalGraph;
 import static vsr.cobalt.testing.Assert.assertSubClass;
@@ -21,6 +23,13 @@ public class SequentialPlanCollectorTest {
   @Test
   public void extendsQueueingPlanCollector() {
     assertSubClass(SequentialPlanCollector.class, QueueingPlanCollector.class);
+  }
+
+  @Test
+  public void returnContinue() {
+    final SequentialPlanCollector pc = new SequentialPlanCollector();
+    final Plan p = new Plan(make(aMinimalGraph()));
+    assertEquals(pc.collect(p), PlanCollector.Result.CONTINUE);
   }
 
   @Test

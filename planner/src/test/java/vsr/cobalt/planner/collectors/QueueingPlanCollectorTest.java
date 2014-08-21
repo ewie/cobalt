@@ -76,8 +76,8 @@ public class QueueingPlanCollectorTest {
     }
 
     @Override
-    public void collect(final Plan plan) {
-      // empty
+    public Result collect(final Plan plan) {
+      return Result.CONTINUE;
     }
   }
 

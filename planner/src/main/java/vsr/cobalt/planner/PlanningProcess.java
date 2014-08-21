@@ -36,6 +36,11 @@ public class PlanningProcess {
   private int targetDepth;
 
   /**
+   * Indicates whether the planning process is done.
+   */
+  private boolean isDone;
+
+  /**
    * Create a planning process.
    *
    * @param planner   a planner
@@ -100,20 +105,24 @@ public class PlanningProcess {
    * @return true when the planner is done, false otherwise
    */
   public boolean isDone() {
-    // a graph must have been created before the planning process is done
-    return graph != null && (isExceeded() || isSearchComplete());
+    return isDone || (isDone = checkIfDone());
   }
 
   /**
    * Advance in the planning process, i.e. create/extend the graph and extract plans.
    *
-   * @throws PlanningException when the graph cannot be created or extended or the maximal plan depth is exceeded
+   * @throws PlanningException when the graph cannot be created or extended, the maximal plan depth is exceeded,
+   *                           or the planning process is done
    */
   public void advance() throws PlanningException {
     // The max depth is exceeded when target depth overflowed. Also check if the target depth exceeds max depth by
     // value, in case max depth is not constrained by data type limitations.
     if (targetDepth < 0 || targetDepth > PlanningProblem.MAX_DEPTH) {
       throw new PlanningException("maximal plan depth exceeded");
+    }
+
+    if (isDone()) {
+      throw new PlanningException("planning process is already done");
     }
 
     evolveGraph();
@@ -142,8 +151,16 @@ public class PlanningProcess {
    */
   private void extractPlans() {
     final Iterator<Plan> plans = planner.extractPlans(graph, targetDepth);
+
+    collect:
     while (plans.hasNext()) {
-      collector.collect(plans.next());
+      switch (collector.collect(plans.next())) {
+      case SKIP_LEVEL:
+        break collect;
+      case STOP:
+        isDone = true;
+        break collect;
+      }
     }
   }
 
@@ -152,6 +169,14 @@ public class PlanningProcess {
    */
   private boolean isExtendable() {
     return graph.getDepth() < targetDepth && !graph.isSatisfied();
+  }
+
+  /**
+   * @return true when the planning process is done, false otherwise
+   */
+  private boolean checkIfDone() {
+    // a graph must have been created before the planning process is done
+    return graph != null && (isExceeded() || isSearchComplete());
   }
 
   /**

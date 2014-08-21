@@ -23,8 +23,9 @@ public class SequentialPlanCollector extends QueueingPlanCollector<Plan> {
   }
 
   @Override
-  public void collect(final Plan plan) {
+  public Result collect(final Plan plan) {
     offer(plan);
+    return Result.CONTINUE;
   }
 
 }
