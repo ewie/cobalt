@@ -16,7 +16,7 @@
   <packaging>war</packaging>
 
   <properties>
-    <jettyVersion>9.2.0.v20140526</jettyVersion>
+    <jettyVersion>9.2.2.v20140723</jettyVersion>
   </properties>
 
   <build>
