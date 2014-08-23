@@ -8,7 +8,7 @@
 
 
 var value = require('../util/value');
-var uuid = require('uuid');
+var seqid = require('../util/seqid');
 
 var InitialLevel = require('./initialLevel');
 var ExtensionLevel = require('./extensionLevel');
@@ -19,7 +19,7 @@ module.exports = value.define({
 
   id: {
     intern: function (id) {
-      return id || uuid.v4();
+      return id || seqid.nextId();
     }
   },
   rating: undefined,

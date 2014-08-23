@@ -7,12 +7,20 @@
  */
 
 
-var seqid = require('../util/seqid');
+var nextId = (function () {
 
-module.exports = Backbone.Model.extend({
+  var value = 0;
 
-  initialize: function () {
-    this.attributes.id || (this.set('id', seqid.nextId()));
-  }
+  return function () {
+    return value += 1;
+  };
 
-});
+}());
+
+
+
+module.exports = {
+
+  nextId: nextId,
+
+};
