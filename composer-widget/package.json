@@ -1,7 +1,7 @@
 {
-  "name": "cobalt-client-widget",
+  "name": "cobalt-composer-widget",
   "version": "0.1.0",
-  "description": "W3C widget to consume the Cobalt planning service and configure a mashup within Apache Rave",
+  "description": "Mashup Composer Widget, W3C widget to consume the Cobalt planning service and compose mashups within Apache Rave according to selected plans.",
   "author": "Erik Wienhold <ewie@hrz.tu-chemnitz.de>",
   "license": "BSD 3-Clause License",
   "private": true,

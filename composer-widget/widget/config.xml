@@ -3,7 +3,7 @@
   id="https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/widget">
 
  <name>Cobalt Mashup Composer</name>
- <description>Consumes the Cobalt planning service and configures a mashup within Apache Rave</description>
+ <description>Consumes the Cobalt planning service and composes mashups within Apache Rave according to selected plans.</description>
 
  <author email="ewie@hrz.tu-chemnitz.de">Erik Wienhold</author>
 
