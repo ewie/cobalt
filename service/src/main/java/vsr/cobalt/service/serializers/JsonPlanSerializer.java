@@ -8,6 +8,7 @@
 package vsr.cobalt.service.serializers;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonObjectBuilder;
 
 import vsr.cobalt.planner.graph.ExtensionLevel;
@@ -37,10 +38,17 @@ public class JsonPlanSerializer extends JsonSerializer<RatedPlan> {
   @Override
   public JsonObjectBuilder build(final RatedPlan ratedPlan) {
     final Graph g = ratedPlan.getPlan().getGraph();
-    return Json.createObjectBuilder()
+
+    final JsonObjectBuilder obj = Json.createObjectBuilder()
         .add(rating, ratedPlan.getRating().getValue())
-        .add(initialLevel, initialLevelSerializer.serialize(g.getInitialLevel()))
-        .add(extensionLevels, extensionLevelSerializer.serializeAll(g.getExtensionLevels()));
+        .add(initialLevel, initialLevelSerializer.serialize(g.getInitialLevel()));
+
+    final JsonArray xls = extensionLevelSerializer.serializeAll(g.getExtensionLevels());
+    if (!xls.isEmpty()) {
+      obj.add(extensionLevels, xls);
+    }
+
+    return obj;
   }
 
 }

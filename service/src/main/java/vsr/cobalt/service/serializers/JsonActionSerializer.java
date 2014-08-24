@@ -49,11 +49,25 @@ public class JsonActionSerializer extends JsonSerializer<Action> {
 
   @Override
   public JsonObjectBuilder build(final Action action) {
-    return Json.createObjectBuilder()
-        .add(widget, serializeWidget(action))
-        .add(realizedFunctionalities, serializeFunctionalities(action))
-        .add(publishedProperties, serializeProperties(action))
-        .add(interactions, serializeInteractions(action));
+    final JsonObjectBuilder obj = Json.createObjectBuilder()
+        .add(widget, serializeWidget(action));
+
+    final JsonArray fs = serializeFunctionalities(action);
+    if (!fs.isEmpty()) {
+      obj.add(realizedFunctionalities, fs);
+    }
+
+    final JsonArray ps = serializeProperties(action);
+    if (!ps.isEmpty()) {
+      obj.add(publishedProperties, ps);
+    }
+
+    final JsonArray is = serializeInteractions(action);
+    if (!is.isEmpty()) {
+      obj.add(interactions, is);
+    }
+
+    return obj;
   }
 
   private JsonObject serializeWidget(final Action action) {
