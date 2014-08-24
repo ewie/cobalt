@@ -49,6 +49,17 @@ public final class CachingResourceInternalizers {
     actions = caching(new ActionResourceInternalizer(widgets, propositions, functionalities, interactions));
   }
 
+  public static void clearCaches() {
+    actions.clearCache();
+    functionalities.clearCache();
+    interactions.clearCache();
+    mashups.clearCache();
+    properties.clearCache();
+    propositions.clearCache();
+    types.clearCache();
+    widgets.clearCache();
+  }
+
   private static <T> CachingResourceInternalizer<T> caching(final ResourceInternalizer<T> internalizer) {
     return new CachingResourceInternalizer<>(internalizer);
   }

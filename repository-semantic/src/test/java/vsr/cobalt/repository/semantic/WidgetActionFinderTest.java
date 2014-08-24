@@ -20,6 +20,7 @@ import vsr.cobalt.models.Property;
 import vsr.cobalt.models.Type;
 import vsr.cobalt.models.Widget;
 import vsr.cobalt.repository.semantic.finders.WidgetActionFinder;
+import vsr.cobalt.repository.semantic.internalizers.CachingResourceInternalizers;
 
 import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.models.makers.ActionMaker.anAction;
@@ -42,6 +43,8 @@ public class WidgetActionFinderTest {
   public void setUp() {
     final Dataset ds = loadDataset("widget-actions.n3");
     finder = new WidgetActionFinder(ds);
+
+    CachingResourceInternalizers.clearCaches();
   }
 
   @Test

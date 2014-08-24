@@ -10,6 +10,7 @@ package vsr.cobalt.repository.semantic;
 import java.util.Set;
 
 import com.hp.hpl.jena.query.Dataset;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Functionality;
@@ -18,6 +19,7 @@ import vsr.cobalt.models.PublishedProperty;
 import vsr.cobalt.models.RealizedFunctionality;
 import vsr.cobalt.models.Type;
 import vsr.cobalt.repository.semantic.finders.CompatibleResourceFinder;
+import vsr.cobalt.repository.semantic.internalizers.CachingResourceInternalizers;
 
 import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.repository.semantic.Datasets.loadDataset;
@@ -30,6 +32,11 @@ import static vsr.cobalt.testing.Utilities.setOf;
 
 @Test
 public class CompatibleResourceFinderTest {
+
+  @BeforeMethod
+  public void setUp() {
+    CachingResourceInternalizers.clearCaches();
+  }
 
   @Test
   public void findCompatibleProperties() {

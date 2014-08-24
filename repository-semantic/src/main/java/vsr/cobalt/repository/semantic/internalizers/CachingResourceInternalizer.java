@@ -42,4 +42,8 @@ public class CachingResourceInternalizer<T> extends ResourceInternalizer<T> {
     return intern;
   }
 
+  public void clearCache() {
+    cache.clear();
+  }
+
 }
