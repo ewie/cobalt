@@ -40,7 +40,11 @@ function requestPlans(model) {
     url:      attrs.serviceUrl,
     data:     JSON.stringify(data),
     mimeType: mediaTypes.JSON,
-    dataType: 'json'
+    dataType: 'json',
+    headers:  {
+      // override the default header jQuery would use for JSON
+      'accept': 'application/json; charset=utf-8; x-json-pointer=true'
+    }
   });
 
   var deferred = $.Deferred();

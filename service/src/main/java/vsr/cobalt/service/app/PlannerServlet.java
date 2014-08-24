@@ -12,7 +12,10 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Enumeration;
+import java.util.List;
 import javax.json.Json;
+import javax.json.JsonWriter;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +43,12 @@ public class PlannerServlet extends HttpServlet {
 
   private static final Logger logger = LoggerFactory.getLogger(PlannerServlet.class);
 
-  private static final String CONTENT_TYPE_JSON = MediaType.JSON_UTF_8.toString();
+  private static final MediaType MEDIA_TYPE_JSON = MediaType.JSON_UTF_8.withoutParameters();
+
+  private static final String X_JSON_POINTER = "x-json-pointer";
+
+  private static final String X_JSON_POINTER_TRUE = "true";
+  private static final String X_JSON_POINTER_FALSE = "false";
 
   @Override
   public void doOptions(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
@@ -59,6 +67,16 @@ public class PlannerServlet extends HttpServlet {
 
   @Override
   public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+    final MediaType acceptedMediaType = parseAcceptHeader(request);
+
+    if (acceptedMediaType == null) {
+      response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+      response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+      return;
+    }
+
+    final boolean acceptJsonPointer = acceptJsonPointer(acceptedMediaType);
+
     final PlannerRequest req;
 
     try {
@@ -66,8 +84,8 @@ public class PlannerServlet extends HttpServlet {
     } catch (final Exception ex) {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-      response.setHeader(HttpHeaders.CONTENT_TYPE, CONTENT_TYPE_JSON);
-      serializeResponse(new PlannerFailure(ex), response.getWriter());
+      response.setContentType(MediaType.JSON_UTF_8.toString());
+      serializeResponseUsingCanonicalJson(new PlannerFailure(ex), response.getWriter());
       return;
     }
 
@@ -83,15 +101,50 @@ public class PlannerServlet extends HttpServlet {
     }
 
     response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-    response.setHeader(HttpHeaders.CONTENT_TYPE, CONTENT_TYPE_JSON);
-    serializeResponse(res, response.getWriter());
+    response.setContentType(acceptedMediaType.toString());
+
+    if (acceptJsonPointer) {
+      serializeResponseUsingJsonPointer(res, response.getWriter());
+    } else {
+      serializeResponseUsingCanonicalJson(res, response.getWriter());
+    }
+  }
+
+  private MediaType parseAcceptHeader(final HttpServletRequest request) {
+    // check every accept header (in case the client sent multiple)
+    final Enumeration<String> headers = request.getHeaders(HttpHeaders.ACCEPT);
+    while (headers.hasMoreElements()) {
+      final MediaType mediaType = MediaType.parse(headers.nextElement());
+      if (isAcceptable(mediaType)) {
+        return mediaType;
+      }
+    }
+    return null;
+  }
+
+  private boolean isAcceptable(final MediaType mediaType) {
+    // compare only type and subtype (ignore any parameters)
+    return MEDIA_TYPE_JSON.equals(mediaType.withoutParameters());
+  }
+
+  private boolean acceptJsonPointer(final MediaType mediaType) {
+    // media type must contain x-json-pointer=true
+    final List<String> jps = mediaType.parameters().get(X_JSON_POINTER);
+    return jps != null
+        && !jps.isEmpty()
+        && X_JSON_POINTER_TRUE.equals(jps.get(0));
   }
 
   private PlannerRequest parseRequest(final Reader reader) {
     return new JsonPlannerRequestDeserializer().deserialize(Json.createReader(reader).read());
   }
 
-  private void serializeResponse(final PlannerResponse response, final Writer writer) {
+  private void serializeResponseUsingCanonicalJson(final PlannerResponse response, final Writer writer) {
+    final JsonWriter w = Json.createWriter(writer);
+    w.write(new JsonPlannerResponseSerializer().serialize(response));
+  }
+
+  private void serializeResponseUsingJsonPointer(final PlannerResponse response, final Writer writer) {
     new RefJsonWriter(writer).write(new JsonPlannerResponseSerializer().serialize(response));
   }
 
