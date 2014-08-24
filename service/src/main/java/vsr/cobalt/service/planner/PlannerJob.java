@@ -13,7 +13,6 @@ import vsr.cobalt.planner.GraphExtender;
 import vsr.cobalt.planner.GraphFactory;
 import vsr.cobalt.planner.PlanCollector;
 import vsr.cobalt.planner.PlanExtractor;
-import vsr.cobalt.planner.PlanningException;
 import vsr.cobalt.planner.PlanningProcess;
 import vsr.cobalt.planner.collectors.RatingPlanCollector;
 import vsr.cobalt.planner.extenders.DefaultGraphExtender;
@@ -46,7 +45,7 @@ public class PlannerJob {
     while (!process.isDone()) {
       try {
         process.advance();
-      } catch (final PlanningException ex) {
+      } catch (final Exception ex) {
         return new PlannerFailure(ex);
       }
     }
