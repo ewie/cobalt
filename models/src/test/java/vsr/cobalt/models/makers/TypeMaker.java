@@ -12,14 +12,14 @@ import vsr.cobalt.models.Type;
 /**
  * @author Erik Wienhold
  */
-public class TypeMaker extends IdentifiableMaker<Type> {
+public class TypeMaker extends IdentifiableMaker<Type, TypeMaker> {
 
   public static TypeMaker aType() {
     return new TypeMaker();
   }
 
   public static TypeMaker aMinimalType() {
-    return (TypeMaker) aType().withIdentifier("");
+    return aType().withIdentifier("");
   }
 
   @Override

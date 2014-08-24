@@ -14,6 +14,7 @@ import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
+import vsr.cobalt.models.Widget;
 import vsr.cobalt.planner.Plan;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.FunctionalityProvision;
@@ -26,6 +27,7 @@ import static vsr.cobalt.models.makers.FunctionalityMaker.aFunctionality;
 import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
+import static vsr.cobalt.models.makers.WidgetMaker.aMinimalWidget;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
 import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
@@ -223,30 +225,38 @@ public class BackwardChainingPlanIteratorTest {
       final Property p2 = make(aMinimalProperty().withName("p2"));
       final Property p3 = make(aMinimalProperty().withName("p3"));
 
+      final Widget w = make(aMinimalWidget().withPublic(p1, p2, p3));
+
       // a1 and a2 not mutex
       // a1 and a3 mutex by definition
       // a4, a5, a6 not mutex
 
       final Action a1 = make(aMinimalAction()
+          .withWidget(w)
           .withFunctionality(f1)
           .withEffects(aPropositionSet().withFilled(p3))
           .withPre(aPropositionSet().withFilled(p1)));
 
       final Action a2 = make(aMinimalAction()
+          .withWidget(w)
           .withFunctionality(f2)
           .withPre(aPropositionSet().withFilled(p2)));
 
       final Action a3 = make(aMinimalAction()
+          .withWidget(w)
           .withFunctionality(f2)
           .withPre(aPropositionSet().withCleared(p3)));
 
       final Action a4 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet().withFilled(p1)));
 
       final Action a5 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet().withFilled(p2)));
 
       final Action a6 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet().withCleared(p3)));
 
       final FunctionalityProvision fp1 = make(aFunctionalityProvision()

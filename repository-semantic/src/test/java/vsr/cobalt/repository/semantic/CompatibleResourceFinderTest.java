@@ -39,20 +39,22 @@ public class CompatibleResourceFinderTest {
   }
 
   @Test
-  public void findCompatibleProperties() {
+  public void findCompatiblePublicProperties() {
     final Dataset ds = loadDataset("compatibility/properties.n3");
     final CompatibleResourceFinder finder = new CompatibleResourceFinder(ds);
 
     final Type y0 = type(0);
     final Type y1 = type(1);
     final Type y2 = type(2);
+    final Type y3 = type(3);
 
     final Property p0 = property(0, y0);
     final Property p1 = property(1, y1);
     final Property p2 = property(2, y2);
+    final Property p3 = property(3, y3);
 
-    final Action a1 = action(widget(1), p1);
-    final Action a2 = action(widget(2), p2);
+    final Action a1 = action(widget(1, p1), p1);
+    final Action a2 = action(widget(2, p2), p2, p3);
 
     final PublishedProperty pp1 = new PublishedProperty(p1, a1);
     final PublishedProperty pp2 = new PublishedProperty(p2, a2);

@@ -220,7 +220,7 @@ public final class ActionProvision {
     }
 
     final Set<Property> required = requestedAction.getPreConditions().getFilledProperties();
-    final Set<Property> unsatisfied = requestedAction.getFilledPropertiesNotSatisfiedByPrecursor(precursorAction);
+    final Set<Property> unsatisfied = requestedAction.getPublicPropertiesNotSatisfiedByPrecursor(precursorAction);
 
     if (unsatisfied.size() == required.size()) {
       // the precursor does not satisfy any property required filled

@@ -15,6 +15,7 @@ import static org.testng.Assert.assertTrue;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
+import static vsr.cobalt.models.makers.WidgetMaker.aMinimalWidget;
 import static vsr.cobalt.testing.Assert.assertSubClass;
 import static vsr.cobalt.testing.Utilities.make;
 
@@ -48,8 +49,8 @@ public class PublishedPropertyTest {
     public void setUp() {
       final Property p = make(aMinimalProperty());
       final Action a = make(aMinimalAction()
-          .withEffects(aPropositionSet()
-              .withFilled(p)));
+          .withWidget(aMinimalWidget().withPublic(p))
+          .withEffects(aPropositionSet().withFilled(p)));
       pp = new PublishedProperty(p, a);
     }
 

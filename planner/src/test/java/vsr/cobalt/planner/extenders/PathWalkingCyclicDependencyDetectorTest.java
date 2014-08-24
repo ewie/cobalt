@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
+import vsr.cobalt.models.Widget;
 import vsr.cobalt.planner.graph.Graph;
 
 import static org.testng.Assert.assertFalse;
@@ -19,6 +20,7 @@ import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
+import static vsr.cobalt.models.makers.WidgetMaker.aMinimalWidget;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
 import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
@@ -103,17 +105,22 @@ public class PathWalkingCyclicDependencyDetectorTest {
     final Property p1 = make(aMinimalProperty().withName("p1"));
     final Property p2 = make(aMinimalProperty().withName("p2"));
 
+    final Widget w = make(aMinimalWidget().withPublic(p1));
+
     final Action a1 = make(aMinimalAction()
+        .withWidget(w)
         .withFunctionality(f)
         .withPre(aPropositionSet()
             .withFilled(p1)));
 
     final Action a2 = make(aMinimalAction()
+        .withWidget(w)
         .withEffects(aPropositionSet()
             .withFilled(p1)));
 
     final Action a3 = Action.compose(a1,
         make(aMinimalAction()
+            .withWidget(w)
             .withPre(aPropositionSet()
                 .withCleared(p2))));
 

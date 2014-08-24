@@ -308,7 +308,7 @@ public class DefaultGraphExtender implements GraphExtender {
      * @param precursor a precursor action
      */
     public Candidate(final Action request, final Action precursor) {
-      this(request, precursor, request.getFilledPropertiesNotSatisfiedByPrecursor(precursor));
+      this(request, precursor, request.getPublicPropertiesNotSatisfiedByPrecursor(precursor));
     }
 
     /**

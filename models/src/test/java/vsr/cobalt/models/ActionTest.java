@@ -11,7 +11,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static java.util.Arrays.asList;
@@ -271,35 +270,39 @@ public class ActionTest {
   }
 
   @Test
-  public static class ComputingGetters {
-
-    private Action action;
-
-    private Property property;
-
-    private PropositionSet pre;
-
-    private PropositionSet effects;
-
-    @BeforeMethod
-    public void setUp() {
-      final Widget widget = make(aMinimalWidget());
-
-      property = make(aMinimalProperty());
-      pre = make(aPropositionSet().withCleared(property));
-      effects = make(aPropositionSet().withFilled(property));
-
-      action = Action.create(widget, pre, effects);
-    }
+  public static class GetPostConditions {
 
     @Test
-    public void getPostConditions() {
+    public void deriveFromPreConditionsAndEffects() {
+      final Property property = make(aMinimalProperty());
+      final PropositionSet pre = make(aPropositionSet().withCleared(property));
+      final PropositionSet effects = make(aPropositionSet().withFilled(property));
+
+      final Action action = make(aMinimalAction()
+          .withPre(pre)
+          .withEffects(effects));
+
       assertEquals(action.getPostConditions(), effects.createPostConditions(pre));
     }
 
+  }
+
+  @Test
+  public static class GetPublishedProperties {
+
     @Test
-    public void getPublishedProperties() {
-      assertEquals(action.getPublishedProperties(), setOf(property));
+    public void returnPublicPropertiesFilledByEffects() {
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+      final Property p3 = make(aMinimalProperty().withName("p3"));
+      final Widget w = make(aMinimalWidget()
+          .withPublic(p1));
+      final Action a = make(aMinimalAction()
+          .withWidget(w)
+          .withEffects(aPropositionSet()
+              .withFilled(p1, p2)
+              .withCleared(p3)));
+      assertEquals(a.getPublishedProperties(), setOf(p1));
     }
 
   }
@@ -453,16 +456,27 @@ public class ActionTest {
   public static class Publishes {
 
     @Test
-    public void returnTrueWhenTheGivenPropertyIsPublished() {
+    public void returnTrueWhenTheGivenPropertyGetsFilledAndIsPublishedByWidget() {
       final Property p = make(aMinimalProperty());
+      final Widget w = make(aMinimalWidget().withPublic(p));
       final Action a = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withFilled(p)));
       assertTrue(a.publishes(p));
     }
 
     @Test
-    public void returnFalseWhenTheGivenPropertyIsNotPublished() {
+    public void returnFalseWhenTheGivenPropertyIsFilledButNotPublishedByWidget() {
+      final Property p = make(aMinimalProperty());
+      final Action a = make(aMinimalAction()
+          .withEffects(aPropositionSet()
+              .withFilled(p)));
+      assertFalse(a.publishes(p));
+    }
+
+    @Test
+    public void returnFalseWhenTheGivenPropertyIsNotFilled() {
       final Property p = make(aMinimalProperty());
       final Action a = make(aMinimalAction());
       assertFalse(a.publishes(p));
@@ -528,6 +542,31 @@ public class ActionTest {
       assertTrue(source.canBePrecursorOf(target));
     }
 
+    @Test
+    public void returnFalseWhenSourceDoesNotFillAllNonPublicPropertiesRequiredFilledByTarget() {
+      final Property p = make(aMinimalProperty());
+
+      final Action source = make(aMinimalAction());
+
+      final Action target = make(aMinimalAction()
+          .withPre(aPropositionSet().withFilled(p)));
+
+      assertFalse(source.canBePrecursorOf(target));
+    }
+
+    @Test
+    public void returnTrueWhenSourceFillsAllNonPublicPropertiesRequiredFilledByTarget() {
+      final Property p = make(aMinimalProperty());
+
+      final Action source = make(aMinimalAction()
+          .withEffects(aPropositionSet().withFilled(p)));
+
+      final Action target = make(aMinimalAction()
+          .withPre(aPropositionSet().withFilled(p)));
+
+      assertTrue(source.canBePrecursorOf(target));
+    }
+
   }
 
   @Test
@@ -540,10 +579,13 @@ public class ActionTest {
     }
 
     @Test
-    public void returnFalseWhenPreConditionsRequireOnlyFilledProperties() {
+    public void returnFalseWhenPreConditionsRequireOnlyFilledPublicProperties() {
       final Property p = make(aMinimalProperty());
 
+      final Widget w = make(aMinimalWidget().withPublic(p));
+
       final Action action = make(aMinimalAction()
+          .withWidget(w)
           .withPre(aPropositionSet().withFilled(p)));
 
       assertFalse(action.requiresPrecursor());
@@ -559,21 +601,31 @@ public class ActionTest {
       assertTrue(action.requiresPrecursor());
     }
 
+    @Test
+    public void returnTrueWhenPreConditionsRequireFilledNonPublicProperties() {
+      final Property p = make(aMinimalProperty());
+
+      final Action action = make(aMinimalAction()
+          .withPre(aPropositionSet().withFilled(p)));
+
+      assertTrue(action.requiresPrecursor());
+    }
+
   }
 
   @Test
-  public static class GetFilledPropertiesNotSatisfiedByPrecursor {
+  public static class GetPublicPropertiesNotSatisfiedByPrecursor {
 
     @Test(expectedExceptions = IllegalArgumentException.class,
-        expectedExceptionsMessageRegExp = "expecting an action of the same widget")
-    public void rejectActionOfDifferentWidget() {
+        expectedExceptionsMessageRegExp = "expecting a precursor action")
+    public void rejectNonPrecursorAction() {
       final Action target = make(aMinimalAction()
           .withWidget(aWidget().withIdentifier("w1")));
 
       final Action precursor = make(aMinimalAction()
           .withWidget(aWidget().withIdentifier("w2")));
 
-      target.getFilledPropertiesNotSatisfiedByPrecursor(precursor);
+      target.getPublicPropertiesNotSatisfiedByPrecursor(precursor);
     }
 
     @Test
@@ -581,16 +633,20 @@ public class ActionTest {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
+      final Widget w = make(aMinimalWidget().withPublic(p1));
+
       final Action target = make(aMinimalAction()
+          .withWidget(w)
           .withPre(aPropositionSet()
               .withCleared(p2)
               .withFilled(p1)));
 
       final Action precursor = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withCleared(p1, p2)));
 
-      final Set<Property> ps = target.getFilledPropertiesNotSatisfiedByPrecursor(precursor);
+      final Set<Property> ps = target.getPublicPropertiesNotSatisfiedByPrecursor(precursor);
 
       assertEquals(ps, setOf(p1));
     }

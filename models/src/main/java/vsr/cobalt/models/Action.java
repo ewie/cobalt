@@ -244,7 +244,7 @@ public abstract class Action {
   public Set<Property> getPublishedProperties() {
     final Set<Property> ps = new HashSet<>();
     for (final Proposition p : effects) {
-      if (p.isFilled()) {
+      if (p.isFilled() && widget.isPublicProperty(p.getProperty())) {
         ps.add(p.getProperty());
       }
     }
@@ -295,7 +295,7 @@ public abstract class Action {
    * @return true when the given property gets published, false otherwise
    */
   public boolean publishes(final Property property) {
-    return effects.isFilled(property);
+    return effects.isFilled(property) && widget.isPublicProperty(property);
   }
 
   /**
@@ -318,16 +318,15 @@ public abstract class Action {
    * @return true when this action can be the precursor, false otherwise
    */
   public boolean canBePrecursorOf(final Action other) {
-    if (belongsToSameWidget(other)) {
-      final Set<Property> ps = other.preConditions.getClearedProperties();
-      for (final Property p : ps) {
-        if (!postConditions.isCleared(p)) {
-          return false;
-        }
-      }
-      return true;
+    if (!belongsToSameWidget(other)) {
+      return false;
     }
-    return false;
+    for (final Proposition p : other.preConditions) {
+      if (requiresPrecursor(p) && !postConditions.contains(p)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
@@ -336,24 +335,29 @@ public abstract class Action {
    * @return true when a precursor is required, false otherwise
    */
   public boolean requiresPrecursor() {
-    return !preConditions.getClearedProperties().isEmpty();
+    for (final Proposition p : preConditions) {
+      if (requiresPrecursor(p)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
-   * Get all properties requiring a value for which the given action cannot provide a value.
+   * Get all public properties requiring a value for which the given precursor action cannot provide a value.
    *
-   * @param precursor an action to provide property values
+   * @param precursor a precursor action
    *
-   * @return a set of properties whose values cannot be provided
+   * @return a set of properties whose values cannot be provided by the precursor action
    */
-  public Set<Property> getFilledPropertiesNotSatisfiedByPrecursor(final Action precursor) {
-    if (!belongsToSameWidget(precursor)) {
-      throw new IllegalArgumentException("expecting an action of the same widget");
+  public Set<Property> getPublicPropertiesNotSatisfiedByPrecursor(final Action precursor) {
+    if (!precursor.canBePrecursorOf(this)) {
+      throw new IllegalArgumentException("expecting a precursor action");
     }
     final Set<Property> ps = new HashSet<>();
-    for (final Property p : preConditions.getFilledProperties()) {
-      if (!precursor.postConditions.isFilled(p)) {
-        ps.add(p);
+    for (final Proposition q : preConditions) {
+      if (!requiresPrecursor(q) && !precursor.postConditions.contains(q)) {
+        ps.add(q.getProperty());
       }
     }
     return ps;
@@ -386,6 +390,19 @@ public abstract class Action {
 
   private boolean belongsToSameWidget(final Action other) {
     return widget.equals(other.widget);
+  }
+
+  /**
+   * Test if a proposition requires a precursor action to be satisified.
+   *
+   * @param proposition the proposition to test
+   *
+   * @return true when a precursor action is required, false otherwise
+   */
+  private boolean requiresPrecursor(final Proposition proposition) {
+    // Only filled non-public properties require no precursor, i.e. they can be satisfied by another widget instance
+    // through publication.
+    return !(proposition.isFilled() && widget.isPublicProperty(proposition.getProperty()));
   }
 
   /**

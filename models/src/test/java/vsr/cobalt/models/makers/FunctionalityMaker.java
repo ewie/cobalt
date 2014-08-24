@@ -12,14 +12,14 @@ import vsr.cobalt.models.Functionality;
 /**
  * @author Erik Wienhold
  */
-public class FunctionalityMaker extends IdentifiableMaker<Functionality> {
+public class FunctionalityMaker extends IdentifiableMaker<Functionality, FunctionalityMaker> {
 
   public static FunctionalityMaker aFunctionality() {
     return new FunctionalityMaker();
   }
 
   public static FunctionalityMaker aMinimalFunctionality() {
-    return (FunctionalityMaker) aFunctionality().withIdentifier("");
+    return aFunctionality().withIdentifier("");
   }
 
   @Override

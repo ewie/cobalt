@@ -41,10 +41,10 @@ public class WidgetActionFinderTest {
 
   @BeforeMethod
   public void setUp() {
+    CachingResourceInternalizers.clearCaches();
+
     final Dataset ds = loadDataset("widget-actions.n3");
     finder = new WidgetActionFinder(ds);
-
-    CachingResourceInternalizers.clearCaches();
   }
 
   @Test

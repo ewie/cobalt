@@ -30,7 +30,7 @@ import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
-import static vsr.cobalt.models.makers.WidgetMaker.aWidget;
+import static vsr.cobalt.models.makers.WidgetMaker.aMinimalWidget;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
 import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
@@ -209,13 +209,17 @@ public class DefaultGraphExtenderTest {
 
       final Property p = make(aMinimalProperty());
 
+      final Widget w = make(aMinimalWidget().withPublic(p));
+
       final Action a1 = make(aMinimalAction()
+          .withWidget(w)
           .withFunctionality(f)
           .withPre(aPropositionSet()
               .withFilled(p)));
 
       // a property provider for a1
       final Action a2 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withFilled(p)));
 
@@ -255,7 +259,10 @@ public class DefaultGraphExtenderTest {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
+      final Widget w = make(aMinimalWidget().withPublic(p2));
+
       final Action a1 = make(aMinimalAction()
+          .withWidget(w)
           .withFunctionality(f)
           .withPre(aPropositionSet()
               .withCleared(p1)
@@ -263,11 +270,13 @@ public class DefaultGraphExtenderTest {
 
       // a precursor for a1
       final Action a2 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withCleared(p1)));
 
       // a property provider for a1
       final Action a3 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withFilled(p2)));
 
@@ -308,16 +317,21 @@ public class DefaultGraphExtenderTest {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
+      final Widget w = make(aMinimalWidget().withPublic(p1, p2));
+
       final Action a1 = make(aMinimalAction()
+          .withWidget(w)
           .withFunctionality(f)
           .withPre(aPropositionSet()
               .withFilled(p1, p2)));
 
       final Action a2 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withFilled(p1)));
 
       final Action a3 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withFilled(p1, p2)));
 
@@ -370,19 +384,25 @@ public class DefaultGraphExtenderTest {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
+      final Widget w = make(aMinimalWidget().withPublic(p1, p2));
+
       final Action a1 = make(aMinimalAction()
+          .withWidget(w)
           .withFunctionality(f)
           .withPre(aPropositionSet().withFilled(p1)));
 
       final Action a2 = make(aMinimalAction()
+          .withWidget(w)
           .withFunctionality(f)
           .withPre(aPropositionSet().withFilled(p2)));
 
       final Action a3 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withFilled(p1)));
 
       final Action a4 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withFilled(p2)));
 
@@ -497,7 +517,10 @@ public class DefaultGraphExtenderTest {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
+      final Widget w = make(aMinimalWidget().withPublic(p2));
+
       final Action a1 = make(aMinimalAction()
+          .withWidget(w)
           .withFunctionality(f)
           .withPre(aPropositionSet()
               .withCleared(p1)
@@ -505,6 +528,7 @@ public class DefaultGraphExtenderTest {
 
       // a precursor action fully satisfying a1
       final Action a2 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withCleared(p1)
               .withFilled(p2)));
@@ -512,6 +536,7 @@ public class DefaultGraphExtenderTest {
       // a precursor action not fully satisfying a1
       // because p2 cannot be provided otherwise, this precursor should be ignored
       final Action a3 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withCleared(p1)));
 
@@ -587,27 +612,26 @@ public class DefaultGraphExtenderTest {
     public void filterPrecursorActionsCausingCyclicDependencies() throws Exception {
       final Functionality f = make(aMinimalFunctionality());
 
-      final Widget w1 = make(aWidget().withIdentifier("w1"));
-      final Widget w2 = make(aWidget().withIdentifier("w2"));
-
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
+      final Widget w = make(aMinimalWidget().withPublic(p1));
+
       final Action a1 = make(aMinimalAction()
-          .withWidget(w1)
+          .withWidget(w)
           .withFunctionality(f)
           .withPre(aPropositionSet()
               .withFilled(p1)));
 
       // will cause cyclic dependency with a1, therefore cannot be a precursor
       final Action a2 = Action.compose(a1, make(aMinimalAction()
-          .withWidget(w1)
+          .withWidget(w)
           .withPre(aPropositionSet()
               .withCleared(p2))));
 
       // an action supporting a1 via a property provision, will be used instead of a2
       final Action a3 = make(aMinimalAction()
-          .withWidget(w2)
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withFilled(p1)));
 
@@ -650,17 +674,22 @@ public class DefaultGraphExtenderTest {
 
       final Property p = make(aMinimalProperty());
 
+      final Widget w = make(aMinimalWidget().withPublic(p));
+
       final Action a1 = make(aMinimalAction()
+          .withWidget(w)
           .withFunctionality(f)
           .withPre(aPropositionSet()
               .withFilled(p)));
 
       final Action a2 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withFilled(p)));
 
       // will cause cyclic dependency with a1
       final Action a3 = Action.compose(a1, make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withFilled(p))));
 
@@ -706,16 +735,21 @@ public class DefaultGraphExtenderTest {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
+      final Widget w = make(aMinimalWidget().withPublic(p1, p2));
+
       final Action a1 = make(aMinimalAction()
+          .withWidget(w)
           .withFunctionality(f)
           .withPre(aPropositionSet()
               .withFilled(p1, p2)));
 
       final Action a2 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withFilled(p1)));
 
       final Action a3 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withFilled(p2)));
 

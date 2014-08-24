@@ -12,6 +12,7 @@ import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PublishedProperty;
 import vsr.cobalt.models.Repository;
+import vsr.cobalt.models.Widget;
 import vsr.cobalt.planner.graph.PropertyProvision;
 
 import static org.mockito.Mockito.mock;
@@ -20,6 +21,7 @@ import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
+import static vsr.cobalt.models.makers.WidgetMaker.aMinimalWidget;
 import static vsr.cobalt.planner.graph.makers.PropertyProvisionMaker.aPropertyProvision;
 import static vsr.cobalt.testing.Utilities.make;
 import static vsr.cobalt.testing.Utilities.setOf;
@@ -32,11 +34,15 @@ public class BasicPropertyProvisionProviderTest {
     final Property p1 = make(aMinimalProperty().withName("p1"));
     final Property p2 = make(aMinimalProperty().withName("p2"));
 
+    final Widget w = make(aMinimalWidget().withPublic(p1, p2));
+
     final Action a1 = make(aMinimalAction()
+        .withWidget(w)
         .withEffects(aPropositionSet()
             .withFilled(p1)));
 
     final Action a2 = make(aMinimalAction()
+        .withWidget(w)
         .withEffects(aPropositionSet()
             .withFilled(p2)));
 

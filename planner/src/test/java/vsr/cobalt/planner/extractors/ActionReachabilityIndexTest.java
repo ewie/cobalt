@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
+import vsr.cobalt.models.Widget;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.PropertyProvision;
@@ -21,6 +22,7 @@ import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.FunctionalityMaker.aMinimalFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
+import static vsr.cobalt.models.makers.WidgetMaker.aMinimalWidget;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
 import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
@@ -122,16 +124,21 @@ public class ActionReachabilityIndexTest {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
+      final Widget w = make(aMinimalWidget().withPublic(p1, p2));
+
       final Action request = make(aMinimalAction()
+          .withWidget(w)
           .withFunctionality(f)
           .withPre(aPropositionSet().withFilled(p1, p2)));
 
       // an enabled precursor action for request
       final Action precursor = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet().withFilled(p1)));
 
       // an enabled providing action for request
       final Action provider = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withFilled(p2)));
 
@@ -203,18 +210,23 @@ public class ActionReachabilityIndexTest {
       final Property p1 = make(aMinimalProperty().withName("p1"));
       final Property p2 = make(aMinimalProperty().withName("p2"));
 
+      final Widget w = make(aMinimalWidget().withPublic(p1, p2));
+
       final Action request = make(aMinimalAction()
+          .withWidget(w)
           .withFunctionality(f)
           .withPre(aPropositionSet().withFilled(p1, p2)));
 
       // an enabled precursor action for request
       final Action provider1 = make(aMinimalAction()
+          .withWidget(w)
           .withPre(aPropositionSet().withCleared(p1))
           .withEffects(aPropositionSet()
               .withFilled(p1)));
 
       // a non-enabled precursor action for request
       final Action provider2 = make(aMinimalAction()
+          .withWidget(w)
           .withPre(aPropositionSet().withCleared(p2))
           .withEffects(aPropositionSet()
               .withFilled(p2)));

@@ -7,24 +7,47 @@
 
 package vsr.cobalt.models.makers;
 
+import java.util.Collection;
+
+import vsr.cobalt.models.Property;
 import vsr.cobalt.models.Widget;
+import vsr.cobalt.testing.maker.CollectionValue;
+import vsr.cobalt.testing.maker.Maker;
 
 /**
  * @author Erik Wienhold
  */
-public class WidgetMaker extends IdentifiableMaker<Widget> {
+public class WidgetMaker extends IdentifiableMaker<Widget, WidgetMaker> {
+
+  private final CollectionValue<Property> publicProperties = new CollectionValue<>();
 
   public static WidgetMaker aWidget() {
     return new WidgetMaker();
   }
 
   public static WidgetMaker aMinimalWidget() {
-    return (WidgetMaker) aWidget().withIdentifier("");
+    return aWidget().withIdentifier("");
   }
 
   @Override
   public Widget make() {
-    return new Widget(identifier.get());
+    return new Widget(identifier.get(), publicProperties.asSet());
+  }
+
+  public WidgetMaker withPublish(final Collection<Property> properties) {
+    publicProperties.set(properties);
+    return this;
+  }
+
+  public WidgetMaker withPublic(final Property... properties) {
+    publicProperties.addValues(properties);
+    return this;
+  }
+
+  @SafeVarargs
+  public final WidgetMaker withPublish(final Maker<Property>... makers) {
+    publicProperties.add(makers);
+    return this;
   }
 
 }

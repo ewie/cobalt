@@ -96,6 +96,12 @@
   rdfs:label "hasPreConditions" ;
   rdfs:comment "states an action's pre-conditions" .
 
+:hasPublicProperty a owl:ObjectProperty ;
+  rdfs:domain :Widget ;
+  rdfs:range :Property ;
+  rdfs:label "hasPublicProperty" ;
+  rdfs:comment "states a widget's public properties" .
+
 :hasType a owl:ObjectProperty ;
   rdfs:domain :Property ;
   rdfs:range rdfs:Class ;
@@ -114,7 +120,7 @@
     owl:unionOf(:Action :Mashup) ] ;
   rdfs:range :Functionality ;
   rdfs:label "realizesFunctionality" ;
-  rdfs:comment "states an action's or widget's realized functionalities" .
+  rdfs:comment "states an action's or mashup's realized functionalities" .
 
 :subFunctionalityOf a owl:TransitiveProperty ;
   rdfs:domain :Functionality ;

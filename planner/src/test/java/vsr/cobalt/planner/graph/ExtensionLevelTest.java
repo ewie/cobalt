@@ -12,6 +12,7 @@ import java.util.Set;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
+import vsr.cobalt.models.Widget;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -23,6 +24,7 @@ import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropertyMaker.aProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
+import static vsr.cobalt.models.makers.WidgetMaker.aMinimalWidget;
 import static vsr.cobalt.models.makers.WidgetMaker.aWidget;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.aMinimalActionProvision;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
@@ -103,15 +105,20 @@ public class ExtensionLevelTest {
       final Property p1 = make(aProperty().withName("p1"));
       final Property p2 = make(aProperty().withName("p2"));
 
+      final Widget w = make(aMinimalWidget().withPublic(p2));
+
       final Action request = make(aMinimalAction()
+          .withWidget(w)
           .withPre(aPropositionSet()
               .withCleared(p1)
               .withFilled(p2)));
 
       final Action precursor = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet().withCleared(p1)));
 
       final Action provider = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withFilled(p2)));
 
@@ -132,10 +139,15 @@ public class ExtensionLevelTest {
     public void handlePrecursorLessActionProvisions() {
       final Property p = make(aMinimalProperty());
 
+      final Widget w = make(aMinimalWidget().withPublic(p));
+
       final Action request = make(aMinimalAction()
+          .withWidget(w)
           .withPre(aPropositionSet().withFilled(p)));
 
       final Action provider = make(aMinimalAction()
+          .withWidget(w)
+          .withWidget(aMinimalWidget().withPublic(p))
           .withEffects(aPropositionSet()
               .withFilled(p)));
 

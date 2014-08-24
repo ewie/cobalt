@@ -9,43 +9,55 @@
 <urn:example:type:2> a rdfs:Class ;
   rdfs:subClassOf <urn:example:type:1> .
 
-<urn:example:type:3> a rdfs:Class .
+<urn:example:type:3> a rdfs:Class ;
+  rdfs:subClassOf <urn:example:type:2> .
+
+<urn:example:type:4> a rdfs:Class .
+
+_:p1 :hasName "p1" ;
+  :hasType <urn:example:type:1> .
+
+_:p2 :hasName "p2" ;
+  :hasType <urn:example:type:2> .
+
+_:p3 :hasName "p3" ;
+  :hasType <urn:example:type:3> .
+
+_:p4 :hasName "p4" ;
+  :hasType <urn:example:type:4> .
 
 <urn:example:widget:1> a :Widget ;
+
+  :hasPublicProperty _:p1 ;
 
   :hasAction [
 
     :hasEffects [
-      :fillValueOf [
-        :hasName "p1" ;
-        :hasType <urn:example:type:1>
-      ]
+      :fillValueOf _:p1
     ]
 
   ] .
 
 <urn:example:widget:2> a :Widget ;
 
+  :hasPublicProperty _:p2 ;
+
   :hasAction [
 
     :hasEffects [
-      :fillValueOf [
-        :hasName "p2" ;
-        :hasType <urn:example:type:2>
-      ]
+      :fillValueOf _:p2, _:p3
     ]
 
   ] .
 
 <urn:example:widget:3> a :Widget ;
 
+  :hasPublicProperty _:p4 ;
+
   :hasAction [
 
     :hasEffects [
-      :fillValueOf [
-        :hasName "p3" ;
-        :hasType <urn:example:type:3>
-      ]
+      :fillValueOf _:p4
     ]
 
   ] .

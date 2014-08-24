@@ -14,6 +14,7 @@ import vsr.cobalt.models.Interaction;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.Repository;
 import vsr.cobalt.models.Type;
+import vsr.cobalt.models.Widget;
 import vsr.cobalt.planner.Plan;
 import vsr.cobalt.planner.rating.Rating;
 import vsr.cobalt.service.planner.DefaultPlanRater;
@@ -31,6 +32,7 @@ import static vsr.cobalt.models.makers.InteractionMaker.anInteraction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
 import static vsr.cobalt.models.makers.TypeMaker.aType;
+import static vsr.cobalt.models.makers.WidgetMaker.aMinimalWidget;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
 import static vsr.cobalt.planner.graph.makers.FunctionalityProvisionMaker.aFunctionalityProvision;
@@ -49,12 +51,16 @@ public class DefaultPlanRaterTest {
     final Property p1 = make(aMinimalProperty().withName("p1"));
     final Property p2 = make(aMinimalProperty().withName("p2"));
 
+    final Widget w = make(aMinimalWidget().withPublic(p1, p2));
+
     final Action a1 = make(aMinimalAction()
+        .withWidget(w)
         .withFunctionality(f)
         .withPre(aPropositionSet()
             .withFilled(p1)));
 
     final Action a2 = make(aMinimalAction()
+        .withWidget(w)
         .withEffects(aPropositionSet()
             .withFilled(p2)));
 
@@ -178,18 +184,23 @@ public class DefaultPlanRaterTest {
     final Property p1 = make(aMinimalProperty().withType(y1));
     final Property p2 = make(aMinimalProperty().withType(y2));
 
+    final Widget w = make(aMinimalWidget().withPublic(p1, p2));
+
     final Action a1 = make(aMinimalAction()
+        .withWidget(w)
         .withFunctionality(f)
         .withInteraction(aMinimalInteraction())
         .withPre(aPropositionSet()
             .withFilled(p1)));
 
     final Action a2 = make(aMinimalAction()
+        .withWidget(w)
         .withEffects(aPropositionSet()
             .withFilled(p1))
         .withInteraction(aMinimalInteraction()));
 
     final Action a3 = make(aMinimalAction()
+        .withWidget(w)
         .withEffects(aPropositionSet()
             .withFilled(p2))
         .withInteraction(aMinimalInteraction()));

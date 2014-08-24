@@ -42,10 +42,10 @@ public final class CachingResourceInternalizers {
     interactions = caching(new InteractionResourceInternalizer());
     functionalities = caching(new FunctionalityResourceInternalizer());
     types = caching(new TypeResourceInternalizer());
-    widgets = caching(new WidgetResourceInternalizer());
     mashups = caching(new MashupResourceInternalizer(functionalities));
     properties = caching(new PropertyResourceInternalizer(types));
     propositions = caching(new PropositionsResourceInternalizer(properties));
+    widgets = caching(new WidgetResourceInternalizer(properties));
     actions = caching(new ActionResourceInternalizer(widgets, propositions, functionalities, interactions));
   }
 

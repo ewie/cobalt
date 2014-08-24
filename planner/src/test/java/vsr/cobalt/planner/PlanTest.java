@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
+import vsr.cobalt.models.Widget;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.Graph;
@@ -21,6 +22,7 @@ import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.FunctionalityMaker.aFunctionality;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
+import static vsr.cobalt.models.makers.WidgetMaker.aMinimalWidget;
 import static vsr.cobalt.models.makers.WidgetMaker.aWidget;
 import static vsr.cobalt.planner.graph.makers.ActionProvisionMaker.anActionProvision;
 import static vsr.cobalt.planner.graph.makers.ExtensionLevelMaker.anExtensionLevel;
@@ -166,19 +168,24 @@ public class PlanTest {
 
       final Property p = make(aMinimalProperty());
 
+      final Widget w = make(aMinimalWidget().withPublic(p));
+
       // a1 and a2 mutex
 
       final Action a1 = make(aMinimalAction()
+          .withWidget(w)
           .withFunctionality(f1)
           .withPre(aPropositionSet()
               .withCleared(p)));
 
       final Action a2 = make(aMinimalAction()
+          .withWidget(w)
           .withFunctionality(f2)
           .withEffects(aPropositionSet()
               .withFilled(p)));
 
       final Action a3 = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withCleared(p)));
 

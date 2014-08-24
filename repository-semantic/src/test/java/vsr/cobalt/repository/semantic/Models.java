@@ -28,8 +28,10 @@ import static vsr.cobalt.testing.Utilities.make;
  */
 public final class Models {
 
-  public static Widget widget(final int id) {
-    return make(aWidget().withIdentifier(uri("urn:example:widget:" + id)));
+  public static Widget widget(final int id, final Property... properties) {
+    return make(aWidget()
+        .withIdentifier(uri("urn:example:widget:" + id))
+        .withPublic(properties));
   }
 
   public static Type type(final int id) {
@@ -40,17 +42,17 @@ public final class Models {
     return make(aFunctionality().withIdentifier(uri("urn:example:fn:" + id)));
   }
 
-  public static Action action(final Widget w, final Property p) {
+  public static Action action(final Widget widget, final Property... properties) {
     return make(aMinimalAction()
-        .withWidget(w)
+        .withWidget(widget)
         .withEffects(aPropositionSet()
-            .withFilled(p)));
+            .withFilled(properties)));
   }
 
-  public static Action action(final Widget w, final Functionality t) {
+  public static Action action(final Widget widget, final Functionality functionalities) {
     return make(aMinimalAction()
-        .withWidget(w)
-        .withFunctionality(t));
+        .withWidget(widget)
+        .withFunctionality(functionalities));
   }
 
   public static Property property(final int id, final Type type) {

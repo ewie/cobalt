@@ -14,6 +14,7 @@ import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PublishedProperty;
 import vsr.cobalt.models.Repository;
+import vsr.cobalt.models.Widget;
 import vsr.cobalt.planner.graph.PropertyProvision;
 
 import static org.mockito.Mockito.mock;
@@ -23,6 +24,7 @@ import static vsr.cobalt.models.makers.ActionMaker.aMinimalAction;
 import static vsr.cobalt.models.makers.PropertyMaker.aMinimalProperty;
 import static vsr.cobalt.models.makers.PropertyMaker.aProperty;
 import static vsr.cobalt.models.makers.PropositionSetMaker.aPropositionSet;
+import static vsr.cobalt.models.makers.WidgetMaker.aMinimalWidget;
 import static vsr.cobalt.planner.graph.makers.PropertyProvisionMaker.aPropertyProvision;
 import static vsr.cobalt.testing.Assert.assertSubClass;
 import static vsr.cobalt.testing.Utilities.make;
@@ -48,6 +50,7 @@ public class ComposingPropertyProvisionProviderTest {
       final Property p = make(aMinimalProperty());
 
       final Action a = make(aMinimalAction()
+          .withWidget(aMinimalWidget().withPublic(p))
           .withEffects(aPropositionSet()
               .withFilled(p)));
 
@@ -70,8 +73,8 @@ public class ComposingPropertyProvisionProviderTest {
       final Property p1 = make(aProperty().withName("p1"));
       final Property p2 = make(aProperty().withName("p2"));
       final Action a = make(aMinimalAction()
-          .withEffects(aPropositionSet()
-              .withFilled(p2)));
+          .withWidget(aMinimalWidget().withPublic(p2))
+          .withEffects(aPropositionSet().withFilled(p2)));
       final PropertyProvision pp = make(aPropertyProvision()
           .withRequest(p1)
           .withOffer(p2)
@@ -89,7 +92,9 @@ public class ComposingPropertyProvisionProviderTest {
     public void returnPublishedProperties() {
       final Property p1 = make(aProperty().withName("p1"));
       final Property p2 = make(aProperty().withName("p2"));
+      final Widget w = make(aMinimalWidget().withPublic(p1, p2));
       final Action a = make(aMinimalAction()
+          .withWidget(w)
           .withEffects(aPropositionSet()
               .withFilled(p1, p2)));
       final ComposingPropertyProvisionProvider ppp = new ComposingPropertyProvisionProvider(null);

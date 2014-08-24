@@ -17,23 +17,26 @@ import vsr.cobalt.testing.maker.Maker;
 /**
  * @author Erik Wienhold
  */
-public abstract class IdentifiableMaker<T extends Identifiable> implements Maker<T> {
+public abstract class IdentifiableMaker<T extends Identifiable, M extends IdentifiableMaker<T, M>> implements Maker<T> {
 
   protected final AtomicValue<Identifier> identifier = new AtomicValue<>();
 
-  public IdentifiableMaker<T> withIdentifier(final Identifier identifier) {
+  @SuppressWarnings("unchecked")
+  public M withIdentifier(final Identifier identifier) {
     this.identifier.set(identifier);
-    return this;
+    return (M) this;
   }
 
-  public IdentifiableMaker<T> withIdentifier(final String id) {
+  @SuppressWarnings("unchecked")
+  public M withIdentifier(final String id) {
     identifier.set(Identifier.create(id));
-    return this;
+    return (M) this;
   }
 
-  public IdentifiableMaker<T> withIdentifier(final URI uri) {
+  @SuppressWarnings("unchecked")
+  public M withIdentifier(final URI uri) {
     identifier.set(Identifier.create(uri));
-    return this;
+    return (M) this;
   }
 
 }
