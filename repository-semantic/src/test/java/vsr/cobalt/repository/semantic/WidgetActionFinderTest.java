@@ -43,7 +43,7 @@ public class WidgetActionFinderTest {
   public void setUp() {
     CachingResourceInternalizers.clearCaches();
 
-    final Dataset ds = loadDataset("widget-actions.n3");
+    final Dataset ds = loadDataset("widget-actions.ttl");
     finder = new WidgetActionFinder(ds);
   }
 

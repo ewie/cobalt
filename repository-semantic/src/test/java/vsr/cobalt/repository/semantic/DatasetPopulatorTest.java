@@ -27,7 +27,7 @@ public class DatasetPopulatorTest {
   public void rejectMutexPropositions() throws Exception {
     final Dataset ds = TDBFactory.createDataset();
     final DatasetPopulator dsp = new DatasetPopulator(ds);
-    dsp.addModel(loadModel("validation/mutex-propositions.n3"));
+    dsp.addModel(loadModel("validation/mutex-propositions.ttl"));
   }
 
   @Test
@@ -56,9 +56,9 @@ public class DatasetPopulatorTest {
   public void inferMissingPropertyNames() throws Exception {
     final Dataset ds = TDBFactory.createDataset();
     final DatasetPopulator dsp = new DatasetPopulator(ds);
-    dsp.addModel(loadModel("infer-property-names/data.n3"));
+    dsp.addModel(loadModel("infer-property-names/data.ttl"));
 
-    final Model x = loadModel("infer-property-names/expected.n3");
+    final Model x = loadModel("infer-property-names/expected.ttl");
 
     ds.begin(ReadWrite.READ);
 

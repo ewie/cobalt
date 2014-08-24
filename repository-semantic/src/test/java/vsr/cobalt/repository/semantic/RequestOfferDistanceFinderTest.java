@@ -23,7 +23,7 @@ public class RequestOfferDistanceFinderTest {
 
   @Test
   public void functionalityDistance() {
-    final Dataset ds = loadDataset("distance/functionalities.n3");
+    final Dataset ds = loadDataset("distance/functionalities.ttl");
     final RequestOfferDistanceFinder df = new RequestOfferDistanceFinder(ds);
 
     final Functionality t0 = functionality(0);
@@ -34,7 +34,7 @@ public class RequestOfferDistanceFinderTest {
 
   @Test
   public void typeDistance() {
-    final Dataset ds = loadDataset("distance/types.n3");
+    final Dataset ds = loadDataset("distance/types.ttl");
     final RequestOfferDistanceFinder df = new RequestOfferDistanceFinder(ds);
 
     final Type y0 = type(0);

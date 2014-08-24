@@ -40,7 +40,7 @@ public class CompatibleResourceFinderTest {
 
   @Test
   public void findCompatiblePublicProperties() {
-    final Dataset ds = loadDataset("compatibility/properties.n3");
+    final Dataset ds = loadDataset("compatibility/properties.ttl");
     final CompatibleResourceFinder finder = new CompatibleResourceFinder(ds);
 
     final Type y0 = type(0);
@@ -67,7 +67,7 @@ public class CompatibleResourceFinderTest {
 
   @Test
   public void findCompatibleFunctionalities() {
-    final Dataset ds = loadDataset("compatibility/functionalities.n3");
+    final Dataset ds = loadDataset("compatibility/functionalities.ttl");
     final CompatibleResourceFinder finder = new CompatibleResourceFinder(ds);
 
     final Functionality f0 = functionality(0);
