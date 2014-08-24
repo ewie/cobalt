@@ -113,13 +113,13 @@ public class DefaultGraphExtender implements GraphExtender {
 
     for (final Candidate c : candidates) {
       if (c.requiresProperties()) {
-        aps.add(createActionProvision(c));
-      } else {
         for (final Set<PropertyProvision> combination : index.getCombinations(c.requiredProperties)) {
           if (canCreateActionProvision(c, combination, graph)) {
             aps.add(createActionProvision(c, combination));
           }
         }
+      } else {
+        aps.add(createActionProvision(c));
       }
     }
 
@@ -321,7 +321,7 @@ public class DefaultGraphExtender implements GraphExtender {
     }
 
     public boolean requiresProperties() {
-      return requiredProperties.isEmpty();
+      return !requiredProperties.isEmpty();
     }
 
   }
