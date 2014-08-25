@@ -17,8 +17,8 @@ var PropertyProvision = require('./propertyProvision');
 
 module.exports = value.define({
 
-  request: { type: Action },
-  precursor: { type: Action },
+  requestedAction: { type: Action },
+  precursorAction: { type: Action },
   propertyProvisions: {
     intern: function (v) { return new Set(PropertyProvision.fromArray(v)) },
     extern: function (s) { return PropertyProvision.toArray(s) }
@@ -28,9 +28,9 @@ module.exports = value.define({
 
   get requiredActions() {
     var actions = new Set();
-    this.precursor && actions.add(this.precursor);
+    this.precursorAction && actions.add(this.precursorAction);
     return this.propertyProvisions.reduce(function (actions, pp) {
-      actions.add(pp.provider);
+      actions.add(pp.providingAction);
       return actions;
     }, actions);
   }

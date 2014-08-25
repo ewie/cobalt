@@ -74,7 +74,7 @@ function getInteractions(action, level) {
 
   return action.interactions.reduce(function (interactions, interaction) {
     interactions.add({
-      instruction: interaction.instruction,
+      instructionText: interaction.instructionText,
       widget: instance
     });
     return interactions;
@@ -88,19 +88,21 @@ function getInteractions(action, level) {
  *
  * @param {object} action
  * @param {object} level
+ * @param {object} prevLevel the previous level, i.e. the level which `level`
+ *                           extends on
  *
- * @return {array} an array communications
+ * @return {array} an array of communications
  */
 function getCommunications(action, level, prevLevel) {
   return (level.actionProvisions || []).reduce(function (comms, ap) {
     return ap.propertyProvisions.reduce(function (comms, pp) {
-      if (pp.provider.equals(action)) {
+      if (pp.providingAction.equals(action)) {
         if (pp.offer.name !== pp.request.name) {
           throw new Error("cannot realize communication for property provision with offer and request of differing names");
         }
         comms.push({
           topic: pp.offer.name,
-          instance: instances.get(ap.request, prevLevel)
+          instance: instances.get(ap.requestedAction, prevLevel)
         });
       }
       return comms;
@@ -126,15 +128,15 @@ function getActions(level, prevLevel) {
   // instance of requested action in the previous level. This applies only to
   // extension levels.
   if (level.actionProvisions) {
-    level.actionProvisions.forEach(function (actionProvision) {
-      var precursor = actionProvision.precursor;
-      if (precursor) {
-        index.putWhenMissing(precursor, function () {
+    level.actionProvisions.forEach(function (ap) {
+      var pa = ap.precursorAction;
+      if (pa) {
+        index.putWhenMissing(pa, function () {
           return {
             done:           false,
-            interactions:   getInteractions(precursor),
-            communications: getCommunications(precursor, level, prevLevel),
-            instance:       instances.get(actionProvision.request, prevLevel)
+            interactions:   getInteractions(pa),
+            communications: getCommunications(pa, level, prevLevel),
+            instance:       instances.get(ap.requestedAction, prevLevel)
           };
         });
       }

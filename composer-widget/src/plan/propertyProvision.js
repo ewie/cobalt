@@ -17,6 +17,6 @@ module.exports = value.define({
 
   request: { type: Property },
   offer: { type: Property },
-  provider: { type: Action }
+  providingAction: { type: Action }
 
 });

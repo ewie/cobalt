@@ -18,12 +18,12 @@ import vsr.cobalt.service.JsonSerializer;
  */
 public class JsonInteractionSerializer extends JsonSerializer<Interaction> {
 
-  private static final String instruction = "instruction";
+  private static final String instructionText = "instructionText";
 
   @Override
   public JsonObjectBuilder build(final Interaction interaction) {
     return Json.createObjectBuilder()
-        .add(instruction, interaction.getInstructionText());
+        .add(instructionText, interaction.getInstructionText());
   }
 
 }

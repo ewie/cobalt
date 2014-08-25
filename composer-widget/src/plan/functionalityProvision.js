@@ -17,6 +17,6 @@ module.exports = value.define({
 
   request: { type: Functionality },
   offer: { type: Functionality },
-  provider: { type: Action }
+  providingAction: { type: Action }
 
 });

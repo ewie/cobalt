@@ -21,8 +21,8 @@ import vsr.cobalt.service.JsonSerializer;
  */
 public class JsonActionProvisionSerializer extends JsonSerializer<ActionProvision> {
 
-  private static final String request = "request";
-  private static final String precursor = "precursor";
+  private static final String requestedAction = "requestedAction";
+  private static final String precursorAction = "precursorAction";
   private static final String propertyProvisions = "propertyProvisions";
 
   private final JsonSerializer<Action> actionSerializer;
@@ -37,9 +37,9 @@ public class JsonActionProvisionSerializer extends JsonSerializer<ActionProvisio
   @Override
   public JsonObjectBuilder build(final ActionProvision provision) {
     final JsonObjectBuilder obj = Json.createObjectBuilder();
-    obj.add(request, actionSerializer.serialize(provision.getRequestedAction()));
+    obj.add(requestedAction, actionSerializer.serialize(provision.getRequestedAction()));
     if (provision.getPrecursorAction() != null) {
-      obj.add(precursor, actionSerializer.serialize(provision.getPrecursorAction()));
+      obj.add(precursorAction, actionSerializer.serialize(provision.getPrecursorAction()));
     }
     final Set<PropertyProvision> pps = provision.getPropertyProvisions();
     if (!pps.isEmpty()) {

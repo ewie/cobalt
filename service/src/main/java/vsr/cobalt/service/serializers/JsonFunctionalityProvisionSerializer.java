@@ -22,7 +22,7 @@ public class JsonFunctionalityProvisionSerializer extends JsonSerializer<Functio
 
   private static final String offer = "offer";
   private static final String request = "request";
-  private static final String provider = "provider";
+  private static final String providingAction = "providingAction";
 
   private final JsonSerializer<Action> actionSerializer;
   private final JsonSerializer<Functionality> functionalitySerializer;
@@ -38,7 +38,7 @@ public class JsonFunctionalityProvisionSerializer extends JsonSerializer<Functio
     return Json.createObjectBuilder()
         .add(request, functionalitySerializer.serialize(provision.getRequest()))
         .add(offer, functionalitySerializer.serialize(provision.getOffer().getSubject()))
-        .add(provider, actionSerializer.serialize(provision.getProvidingAction()));
+        .add(providingAction, actionSerializer.serialize(provision.getProvidingAction()));
   }
 
 }

@@ -20,12 +20,12 @@ module.exports = TemplateView.extend({
 
   initialize: function () {
     TemplateView.prototype.initialize.apply(this, arguments);
-    this.$instruction = this.$el.byName('instruction');
+    this.$instruction = this.$el.byName('instruction-text');
   },
 
 
   render: function () {
-    this.$instruction.text(this.model.attributes.instruction);
+    this.$instruction.text(this.model.attributes.instructionText);
   }
 
 

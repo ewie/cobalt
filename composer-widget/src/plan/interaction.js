@@ -11,6 +11,6 @@ var value = require('../util/value');
 
 module.exports = value.define({
 
-  instruction: undefined
+  instructionText: undefined
 
 });

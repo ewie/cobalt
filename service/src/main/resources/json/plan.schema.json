@@ -3,7 +3,7 @@
   "type": "object",
   "required": [ "rating", "initialLevel" ],
   "properties": {
-    "rating": { "type": "number" },
+    "rating": { "$ref": "#/definitions/rating" },
     "initialLevel": { "$ref": "#/definitions/initialLevel" },
     "extensionLevels": {
       "type": "array",
@@ -12,6 +12,7 @@
     }
   },
   "definitions": {
+    "rating": { "type": "number" },
     "initialLevel": {
       "type": "object",
       "required": [ "functionalityProvisions" ],
@@ -34,22 +35,13 @@
         }
       }
     },
-    "functionalityProvision": {
-      "type": "object",
-      "required": [ "request", "offer", "provider" ],
-      "properties": {
-        "request": { "$ref": "#/definitions/functionality" },
-        "offer": { "$ref": "#/definitions/functionality" },
-        "provider": { "$ref": "#/definitions/action" }
-      }
-    },
     "actionProvision": {
       "type": "object",
       "required": [ "request" ],
       "properties": {
-        "request": { "$ref": "#/definitions/action" },
-        "precursor": { "$ref": "#/definitions/action" },
-        "properties": {
+        "requestedAction": { "$ref": "#/definitions/action" },
+        "precursorAction": { "$ref": "#/definitions/action" },
+        "propertyProvisions": {
           "type": "array",
           "items": { "$ref": "#/definitions/propertyProvision" },
           "minItems": 1
@@ -58,11 +50,20 @@
     },
     "propertyProvision": {
       "type": "object",
-      "required": [ "request", "offer", "provider" ],
+      "required": [ "request", "offer", "providingAction" ],
       "properties": {
         "request": { "$ref": "#/definitions/property" },
         "offer": { "$ref": "#/definitions/property" },
-        "provider": { "$ref": "#/definitions/action" }
+        "providingAction": { "$ref": "#/definitions/action" }
+      }
+    },
+    "functionalityProvision": {
+      "type": "object",
+      "required": [ "request", "offer", "providingAction" ],
+      "properties": {
+        "request": { "$ref": "#/definitions/functionality" },
+        "offer": { "$ref": "#/definitions/functionality" },
+        "providingAction": { "$ref": "#/definitions/action" }
       }
     },
     "action": {
@@ -87,31 +88,6 @@
         }
       }
     },
-    "widget": { "$ref": "#/definitions/identifiable" },
-    "functionality": { "$ref": "#/definitions/identifiable" },
-    "type": { "$ref": "#/definitions/identifiable" },
-    "identifiable": {
-      "description": "a uniquely identifiable entity",
-      "type": "object",
-      "required": [ "id" ],
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "a value uniquely identifying the entity within a single plan"
-        },
-        "uri": {
-          "type": "string",
-          "description": "the ID as a URI when it's a valid URI"
-        }
-      }
-    },
-    "interaction": {
-      "type": "object",
-      "required": [ "instruction" ],
-      "properties": {
-        "instruction": { "type": "string" }
-      }
-    },
     "property": {
       "type": "object",
       "required": [ "name", "type" ],
@@ -119,6 +95,41 @@
         "name": { "type": "string" },
         "type": { "$ref": "#/definitions/type" }
       }
+    },
+    "interaction": {
+      "type": "object",
+      "required": [ "instructionText" ],
+      "properties": {
+        "instructionText": { "type": "string" }
+      }
+    },
+    "widget": { "$ref": "#/definitions/identifiable" },
+    "functionality": { "$ref": "#/definitions/identifiable" },
+    "type": { "$ref": "#/definitions/identifiable" },
+    "identifiable": {
+      "description": "a uniquely identifiable entity",
+      "type": "object",
+      "oneOf": [
+        {
+          "required": [ "uri" ],
+          "properties": {
+            "uri": {
+              "type": "string",
+              "format": "uri",
+              "description": "a URI identifying the entity"
+            }
+          }
+        },
+        {
+          "required": [ "id" ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "a value uniquely identifying the entity within a single plan, used when the entity cannot identified by a URI"
+            }
+          }
+        }
+      ]
     }
   }
 }

@@ -11,7 +11,7 @@ var value = require('../util/value');
 
 module.exports = value.define({
 
-  id: undefined,
-  uri: undefined
+  uri: undefined,
+  id: undefined
 
 });

@@ -25,7 +25,7 @@ module.exports = value.define({
 
   get requiredActions() {
     return this.functionalityProvisions.reduce(function (actions, fp) {
-      actions.add(fp.provider);
+      actions.add(fp.providingAction);
       return actions;
     }, new Set());
   }
