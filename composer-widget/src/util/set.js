@@ -17,14 +17,14 @@ var value = require('./value');
  * Value equality is based on object identity (===) or, when applicable, the
  * result of `value.equals(other)`.
  */
-var Set = module.exports = function Set(items) {
+var _Set = module.exports = function _Set(items) {
   this._items = [];
   items && this.addAll(items);
 };
 
 
 
-Set.prototype = {
+_Set.prototype = {
 
 
   /**
@@ -64,7 +64,7 @@ Set.prototype = {
   /**
    * Add a collection of items to this set.
    *
-   * @param {Set|array} items
+   * @param {_Set|array} items
    */
   addAll: function (items) {
     items.forEach(this.add.bind(this));
@@ -81,7 +81,7 @@ Set.prototype = {
    * @return {false} otherwise
    */
   equals: function (other) {
-    return other instanceof Set &&
+    return other instanceof _Set &&
            this.size === other.size &&
            this.every(function (item) { return other.has(item) });
   },

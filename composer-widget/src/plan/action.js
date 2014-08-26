@@ -8,7 +8,7 @@
 
 
 var value = require('../util/value');
-var Set = require('../util/set');
+var _Set = require('../util/set');
 
 var Interaction = require('./interaction');
 var Property = require('./property');
@@ -19,7 +19,7 @@ var Widget = require('./widget');
 
 function asSet(type) {
   return function (ary) {
-    return new Set(type.fromArray(ary));
+    return new _Set(type.fromArray(ary));
   };
 }
 

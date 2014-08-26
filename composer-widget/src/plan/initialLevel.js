@@ -7,7 +7,7 @@
  */
 
 
-var Set = require('../util/set');
+var _Set = require('../util/set');
 var value = require('../util/value');
 
 var FunctionalityProvision = require('./functionalityProvision');
@@ -17,7 +17,7 @@ var FunctionalityProvision = require('./functionalityProvision');
 module.exports = value.define({
 
   functionalityProvisions: {
-    intern: function (v) { return new Set(FunctionalityProvision.fromArray(v)) },
+    intern: function (v) { return new _Set(FunctionalityProvision.fromArray(v)) },
     extern: function (s) { return FunctionalityProvision.toArray(s) }
   }
 
@@ -27,7 +27,7 @@ module.exports = value.define({
     return this.functionalityProvisions.reduce(function (actions, fp) {
       actions.add(fp.providingAction);
       return actions;
-    }, new Set());
+    }, new _Set());
   }
 
 });

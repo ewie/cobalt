@@ -7,7 +7,7 @@
  */
 
 
-var Set = require('../util/set');
+var _Set = require('../util/set');
 var value = require('../util/value');
 
 var ActionProvision = require('./actionProvision');
@@ -17,7 +17,7 @@ var ActionProvision = require('./actionProvision');
 module.exports = value.define({
 
   actionProvisions: {
-    intern: function (v) { return new Set(ActionProvision.fromArray(v)) },
+    intern: function (v) { return new _Set(ActionProvision.fromArray(v)) },
     extern: function (s) { return ActionProvision.toArray(s) }
   }
 
@@ -27,7 +27,7 @@ module.exports = value.define({
     return this.actionProvisions.reduce(function (actions, ap) {
       actions.addAll(ap.requiredActions);
       return actions;
-    }, new Set());
+    }, new _Set());
   }
 
 });

@@ -12,7 +12,7 @@ var StepModel = require('./models/step');
 var StepCollection = require('./models/steps');
 var InteractionCollection = require('./models/interactions');
 var ActionCollection = require('./models/actions');
-var Map = require('./util/map');
+var _Map = require('./util/map');
 
 
 
@@ -32,7 +32,7 @@ var instances = (function () {
      * instances are held via strong references.
      */
     clear: function () {
-      index = new Map();
+      index = new _Map();
     },
 
     /**
@@ -46,7 +46,7 @@ var instances = (function () {
     get: function (action, level) {
       level || (level = null);
       return index
-        .getOrPut(level, function () { return new Map() })
+        .getOrPut(level, function () { return new _Map() })
         .getOrPut(action, function () {
           return {
             id: nextId++,
@@ -122,7 +122,7 @@ function getCommunications(action, level, prevLevel) {
  * @return {Backbone.Collection} a collection of action models
  */
 function getActions(level, prevLevel) {
-  var index = new Map();
+  var index = new _Map();
 
   // Get the widget instance for each precursor action, by using the widget
   // instance of requested action in the previous level. This applies only to

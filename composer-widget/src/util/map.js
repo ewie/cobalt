@@ -27,13 +27,13 @@ function findEntry(entries, key) {
  * Key equality is based on object identity (===) or, when applicable, the
  * result of `key.equals(other)`.
  */
-var Map = module.exports = function Map() {
+var _Map = module.exports = function _Map() {
   this._entries = [];
 };
 
 
 
-Map.prototype = {
+_Map.prototype = {
 
 
   /**

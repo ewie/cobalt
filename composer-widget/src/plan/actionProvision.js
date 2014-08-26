@@ -8,7 +8,7 @@
 
 
 var value = require('../util/value');
-var Set = require('../util/set');
+var _Set = require('../util/set');
 
 var Action = require('./action');
 var PropertyProvision = require('./propertyProvision');
@@ -20,14 +20,14 @@ module.exports = value.define({
   requestedAction: { type: Action },
   precursorAction: { type: Action },
   propertyProvisions: {
-    intern: function (v) { return new Set(PropertyProvision.fromArray(v)) },
+    intern: function (v) { return new _Set(PropertyProvision.fromArray(v)) },
     extern: function (s) { return PropertyProvision.toArray(s) }
   }
 
 }, {
 
   get requiredActions() {
-    var actions = new Set();
+    var actions = new _Set();
     this.precursorAction && actions.add(this.precursorAction);
     return this.propertyProvisions.reduce(function (actions, pp) {
       actions.add(pp.providingAction);
