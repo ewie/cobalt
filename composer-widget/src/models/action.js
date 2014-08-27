@@ -7,4 +7,12 @@
  */
 
 
-module.exports = Backbone.Model;
+module.exports = Backbone.Model.extend({
+
+
+  isEmpty: function () {
+    return this.get('interactions').isEmpty();
+  }
+
+
+});

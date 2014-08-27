@@ -193,13 +193,15 @@ function createExecution(plan) {
 
   // Create a step per level by iterating in extension order, i.e. start with
   // the initial level.
-  var steps = plan.levels.map(function (level, index) {
-    return createStep(plan.depth - index, level, plan.level(index - 1));
-  });
-
-  // Reverse the steps as they were constructed in extension order, i.e.
-  // backwards in time.
-  steps.reverse();
+  var steps = plan.levels.reduce(function (steps, level, index) {
+    var step = createStep(plan.depth - index, level, plan.level(index - 1));
+    if (!step.isEmpty()) {
+      // Collect steps in reverse order as they are constructed in extension
+      // order, i.e. converse to execution order.
+      steps.unshift(step);
+    }
+    return steps;
+  }, []);
 
   return new ExecutionModel({
     steps: new StepCollection(steps)

@@ -16,6 +16,13 @@ module.exports = Backbone.Model.extend({
   },
 
 
+  isEmpty: function () {
+    return this.get('actions').every(function (action) {
+      return action.isEmpty();
+    });
+  },
+
+
   _updateActions: function () {
     var _actions = this.previous('actions');
     var actions = this.get('actions');
