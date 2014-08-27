@@ -45,6 +45,14 @@ function put(pointer, value) {
 
 
 
+function remove(pointer) {
+  var data = read();
+  jsonpointer.remove(data, pointer);
+  write(data);
+}
+
+
+
 function getRequest() {
   return get('/request');
 }
@@ -95,6 +103,12 @@ function putCurrentPlanId(id) {
 
 
 
+function removeCurrentPlanId() {
+  remove('/currentPlanId');
+}
+
+
+
 module.exports = {
 
   get: get,
@@ -113,6 +127,8 @@ module.exports = {
 
   getCurrentPlanId: getCurrentPlanId,
 
-  putCurrentPlanId: putCurrentPlanId
+  putCurrentPlanId: putCurrentPlanId,
+
+  removeCurrentPlanId: removeCurrentPlanId
 
 };

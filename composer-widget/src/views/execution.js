@@ -15,6 +15,7 @@ module.exports = TemplateView.extend({
   templateId: 'execution',
 
   events: {
+    'click [name=clear]':        '_clear',
     'click [name=reload]':       '_reload',
     'click [name=expand-all]':   '_expandAll',
     'click [name=collapse-all]': '_collapseAll'
@@ -36,6 +37,11 @@ module.exports = TemplateView.extend({
       collection: this.model.attributes.steps
     });
     v.render();
+  },
+
+
+  _clear: function () {
+    this.model.trigger('clear');
   },
 
 

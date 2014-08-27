@@ -149,7 +149,7 @@ main[data-focus=execution] #execution-section {
 }
 
 
-menu[data-has-current-plan] #current-plan-link {
+menu[data-has-current-plan=true] #current-plan-link {
   display: block;
 }
 
@@ -478,6 +478,11 @@ label[for] {
 
 .execution-control::before {
   font-family: 'FontAwesome';
+}
+
+
+.execution-clear::before {
+  content: '\F00D';
 }
 
 

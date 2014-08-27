@@ -145,6 +145,13 @@ function findActionByWidgetInstance(step, instance) {
 
 
 
+function clear() {
+  return rave.clearRegionWidgets();
+}
+
+
+
+
 /**
  * Load an execution model in the current Rave page.
  *
@@ -153,7 +160,7 @@ function findActionByWidgetInstance(step, instance) {
  * @return {object} a promise resolving the execution is loaded
  */
 function load(execution) {
-  return rave.clearRegionWidgets()
+  return clear()
     .then(function () {
       loadWidgets(execution)
         .then(function (instances) {
@@ -215,6 +222,8 @@ module.exports = {
    * @return {false} otherwise
    */
   get isEmpty() { return rave.isEmpty },
+
+  clear: clear,
 
   load: load
 

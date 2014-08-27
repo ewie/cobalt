@@ -126,6 +126,15 @@ function loadExecution(options) {
 }
 
 
+
+function clearExecution() {
+  mashup.clear();
+  store.putCurrentPlanId(null);
+  $('menu').attr('data-has-current-plan', false);
+}
+
+
+
 // guards against multiple initializations
 var initialized;
 
@@ -149,6 +158,11 @@ module.exports = {
     var serviceView = this.service = createServiceView();
     var plansView = this.plans = createPlansView();
     var executionView = this.execution = createExecutionView();
+
+    executionView.model.on('clear', function () {
+      clearExecution();
+      redirect('plans');
+    });
 
     executionView.model.on('reload', function () {
       loadExecution({
