@@ -8,4 +8,4 @@
 /**
  * @author Erik Wienhold
  */
-package vsr.cobalt.service.json;
+package vsr.cobalt.service.serialization.deserializers;

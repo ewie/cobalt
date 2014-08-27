@@ -5,15 +5,15 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.service.serializers;
+package vsr.cobalt.service.serialization.serializers;
 
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.Type;
-import vsr.cobalt.service.CachingJsonSerializer;
-import vsr.cobalt.service.JsonSerializer;
+import vsr.cobalt.service.serialization.CachingJsonSerializer;
+import vsr.cobalt.service.serialization.JsonSerializer;
 
 /**
  * @author Erik Wienhold

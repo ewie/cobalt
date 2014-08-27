@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.service.json;
+package vsr.cobalt.service.serialization.json;
 
 import java.io.IOException;
 import java.io.Writer;

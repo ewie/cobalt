@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.service.serializers;
+package vsr.cobalt.service.serialization;
 
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Functionality;
@@ -18,8 +18,18 @@ import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.service.CachingJsonSerializer;
-import vsr.cobalt.service.Service;
+import vsr.cobalt.service.planner.PlannerService;
+import vsr.cobalt.service.serialization.serializers.JsonActionProvisionSerializer;
+import vsr.cobalt.service.serialization.serializers.JsonActionSerializer;
+import vsr.cobalt.service.serialization.serializers.JsonExtensionLevelSerializer;
+import vsr.cobalt.service.serialization.serializers.JsonFunctionalityProvisionSerializer;
+import vsr.cobalt.service.serialization.serializers.JsonFunctionalitySerializer;
+import vsr.cobalt.service.serialization.serializers.JsonInitialLevelSerializer;
+import vsr.cobalt.service.serialization.serializers.JsonInteractionSerializer;
+import vsr.cobalt.service.serialization.serializers.JsonPlanSerializer;
+import vsr.cobalt.service.serialization.serializers.JsonPropertyProvisionSerializer;
+import vsr.cobalt.service.serialization.serializers.JsonPropertySerializer;
+import vsr.cobalt.service.serialization.serializers.JsonWidgetSerializer;
 
 /**
  * @author Erik Wienhold
@@ -47,10 +57,10 @@ public final class CachingJsonSerializers {
     actions = new CachingJsonSerializer<>(new JsonActionSerializer(widgets, functionalities, properties, interactions));
 
     functionalityProvisions = new CachingJsonSerializer<>(new JsonFunctionalityProvisionSerializer(actions,
-        functionalities, Service.getInstance().getFunctionalityDistanceMeter()));
+        functionalities, PlannerService.getInstance().getFunctionalityDistanceMeter()));
 
     propertyProvisions = new CachingJsonSerializer<>(new JsonPropertyProvisionSerializer(actions, properties,
-        Service.getInstance().getPropertyDistanceMeter()));
+        PlannerService.getInstance().getPropertyDistanceMeter()));
 
     actionProvisions = new CachingJsonSerializer<>(
         new JsonActionProvisionSerializer(actions, propertyProvisions));

@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.service.serializers;
+package vsr.cobalt.service.serialization.serializers;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -17,7 +17,7 @@ import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Interaction;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.Widget;
-import vsr.cobalt.service.JsonSerializer;
+import vsr.cobalt.service.serialization.JsonSerializer;
 
 /**
  * @author Erik Wienhold

@@ -8,4 +8,4 @@
 /**
  * @author Erik Wienhold
  */
-package vsr.cobalt.service.distance;
+package vsr.cobalt.service.serialization.json;

@@ -23,8 +23,8 @@ import org.testng.annotations.Test;
 import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Mashup;
 import vsr.cobalt.planner.PlanningProblem;
-import vsr.cobalt.service.planner.JsonPlannerRequestDeserializer;
 import vsr.cobalt.service.planner.PlannerRequest;
+import vsr.cobalt.service.serialization.deserializers.JsonPlannerRequestDeserializer;
 
 import static org.testng.Assert.assertEquals;
 import static vsr.cobalt.models.makers.FunctionalityMaker.aFunctionality;

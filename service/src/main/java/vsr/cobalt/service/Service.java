@@ -13,13 +13,6 @@ import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vsr.cobalt.planner.Repository;
-import vsr.cobalt.planner.graph.FunctionalityProvision;
-import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.repository.semantic.SemanticRepository;
-import vsr.cobalt.service.distance.FunctionalityProvisionDistanceMeter;
-import vsr.cobalt.service.distance.PropertyProvisionDistanceMeter;
-import vsr.cobalt.service.distance.ProvisionDistanceMeter;
 
 /**
  * @author Erik Wienhold
@@ -32,8 +25,6 @@ public class Service {
 
   private Dataset dataset;
 
-  private Repository repository;
-
   private Service() {
   }
 
@@ -41,35 +32,21 @@ public class Service {
     return INSTANCE;
   }
 
-  public void initializeDataset() {
-    if (createDataset()) {
-      seedDataset();
-    }
-  }
-
-  public Repository getRepository() {
-    if (repository == null) {
-      repository = new SemanticRepository(dataset);
-    }
-    return repository;
-  }
-
-  public ProvisionDistanceMeter<PropertyProvision> getPropertyDistanceMeter() {
-    return new PropertyProvisionDistanceMeter(getRepository());
-  }
-
-  public ProvisionDistanceMeter<FunctionalityProvision> getFunctionalityDistanceMeter() {
-    return new FunctionalityProvisionDistanceMeter(getRepository());
-  }
-
-  private boolean createDataset() {
+  public Dataset getDataset() {
     if (dataset == null) {
-      final String dir = Config.get(Config.datasetDir);
-      logger.info("create dataset {}", dir);
-      dataset = TDBFactory.createDataset(dir);
-      return true;
+      createDataset();
     }
-    return false;
+    return dataset;
+  }
+
+  public void createDataset() {
+    if (dataset != null) {
+      throw new IllegalStateException("dataset already initialized");
+    }
+    final String dir = Config.get(Config.datasetDir);
+    logger.info("create dataset {}", dir);
+    dataset = TDBFactory.createDataset(dir);
+    seedDataset();
   }
 
   private void seedDataset() {

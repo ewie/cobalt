@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.service.serializers;
+package vsr.cobalt.service.serialization.serializers;
 
 import java.util.Set;
 import javax.json.Json;
@@ -14,7 +14,7 @@ import javax.json.JsonObjectBuilder;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.service.JsonSerializer;
+import vsr.cobalt.service.serialization.JsonSerializer;
 
 /**
  * @author Erik Wienhold

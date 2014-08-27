@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.service.planner;
+package vsr.cobalt.service.serialization.deserializers;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -26,6 +26,7 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFLanguages;
 import vsr.cobalt.models.Mashup;
 import vsr.cobalt.repository.semantic.internalizers.models.MashupInternalizer;
+import vsr.cobalt.service.planner.PlannerRequest;
 
 /**
  * @author Erik Wienhold

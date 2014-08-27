@@ -5,15 +5,15 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.service.serializers;
+package vsr.cobalt.service.serialization.serializers;
 
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 
 import vsr.cobalt.models.Action;
 import vsr.cobalt.planner.graph.Provision;
-import vsr.cobalt.service.JsonSerializer;
-import vsr.cobalt.service.distance.ProvisionDistanceMeter;
+import vsr.cobalt.service.planner.distance.ProvisionDistanceMeter;
+import vsr.cobalt.service.serialization.JsonSerializer;
 
 /**
  * @author Erik Wienhold

@@ -10,7 +10,6 @@ package vsr.cobalt.service.planner;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import vsr.cobalt.planner.Repository;
 import vsr.cobalt.planner.DefaultMashupPlanner;
 import vsr.cobalt.planner.GraphExtender;
 import vsr.cobalt.planner.GraphFactory;
@@ -18,6 +17,7 @@ import vsr.cobalt.planner.Plan;
 import vsr.cobalt.planner.PlanCollector;
 import vsr.cobalt.planner.PlanExtractor;
 import vsr.cobalt.planner.PlanningProcess;
+import vsr.cobalt.planner.Repository;
 import vsr.cobalt.planner.extenders.DefaultGraphExtender;
 import vsr.cobalt.planner.extenders.DefaultGraphFactory;
 import vsr.cobalt.planner.extenders.PathWalkingCyclicDependencyDetector;

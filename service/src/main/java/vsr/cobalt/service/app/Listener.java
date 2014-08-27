@@ -19,7 +19,7 @@ public class Listener implements ServletContextListener {
 
   @Override
   public void contextInitialized(final ServletContextEvent sce) {
-    Service.getInstance().initializeDataset();
+    Service.getInstance().createDataset();
   }
 
   @Override

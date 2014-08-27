@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.service.distance;
+package vsr.cobalt.service.planner.distance;
 
 import vsr.cobalt.planner.Repository;
 import vsr.cobalt.planner.graph.FunctionalityProvision;

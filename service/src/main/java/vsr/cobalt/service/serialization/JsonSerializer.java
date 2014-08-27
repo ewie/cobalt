@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.service;
+package vsr.cobalt.service.serialization;
 
 import java.util.Iterator;
 import javax.json.Json;
