@@ -14,7 +14,7 @@ import java.util.Set;
 
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PublishedProperty;
-import vsr.cobalt.models.Repository;
+import vsr.cobalt.planner.Repository;
 import vsr.cobalt.planner.graph.PropertyProvision;
 
 /**

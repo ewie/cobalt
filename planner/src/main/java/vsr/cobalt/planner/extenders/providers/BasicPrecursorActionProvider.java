@@ -11,8 +11,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import vsr.cobalt.models.Action;
-import vsr.cobalt.models.Repository;
 import vsr.cobalt.models.Widget;
+import vsr.cobalt.planner.Repository;
 
 /**
  * Provides all precursor actions among the widget actions returned by a repository.

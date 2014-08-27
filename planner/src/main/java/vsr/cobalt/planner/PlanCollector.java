@@ -15,9 +15,9 @@ package vsr.cobalt.planner;
 public interface PlanCollector {
 
   /**
-   * Add a plan to the collector.
+   * Collect a plan and instruct further planning process.
    *
-   * @param plan a plan
+   * @param plan the plan to collect
    *
    * @return a value indicating how a planner should proceed
    */

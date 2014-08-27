@@ -15,9 +15,9 @@ import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PublishedProperty;
 import vsr.cobalt.models.RealizedFunctionality;
-import vsr.cobalt.models.Repository;
 import vsr.cobalt.models.Type;
 import vsr.cobalt.models.Widget;
+import vsr.cobalt.planner.Repository;
 import vsr.cobalt.repository.semantic.finders.CompatibleResourceFinder;
 import vsr.cobalt.repository.semantic.finders.RequestOfferDistanceFinder;
 import vsr.cobalt.repository.semantic.finders.WidgetActionFinder;
@@ -74,12 +74,12 @@ public class SemanticRepository implements Repository {
   }
 
   @Override
-  public int getDistance(final Functionality request, final Functionality offer) {
+  public double getDistance(final Functionality request, final Functionality offer) {
     return requestOfferDistanceFinder.getDistance(request, offer);
   }
 
   @Override
-  public int getDistance(final Type request, final Type offer) {
+  public double getDistance(final Type request, final Type offer) {
     return requestOfferDistanceFinder.getDistance(request, offer);
   }
 

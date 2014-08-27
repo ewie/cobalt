@@ -10,7 +10,7 @@ package vsr.cobalt.service.planner;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import vsr.cobalt.models.Repository;
+import vsr.cobalt.planner.Repository;
 import vsr.cobalt.planner.DefaultMashupPlanner;
 import vsr.cobalt.planner.GraphExtender;
 import vsr.cobalt.planner.GraphFactory;

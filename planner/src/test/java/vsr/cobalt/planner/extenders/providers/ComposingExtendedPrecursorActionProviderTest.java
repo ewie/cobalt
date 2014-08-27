@@ -12,7 +12,7 @@ import java.util.Set;
 import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
-import vsr.cobalt.models.Repository;
+import vsr.cobalt.planner.Repository;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

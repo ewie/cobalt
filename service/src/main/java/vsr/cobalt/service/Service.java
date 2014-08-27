@@ -13,7 +13,7 @@ import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vsr.cobalt.models.Repository;
+import vsr.cobalt.planner.Repository;
 import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.PropertyProvision;
 import vsr.cobalt.repository.semantic.SemanticRepository;

@@ -11,8 +11,8 @@ import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.PublishedProperty;
-import vsr.cobalt.models.Repository;
 import vsr.cobalt.models.Widget;
+import vsr.cobalt.planner.Repository;
 import vsr.cobalt.planner.graph.PropertyProvision;
 
 import static org.mockito.Mockito.mock;

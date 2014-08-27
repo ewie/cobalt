@@ -5,9 +5,17 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-package vsr.cobalt.models;
+package vsr.cobalt.planner;
 
 import java.util.Set;
+
+import vsr.cobalt.models.Action;
+import vsr.cobalt.models.Functionality;
+import vsr.cobalt.models.Property;
+import vsr.cobalt.models.PublishedProperty;
+import vsr.cobalt.models.RealizedFunctionality;
+import vsr.cobalt.models.Type;
+import vsr.cobalt.models.Widget;
 
 /**
  * A repository serves as the knowledge base for the planning algorithm.
@@ -55,7 +63,7 @@ public interface Repository {
    *
    * @return the distance between the functionalities, -1 when not compatible
    */
-  int getDistance(Functionality request, Functionality offer);
+  double getDistance(Functionality request, Functionality offer);
 
   /**
    * Get the distance between two types.
@@ -68,6 +76,6 @@ public interface Repository {
    *
    * @return the distance between the types, -1 when not compatible
    */
-  int getDistance(Type request, Type offer);
+  double getDistance(Type request, Type offer);
 
 }

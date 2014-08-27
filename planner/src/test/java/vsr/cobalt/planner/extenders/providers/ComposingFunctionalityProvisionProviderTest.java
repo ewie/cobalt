@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.RealizedFunctionality;
-import vsr.cobalt.models.Repository;
+import vsr.cobalt.planner.Repository;
 import vsr.cobalt.planner.graph.FunctionalityProvision;
 
 import static org.mockito.Mockito.mock;

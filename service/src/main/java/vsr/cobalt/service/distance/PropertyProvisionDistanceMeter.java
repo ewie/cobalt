@@ -7,7 +7,7 @@
 
 package vsr.cobalt.service.distance;
 
-import vsr.cobalt.models.Repository;
+import vsr.cobalt.planner.Repository;
 import vsr.cobalt.planner.graph.PropertyProvision;
 
 /**

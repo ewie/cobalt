@@ -17,7 +17,7 @@
 
     <dependency>
       <groupId>vsr.cobalt</groupId>
-      <artifactId>cobalt-models</artifactId>
+      <artifactId>cobalt-planner</artifactId>
       <version>${project.version}</version>
     </dependency>
 
