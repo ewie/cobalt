@@ -24,7 +24,7 @@ public class PlannerService {
   }
 
   public PlannerJob createJob(final PlannerRequest request) {
-    return new PlannerJob(request, Service.getInstance().createRepository());
+    return new PlannerJob(request, Service.getInstance().getRepository());
   }
 
 }

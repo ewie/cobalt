@@ -11,20 +11,19 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObjectBuilder;
 
+import vsr.cobalt.planner.Plan;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.Graph;
 import vsr.cobalt.planner.graph.InitialLevel;
-import vsr.cobalt.planner.rating.RatedPlan;
 import vsr.cobalt.service.JsonSerializer;
 
 /**
  * @author Erik Wienhold
  */
-public class JsonPlanSerializer extends JsonSerializer<RatedPlan> {
+public class JsonPlanSerializer extends JsonSerializer<Plan> {
 
   private static final String extensionLevels = "extensionLevels";
   private static final String initialLevel = "initialLevel";
-  private static final String rating = "rating";
 
   private final JsonSerializer<InitialLevel> initialLevelSerializer;
   private final JsonSerializer<ExtensionLevel> extensionLevelSerializer;
@@ -36,11 +35,10 @@ public class JsonPlanSerializer extends JsonSerializer<RatedPlan> {
   }
 
   @Override
-  public JsonObjectBuilder build(final RatedPlan ratedPlan) {
-    final Graph g = ratedPlan.getPlan().getGraph();
+  public JsonObjectBuilder build(final Plan plan) {
+    final Graph g = plan.getGraph();
 
     final JsonObjectBuilder obj = Json.createObjectBuilder()
-        .add(rating, ratedPlan.getRating().getValue())
         .add(initialLevel, initialLevelSerializer.serialize(g.getInitialLevel()));
 
     final JsonArray xls = extensionLevelSerializer.serializeAll(g.getExtensionLevels());

@@ -34,6 +34,13 @@ _Set.prototype = {
 
 
   /**
+   * @return {true}  when empty
+   * @return {false} when not empty
+   */
+  get isEmpty() { return this.size === 0 },
+
+
+  /**
    * Check if the set contains an item.
    *
    * @param {any} item

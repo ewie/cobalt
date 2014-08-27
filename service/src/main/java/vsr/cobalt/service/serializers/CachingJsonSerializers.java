@@ -12,13 +12,14 @@ import vsr.cobalt.models.Functionality;
 import vsr.cobalt.models.Interaction;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.models.Widget;
+import vsr.cobalt.planner.Plan;
 import vsr.cobalt.planner.graph.ActionProvision;
 import vsr.cobalt.planner.graph.ExtensionLevel;
 import vsr.cobalt.planner.graph.FunctionalityProvision;
 import vsr.cobalt.planner.graph.InitialLevel;
 import vsr.cobalt.planner.graph.PropertyProvision;
-import vsr.cobalt.planner.rating.RatedPlan;
 import vsr.cobalt.service.CachingJsonSerializer;
+import vsr.cobalt.service.Service;
 
 /**
  * @author Erik Wienhold
@@ -30,7 +31,7 @@ public final class CachingJsonSerializers {
   public static final CachingJsonSerializer<ExtensionLevel> extensionLevels;
   public static final CachingJsonSerializer<InitialLevel> initialLevels;
   public static final CachingJsonSerializer<Interaction> interactions;
-  public static final CachingJsonSerializer<RatedPlan> plans;
+  public static final CachingJsonSerializer<Plan> plans;
   public static final CachingJsonSerializer<Property> properties;
   public static final CachingJsonSerializer<PropertyProvision> propertyProvisions;
   public static final CachingJsonSerializer<Functionality> functionalities;
@@ -46,9 +47,10 @@ public final class CachingJsonSerializers {
     actions = new CachingJsonSerializer<>(new JsonActionSerializer(widgets, functionalities, properties, interactions));
 
     functionalityProvisions = new CachingJsonSerializer<>(new JsonFunctionalityProvisionSerializer(actions,
-        functionalities));
+        functionalities, Service.getInstance().getFunctionalityDistanceMeter()));
 
-    propertyProvisions = new CachingJsonSerializer<>(new JsonPropertyProvisionSerializer(actions, properties));
+    propertyProvisions = new CachingJsonSerializer<>(new JsonPropertyProvisionSerializer(actions, properties,
+        Service.getInstance().getPropertyDistanceMeter()));
 
     actionProvisions = new CachingJsonSerializer<>(
         new JsonActionProvisionSerializer(actions, propertyProvisions));

@@ -7,7 +7,7 @@
 
 package vsr.cobalt.service.planner;
 
-import vsr.cobalt.planner.rating.RatedPlan;
+import vsr.cobalt.planner.Plan;
 
 /**
  * @author Erik Wienhold
@@ -16,7 +16,7 @@ public interface PlannerResponse {
 
   boolean isSuccess();
 
-  Iterable<RatedPlan> getPlans();
+  Iterable<Plan> getPlans();
 
   Throwable getCause();
 

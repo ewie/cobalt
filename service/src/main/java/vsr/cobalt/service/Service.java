@@ -14,7 +14,12 @@ import com.hp.hpl.jena.tdb.TDBFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vsr.cobalt.models.Repository;
+import vsr.cobalt.planner.graph.FunctionalityProvision;
+import vsr.cobalt.planner.graph.PropertyProvision;
 import vsr.cobalt.repository.semantic.SemanticRepository;
+import vsr.cobalt.service.distance.FunctionalityProvisionDistanceMeter;
+import vsr.cobalt.service.distance.PropertyProvisionDistanceMeter;
+import vsr.cobalt.service.distance.ProvisionDistanceMeter;
 
 /**
  * @author Erik Wienhold
@@ -26,6 +31,8 @@ public class Service {
   private static final Service INSTANCE = new Service();
 
   private Dataset dataset;
+
+  private Repository repository;
 
   private Service() {
   }
@@ -40,8 +47,19 @@ public class Service {
     }
   }
 
-  public Repository createRepository() {
-    return new SemanticRepository(dataset);
+  public Repository getRepository() {
+    if (repository == null) {
+      repository = new SemanticRepository(dataset);
+    }
+    return repository;
+  }
+
+  public ProvisionDistanceMeter<PropertyProvision> getPropertyDistanceMeter() {
+    return new PropertyProvisionDistanceMeter(getRepository());
+  }
+
+  public ProvisionDistanceMeter<FunctionalityProvision> getFunctionalityDistanceMeter() {
+    return new FunctionalityProvisionDistanceMeter(getRepository());
   }
 
   private boolean createDataset() {

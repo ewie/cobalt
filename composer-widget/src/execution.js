@@ -210,8 +210,37 @@ function createExecution(plan) {
 
 
 
+/**
+ * Check if a plan can be executed by the underlying execution model.
+ *
+ * @param {object} plan a plan to check
+ *
+ * @return {true}  when executable
+ * @return {false} when not executable
+ */
+function isExecutable(plan) {
+  return plan.extensionLevels.every(function (xl) {
+    return xl.requiredActions.every(function (a) {
+      // Every non-terminal action must have at least one interaction.
+      // Terminal actions (initial level) need no interactions.
+      return !a.interactions.isEmpty;
+    }) || xl.actionProvisions.every(function (ap) {
+      return ap.propertyProvisions.every(function (pp) {
+        // Offered properties must have the same name as their respective
+        // requested properties to make communication possible.
+        return pp.offer.name === pp.request.name;
+      });
+    });
+  });
+}
+
+
+
+
 module.exports = {
 
-  createExecution: createExecution
+  createExecution: createExecution,
+
+  isExecutable: isExecutable
 
 };

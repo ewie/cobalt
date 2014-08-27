@@ -178,8 +178,13 @@ module.exports = {
 
     serviceView.on('plans', function (plans) {
       redirect('plans');
+
+      // store ALL plans returned by the service
       store.putPlans(Plan.toArray(plans));
-      plansView.collection.reset(plans.map(function (plan) {
+
+      // filter out non-executable plans
+      var supportedPlans = plans.filter(execution.isExecutable);
+      plansView.collection.reset(supportedPlans.map(function (plan) {
         return {
           id:     plan.id,
           rating: plan.rating,

@@ -11,6 +11,7 @@ import vsr.cobalt.models.Action;
 import vsr.cobalt.models.Property;
 import vsr.cobalt.planner.graph.PropertyProvision;
 import vsr.cobalt.service.JsonSerializer;
+import vsr.cobalt.service.distance.ProvisionDistanceMeter;
 
 /**
  * @author Erik Wienhold
@@ -18,8 +19,9 @@ import vsr.cobalt.service.JsonSerializer;
 public class JsonPropertyProvisionSerializer extends JsonProvisionSerializer<Property, PropertyProvision> {
 
   public JsonPropertyProvisionSerializer(final JsonSerializer<Action> actionSerializer,
-                                         final JsonSerializer<Property> propertySerializer) {
-    super(actionSerializer, propertySerializer);
+                                         final JsonSerializer<Property> propertySerializer,
+                                         final ProvisionDistanceMeter<PropertyProvision> provisionDistanceMeter) {
+    super(actionSerializer, propertySerializer, provisionDistanceMeter);
   }
 
 }

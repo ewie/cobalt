@@ -7,16 +7,16 @@
 
 package vsr.cobalt.service.planner;
 
-import vsr.cobalt.planner.rating.RatedPlan;
+import vsr.cobalt.planner.Plan;
 
 /**
  * @author Erik Wienhold
  */
 public final class PlannerSuccess implements PlannerResponse {
 
-  private final Iterable<RatedPlan> plans;
+  private final Iterable<Plan> plans;
 
-  public PlannerSuccess(final Iterable<RatedPlan> plans) {
+  public PlannerSuccess(final Iterable<Plan> plans) {
     this.plans = plans;
   }
 
@@ -26,7 +26,7 @@ public final class PlannerSuccess implements PlannerResponse {
   }
 
   @Override
-  public Iterable<RatedPlan> getPlans() {
+  public Iterable<Plan> getPlans() {
     return plans;
   }
 

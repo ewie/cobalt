@@ -7,7 +7,7 @@
 
 package vsr.cobalt.service.planner;
 
-import vsr.cobalt.planner.rating.RatedPlan;
+import vsr.cobalt.planner.Plan;
 
 /**
  * @author Erik Wienhold
@@ -26,7 +26,7 @@ public class PlannerFailure implements PlannerResponse {
   }
 
   @Override
-  public Iterable<RatedPlan> getPlans() {
+  public Iterable<Plan> getPlans() {
     return null;
   }
 

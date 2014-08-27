@@ -1,9 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "required": [ "rating", "initialLevel" ],
+  "required": [ "initialLevel" ],
   "properties": {
-    "rating": { "$ref": "#/definitions/rating" },
     "initialLevel": { "$ref": "#/definitions/initialLevel" },
     "extensionLevels": {
       "type": "array",
@@ -12,7 +11,6 @@
     }
   },
   "definitions": {
-    "rating": { "type": "number" },
     "initialLevel": {
       "type": "object",
       "required": [ "functionalityProvisions" ],
@@ -54,7 +52,8 @@
       "properties": {
         "request": { "$ref": "#/definitions/property" },
         "offer": { "$ref": "#/definitions/property" },
-        "providingAction": { "$ref": "#/definitions/action" }
+        "providingAction": { "$ref": "#/definitions/action" },
+        "distance": { "$ref": "#/definitions/distance" }
       }
     },
     "functionalityProvision": {
@@ -63,7 +62,8 @@
       "properties": {
         "request": { "$ref": "#/definitions/functionality" },
         "offer": { "$ref": "#/definitions/functionality" },
-        "providingAction": { "$ref": "#/definitions/action" }
+        "providingAction": { "$ref": "#/definitions/action" },
+        "distance": { "$ref": "#/definitions/distance" }
       }
     },
     "action": {
@@ -130,6 +130,12 @@
           }
         }
       ]
+    },
+    "distance": {
+      "type": "number",
+      "min": 0,
+      "default": 0,
+      "description": "a value indicating the distance between two related concepts, the higher the value the more distant their relation is, value 0 means identical concepts"
     }
   }
 }

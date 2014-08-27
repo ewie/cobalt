@@ -13,6 +13,7 @@ import javax.json.JsonObjectBuilder;
 import vsr.cobalt.models.Action;
 import vsr.cobalt.planner.graph.Provision;
 import vsr.cobalt.service.JsonSerializer;
+import vsr.cobalt.service.distance.ProvisionDistanceMeter;
 
 /**
  * @author Erik Wienhold
@@ -22,14 +23,18 @@ public class JsonProvisionSerializer<T, P extends Provision<T>> extends JsonSeri
   private static final String offer = "offer";
   private static final String request = "request";
   private static final String providingAction = "providingAction";
+  private static final String distance = "distance";
 
   private final JsonSerializer<Action> actionSerializer;
   private final JsonSerializer<T> subjectSerializer;
+  private final ProvisionDistanceMeter<P> provisionDistanceMeter;
 
   public JsonProvisionSerializer(final JsonSerializer<Action> actionSerializer,
-                                 final JsonSerializer<T> subjectSerializer) {
+                                 final JsonSerializer<T> subjectSerializer,
+                                 final ProvisionDistanceMeter<P> provisionDistanceMeter) {
     this.actionSerializer = actionSerializer;
     this.subjectSerializer = subjectSerializer;
+    this.provisionDistanceMeter = provisionDistanceMeter;
   }
 
   @Override
@@ -37,7 +42,8 @@ public class JsonProvisionSerializer<T, P extends Provision<T>> extends JsonSeri
     return Json.createObjectBuilder()
         .add(request, subjectSerializer.serialize(provision.getRequest()))
         .add(offer, subjectSerializer.serialize(provision.getOffer().getSubject()))
-        .add(providingAction, actionSerializer.serialize(provision.getProvidingAction()));
+        .add(providingAction, actionSerializer.serialize(provision.getProvidingAction()))
+        .add(distance, provisionDistanceMeter.measureDistance(provision));
   }
 
 }

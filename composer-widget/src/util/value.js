@@ -7,14 +7,23 @@
  */
 
 
+function set(self, name, val) {
+  self._fields[name] = val;
+}
+
+
+
 function get(self, name) {
   return self._fields[name];
 }
 
 
 
-function set(self, name, val) {
-  self._fields[name] = val;
+function lazyGet(self, name, fn) {
+  if (typeof self._fields[name] === 'undefined') {
+    self._fields[name] = fn.call(self);
+  }
+  return self._fields[name];
 }
 
 
@@ -38,6 +47,10 @@ function define(properties, proto) {
     var p = properties[name];
     var v = props[name];
     if (p) {
+      if (typeof p.lazy === 'function') {
+        // ignore lazy properties
+        return;
+      }
       if (typeof p.intern === 'function') {
         return p.intern(v);
       } else if (p.type) {
@@ -47,9 +60,11 @@ function define(properties, proto) {
             [];
         }
         return v && new p.type(v);
+      } else {
+        return p;
       }
     } else {
-      return v || p;
+      return typeof v === 'undefined' ? p : v;
     }
   }
 
@@ -122,8 +137,11 @@ function define(properties, proto) {
     if (Object.prototype.hasOwnProperty.call(Value.prototype, name)) {
       throw new Error("property name " + name + " cannot be used for value class");
     }
+    var p = properties[name];
     Object.defineProperty(Value.prototype, name, {
-      get: function () { return get(this, name) }
+      get : (p && typeof p.lazy === 'function') ?
+        function () { return lazyGet(this, name, properties[name].lazy) } :
+        function () { return get(this, name) }
     });
   });
 

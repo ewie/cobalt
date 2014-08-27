@@ -15,6 +15,50 @@ var ExtensionLevel = require('./extensionLevel');
 
 
 
+function ratePlan(plan) {
+  return rateInitialLevel(plan.initialLevel) +
+    rateExtensionLevels(plan.extensionLevels);
+}
+
+function rateInitialLevel(level) {
+  return rateLevel(level) +
+    level.functionalityProvisions.reduce(function (rating, fp) {
+      return rating + fp.distance;
+    }, 0);
+}
+
+function rateExtensionLevels(levels) {
+  return levels.reduce(function (rating, level) {
+    return rating + rateExtensionLevel(level);
+  }, 0);
+}
+
+function rateExtensionLevel(level) {
+  return rateLevel(level) +
+    level.actionProvisions.reduce(function (rating, ap) {
+      return rating + rateActionProvision(ap);
+    }, 0);
+}
+
+function rateActionProvision(ap) {
+  return ap.propertyProvisions.reduce(function (rating, pp) {
+    return rating + pp.distance;
+  }, 0);
+}
+
+function rateLevel(level) {
+  var actions = level.requiredActions;
+  return actions.reduce(function (rating, action) {
+    return rating + rateAction(action);
+  }, actions.size);
+}
+
+function rateAction(action) {
+  return action.interactions.size;
+}
+
+
+
 module.exports = value.define({
 
   id: {
@@ -22,13 +66,15 @@ module.exports = value.define({
       return id || seqid.nextId();
     }
   },
-  rating: undefined,
   initialLevel: {
     type: InitialLevel
   },
   extensionLevels: {
     type: ExtensionLevel,
     array: true
+  },
+  rating: {
+    lazy: function () { return ratePlan(this) }
   }
 
 }, {
