@@ -32,7 +32,7 @@ module.exports = Backbone.View.extend({
     var relativeRating = Math.floor(attrs.relativeRating * 100);
     this.$rating.text(relativeRating);
     this.$ratingBar.css({ width: relativeRating + '%' });
-    this.$execute.attr('href', '#plan/' + this.model.id);
+    this.$execute.attr('href', '#execution/' + this.model.id);
     return this;
   }
 

@@ -28,10 +28,10 @@ function createRouter() {
   return new Router({
     key: 'cobalt.view',
     routes: {
-      '':              'root',
-      'service':       'service',
-      'plans':         'plans',
-      'plan(/:id)':    'plan'
+      '':                'root',
+      'service':         'service',
+      'plans':           'plans',
+      'execution(/:id)': 'execution'
     }
   });
 }
@@ -200,13 +200,13 @@ module.exports = {
       focusSection('plans');
     });
 
-    router.on('route:plan', function (id) {
+    router.on('route:execution', function (id) {
       if (!id) {
         id = store.getCurrentPlanId();
 
         if (id) {
           // redirect to canonical path
-          redirect('plan/' + id);
+          redirect('execution/' + id);
         } else {
           // redirect to the root when there's no current plan
           redirect('');
