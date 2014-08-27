@@ -11,10 +11,10 @@
   </head>
   <body>
     <menu type="list"><!--
-   --><li><h1 id="logo">COBALT</h1></li><!--
-   --><li><a class="menu-link" href="#service">service</a></li><!--
-   --><li><a class="menu-link" href="#plans">plans</a></li><!--
-   --><li><a class="menu-link" id="current-plan-link" href="#plan">current execution</a></li><!--
+   --><li><h1 id="logo">Cobalt</h1></li><!--
+   --><li><a class="menu-link" id="service-link" href="#service">service</a></li><!--
+   --><li><a class="menu-link" id="plans-link" href="#plans">plans</a></li><!--
+   --><li><a class="menu-link" id="execution-link" href="#plan">execution</a></li><!--
  --></menu>
     <main>
       <section id="service-section"></section>
@@ -82,19 +82,19 @@
     </template>
 
     <template id="plan-template">
-      <a name="execute" class="button control plan-execute" href="#" title="execute this plan"></a>
-      <span name="rating" class="plan-rating" title="rating (the lower the better)"></span>
-      <span class="plan-rating-bar" title="relative rating among all plans">
+      <a name="execute" class="button control plan-execute" href="#" title="execute this plan"></a><!--
+   --><span name="rating" class="plan-rating" title="rating (the lower the better)"></span><!--
+   --><span class="plan-rating-bar" title="relative rating among all plans">
         <span name="rating-bar" class="plan-rating-bar-fill"></div>
       </span>
     </template>
 
     <template id="execution-template">
       <h2>Execution</h2>
-      <button class="button control execution-control execution-clear" name="clear" type="button" title="clear execution and mashup"></button>
-      <button class="button control execution-control execution-reload" name="reload" type="button" title="reload the plan"></button>
       <button class="button control execution-control execution-expand" name="expand-all" type="button" title="expand all steps"></button>
       <button class="button control execution-control execution-collapse" name="collapse-all" type="button" title="collapse all steps except the current step"></button>
+      <button class="button control execution-control execution-reset" name="reset" type="button" title="reset execution and mashup"></button>
+      <button class="button control execution-control execution-clear" name="clear" type="button" title="clear execution and mashup"></button>
       <div name="steps"></div>
     </template>
 

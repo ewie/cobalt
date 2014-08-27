@@ -119,38 +119,48 @@ footer li:last-child:after {
 }
 
 
+footer a {
+  color: #00bfff;
+}
+
+
+footer a:hover {
+  color: #000;
+}
+
+
 #logo {
   color: #0048ab;
   font-size: 100%;
   padding: 0.1em 0.5em 0.5em 0.5em;
+  text-transform: uppercase;
 }
 
 
 #service-section,
 #plans-section,
 #execution-section,
-#current-plan-link {
+#execution-link {
   display: none;
 }
 
 
-main[data-focus=service] #service-section {
+body[data-section=service] #service-section,
+body[data-section=plans] #plans-section,
+body[data-section=execution] #execution-section {
   display: block;
 }
 
 
-main[data-focus=plans] #plans-section {
-  display: block;
+body[data-section=service] #service-link,
+body[data-section=plans] #plans-link,
+body[data-section=execution] #execution-link {
+  background-color: #eee;
 }
 
 
-main[data-focus=execution] #execution-section {
-  display: block;
-}
-
-
-menu[data-has-current-plan=true] #current-plan-link {
-  display: block;
+menu[data-has-execution=true] #execution-link {
+  display: inline-block;
 }
 
 
@@ -163,11 +173,12 @@ menu > li {
 .menu-link {
   display: inline-block;
   padding: 0.1em 0.5em 0.5em 0.5em;
+  color: #00bfff;
 }
 
 
 .menu-link:hover {
-  background-color: #eee;
+  background-color: #e0e0e0;
 }
 
 
@@ -265,6 +276,8 @@ label[for] {
   text-align: right;
   display: inline-block;
   width: 2.5em;
+  height: 1.3em;
+  vertical-align: top;
 }
 
 
@@ -274,11 +287,12 @@ label[for] {
 
 
 .plan-rating-bar {
-  width: 300px;
+  width: 5em;
   background-color: #ddd;
   display: inline-block;
   position: relative;
-  height: 1em;
+  height: 1.5em;
+  vertical-align: top;
 }
 
 
@@ -339,12 +353,17 @@ label[for] {
 
 
 .step.current:not(.collapsed)::before {
-  content: 'This is the current step, complete it to enable the next step.';
+  content: 'This is the current step. Complete it to enable the next step.';
+}
+
+
+.step:last-child.current:not(.collapsed)::before {
+  content: 'This is the current and last step. Complete it to finish execution.';
 }
 
 
 .step.open:not(.collapsed)::before {
-  content: 'This step is not yet enabled, complete all previous steps to enable it.';
+  content: 'This step is not yet enabled. Complete all previous steps to enable it.';
 }
 
 
@@ -407,6 +426,7 @@ label[for] {
 
 .plan-execute {
   min-width: 1.5em;
+  height: 1.3em;
 }
 
 
@@ -437,22 +457,30 @@ label[for] {
   content: "This action needs to be ticked off manually";
   font-size: 80%;
   font-style: italic;
-  margin-left: 0.5em;
+  margin-left: 0.8em;
   color: #d33;
   vertical-align: top;
 }
 
 
 .action-done-check {
-     -moz-appearance: none;
-      -ms-appearance: none;
-       -o-appearance: none;
-  -webkit-appearance: none;
-          appearance: none;
-  width: 1em;
-  height: 1em;
+  visibility: hidden;
+  position: relative;
+}
+
+
+.action-done-check::after {
+  visibility: visible;
+  position: absolute;
+  top: -0.3em;
+  padding: 0.2em;
   background-color: #d33;
+  color: #fff;
+  font-size: 80%;
+  font-family: 'FontAwesome';
+  content: '\F00C';
   cursor: pointer;
+
      -moz-transition: background-color 0.2s;
       -ms-transition: background-color 0.2s;
        -o-transition: background-color 0.2s;
@@ -461,8 +489,9 @@ label[for] {
 }
 
 
-.action-done-check:hover {
+.action-done-check:hover::after {
   background-color: #000;
+
      -moz-transition: background-color 0.2s;
       -ms-transition: background-color 0.2s;
        -o-transition: background-color 0.2s;
@@ -486,7 +515,7 @@ label[for] {
 }
 
 
-.execution-reload::before {
+.execution-reset::before {
   content: '\F021';
 }
 

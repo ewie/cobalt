@@ -94,8 +94,8 @@ function createExecutionView() {
 
 
 
-function focus(name) {
-  $('main').attr('data-focus', name);
+function focusSection(name) {
+  $('body').attr('data-section', name);
 }
 
 
@@ -121,7 +121,7 @@ function loadExecution(options) {
     mashup.load(exec);
 
     store.putCurrentPlanId(plan.id);
-    $('menu').attr('data-has-current-plan', true);
+    $('menu').attr('data-has-execution', true);
   }
 }
 
@@ -130,7 +130,7 @@ function loadExecution(options) {
 function clearExecution() {
   mashup.clear();
   store.putCurrentPlanId(null);
-  $('menu').attr('data-has-current-plan', false);
+  $('menu').attr('data-has-execution', false);
 }
 
 
@@ -164,7 +164,7 @@ module.exports = {
       redirect('plans');
     });
 
-    executionView.model.on('reload', function () {
+    executionView.model.on('reset', function () {
       loadExecution({
         execution: executionView.model,
         plans:     plansView.collection,
@@ -173,7 +173,7 @@ module.exports = {
     });
 
     if (store.getCurrentPlanId()) {
-      $('menu').attr('data-has-current-plan', true);
+      $('menu').attr('data-has-execution', true);
     }
 
     serviceView.on('plans', function (plans) {
@@ -193,11 +193,11 @@ module.exports = {
     });
 
     router.on('route:service', function () {
-      focus('service');
+      focusSection('service');
     });
 
     router.on('route:plans', function () {
-      focus('plans');
+      focusSection('plans');
     });
 
     router.on('route:plan', function (id) {
@@ -215,7 +215,7 @@ module.exports = {
         return;
       }
 
-      focus('execution');
+      focusSection('execution');
 
       loadExecution({
         planId:    id,

@@ -16,7 +16,7 @@ module.exports = TemplateView.extend({
 
   events: {
     'click [name=clear]':        '_clear',
-    'click [name=reload]':       '_reload',
+    'click [name=reset]' :       '_reset',
     'click [name=expand-all]':   '_expandAll',
     'click [name=collapse-all]': '_collapseAll'
   },
@@ -45,8 +45,8 @@ module.exports = TemplateView.extend({
   },
 
 
-  _reload: function () {
-    this.model.trigger('reload');
+  _reset: function () {
+    this.model.trigger('reset');
   },
 
 
