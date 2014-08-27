@@ -14,6 +14,12 @@ var Plan = require('./plan/plan');
 
 var KEY = rave.pageId;
 
+var PATHS = {
+  request: '/request',
+  plans: '/plans',
+  currentPlanId: '/currentPlanId'
+};
+
 
 function read() {
   return JSON.parse(window.localStorage.getItem(KEY)) || {};
@@ -54,19 +60,19 @@ function remove(pointer) {
 
 
 function getRequest() {
-  return get('/request');
+  return get(PATHS.request);
 }
 
 
 
 function putRequest(request) {
-  put('/request', request);
+  put(PATHS.request, request);
 }
 
 
 
 function getPlans() {
-  return get('/plans', []).map(function (plan) {
+  return get(PATHS.plans, []).map(function (plan) {
     return new Plan(plan);
   });
 }
@@ -74,13 +80,13 @@ function getPlans() {
 
 
 function putPlans(plans) {
-  put('/plans', plans);
+  put(PATHS.plans, plans);
 }
 
 
 
 function getPlan(id) {
-  var plans = get('/plans', []);
+  var plans = get(PATHS.plans, []);
   for (var i = 0; i < plans.length; i += 1) {
     var plan = plans[i];
     if (plan.id === id) {
@@ -92,19 +98,19 @@ function getPlan(id) {
 
 
 function getCurrentPlanId() {
-  return get('/currentPlanId');
+  return get(PATHS.currentPlanId);
 }
 
 
 
 function putCurrentPlanId(id) {
-  put('/currentPlanId', id);
+  put(PATHS.currentPlanId, id);
 }
 
 
 
 function removeCurrentPlanId() {
-  remove('/currentPlanId');
+  remove(PATHS.currentPlanId);
 }
 
 
