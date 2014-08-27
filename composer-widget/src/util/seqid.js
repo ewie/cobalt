@@ -12,7 +12,7 @@ var nextId = (function () {
   var value = 0;
 
   return function () {
-    return value += 1;
+    return (value += 1).toString();
   };
 
 }());
