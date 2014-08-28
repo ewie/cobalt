@@ -66,26 +66,33 @@ module.exports = value.define({
       return id || seqid.nextId();
     }
   },
+
   initialLevel: {
     type: InitialLevel
   },
+
   extensionLevels: {
     type: ExtensionLevel,
     array: true
   },
+
   rating: {
     lazy: function () { return ratePlan(this) }
+  },
+
+  depth: {
+    lazy: function () {
+      return 1 + this.extensionLevels.length;
+    }
+  },
+
+  levels: {
+    lazy: function () {
+      return [this.initialLevel].concat(this.extensionLevels);
+    }
   }
 
 }, {
-
-  get depth() {
-    return 1 + this.extensionLevels.length;
-  },
-
-  get levels() {
-    return [this.initialLevel].concat(this.extensionLevels);
-  },
 
   level: function (index) {
     if (index === 0) {

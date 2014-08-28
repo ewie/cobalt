@@ -19,15 +19,15 @@ module.exports = value.define({
   actionProvisions: {
     intern: function (v) { return new _Set(ActionProvision.fromArray(v)) },
     extern: function (s) { return ActionProvision.toArray(s) }
-  }
+  },
 
-}, {
-
-  get requiredActions() {
-    return this.actionProvisions.reduce(function (actions, ap) {
-      actions.addAll(ap.requiredActions);
-      return actions;
-    }, new _Set());
+  requiredActions: {
+    lazy: function () {
+      return this.actionProvisions.reduce(function (actions, ap) {
+        actions.addAll(ap.requiredActions);
+        return actions;
+      }, new _Set());
+    }
   }
 
 });

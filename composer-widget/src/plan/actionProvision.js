@@ -18,21 +18,23 @@ var PropertyProvision = require('./propertyProvision');
 module.exports = value.define({
 
   requestedAction: { type: Action },
+
   precursorAction: { type: Action },
+
   propertyProvisions: {
     intern: function (v) { return new _Set(PropertyProvision.fromArray(v)) },
     extern: function (s) { return PropertyProvision.toArray(s) }
-  }
+  },
 
-}, {
-
-  get requiredActions() {
-    var actions = new _Set();
-    this.precursorAction && actions.add(this.precursorAction);
-    return this.propertyProvisions.reduce(function (actions, pp) {
-      actions.add(pp.providingAction);
-      return actions;
-    }, actions);
+  requiredActions: {
+    lazy: function () {
+      var actions = new _Set();
+      this.precursorAction && actions.add(this.precursorAction);
+      return this.propertyProvisions.reduce(function (actions, pp) {
+        actions.add(pp.providingAction);
+        return actions;
+      }, actions);
+    }
   }
 
 });
