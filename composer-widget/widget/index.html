@@ -35,7 +35,7 @@
       <p>Request the planning of a mashup realizing the goal mashup given by a semantic description.</p>
       <div name="error" class="error"></div>
       <form name="request">
-        <div class="field">
+        <div class="field" name="media-type-field">
           <label class="field-label" for="{media-type}">language</label>
           <div class="field-value">
             <select id="{media-type}" name="media-type">
@@ -45,10 +45,10 @@
             </select>
           </div>
         </div>
-        <div class="field">
+        <div class="field" name="goal-mashup-field">
           <label class="field-label" for="{goal-mashup}">goal mashup</label>
           <div class="field-value">
-            <textarea id="{goal-mashup}" class="goal-mashup" name="goal-mashup"></textarea>
+            <textarea id="{goal-mashup}" name="goal-mashup"></textarea>
           </div>
         </div>
         <div class="field">
@@ -83,10 +83,19 @@
 
     <template id="plan-template">
       <a name="execute" class="button control plan-execute" href="#" title="execute this plan"></a><!--
-   --><span name="rating" class="plan-rating" title="rating (the lower the better)"></span><!--
-   --><span class="plan-rating-bar" title="relative rating among all plans">
-        <span name="rating-bar" class="plan-rating-bar-fill"></div>
-      </span>
+   --><span class="plan-stats"><!--
+     --><span name="rating" class="plan-rating" title="relative rating among all plans (the higher the better)"><!--
+       --><span class="plan-rating-bar">
+            <span name="rating-bar" class="plan-rating-bar-fill"></span>
+          </span><!--
+       --><span name="relative-rating" class="plan-relative-rating"></span><!--
+     --></span><!--
+     --><span class="plan-counts"><!--
+       --><span name="widget-count" class="plan-widget-count" title="number of widgets"></span><!--
+       --><span name="step-count" class="plan-step-count" title="number of execution steps"></span><!--
+       --><span name="interaction-count" class="plan-interaction-count" title="number of interactions to perform"></span><!--
+     --></span><!--
+   --></span>
     </template>
 
     <template id="execution-template">

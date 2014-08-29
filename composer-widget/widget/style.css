@@ -238,7 +238,16 @@ input[type=number] {
 }
 
 
-.goal-mashup {
+[name=media-type-field] > .field-value::after {
+  margin-left: 0.5em;
+  font-size: 80%;
+  font-style: italic;
+  color: #777;
+  content: "automatically detected when possible";
+}
+
+
+[name=goal-mashup-field] textarea {
   font-family: monospace;
 }
 
@@ -270,29 +279,37 @@ label[for] {
 }
 
 
-.plan-rating {
+.plan-stats {
   background-color: #ddd;
-  padding: 0.1em 0.2em;
-  text-align: right;
   display: inline-block;
-  width: 2.5em;
-  height: 1.3em;
+  height: 1.5em;
   vertical-align: top;
 }
 
 
-.plan-rating::after {
+.plan-relative-rating {
+  padding: 0.1em 0.3em;
+  text-align: right;
+  display: inline-block;
+}
+
+
+.plan-relative-rating {
+  width: 2.5em;
+}
+
+.plan-relative-rating::after {
   content: '%';
 }
 
 
 .plan-rating-bar {
   width: 5em;
-  background-color: #ddd;
   display: inline-block;
   position: relative;
-  height: 1.5em;
+  height: 100%;
   vertical-align: top;
+  background-color: rgba(0, 0, 0, 0.07);
 }
 
 
@@ -301,8 +318,32 @@ label[for] {
   display: inline-block;
   position: absolute;
   left: 0;
-  top: 0;
-  bottom: 0;
+  top: 0.5em;
+  bottom: 0.5em;
+}
+
+
+.plan-counts > span {
+  padding: 0.1em 0.3em;
+  text-align: center;
+  display: inline-block;
+  min-width: 1.5em;
+
+}
+
+
+.plan-widget-count::after {
+  content: "w";
+}
+
+
+.plan-step-count::after {
+  content: "s";
+}
+
+
+.plan-interaction-count::after {
+  content: "i";
 }
 
 

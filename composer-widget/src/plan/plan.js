@@ -90,9 +90,39 @@ module.exports = value.define({
     lazy: function () {
       return [this.initialLevel].concat(this.extensionLevels);
     }
+  },
+
+  widgetCount: {
+    lazy: function () {
+      return this.levels.reduce(function (r, level) {
+        return level.requiredActions.reduce(function (r, action) {
+          var widget = action.widget;
+          var key = widget.uri || widget.id;
+          if (!r.index[key]) {
+            r.count += 1;
+            r.index[key] = true;
+          }
+          return r;
+        }, r);
+      }, { count: 0, index: {} }).count;
+    }
+  },
+
+  interactionCount: {
+    lazy: function () {
+      return this.levels.reduce(function (count, level) {
+        return level.requiredActions.reduce(function (count, action) {
+          return count + action.interactions.size;
+        }, count);
+      }, 0);
+    }
   }
 
 }, {
+
+  get stepCount() {
+    return this.depth;
+  },
 
   level: function (index) {
     if (index === 0) {

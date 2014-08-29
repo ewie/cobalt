@@ -48,15 +48,23 @@ function createRequestModel() {
 
 
 
-function createPlansCollection() {
-  var plans = store.getPlans().map(function (plan) {
+function createPlanModels(plans) {
+  return plans.map(function (plan) {
     return {
-      id: plan.id,
-      rating: plan.rating,
-      plan: plan
+      id:               plan.id,
+      rating:           plan.rating,
+      widgetCount:      plan.widgetCount,
+      stepCount:        plan.stepCount,
+      interactionCount: plan.interactionCount,
+      plan:             plan
     };
   });
-  return new PlanCollection(plans);
+}
+
+
+
+function createPlansCollection() {
+  return new PlanCollection(createPlanModels(store.getPlans()));
 }
 
 
@@ -184,13 +192,7 @@ module.exports = {
 
       // filter out non-executable plans
       var supportedPlans = plans.filter(execution.isExecutable);
-      plansView.collection.reset(supportedPlans.map(function (plan) {
-        return {
-          id:     plan.id,
-          rating: plan.rating,
-          plan:   plan
-        };
-      }));
+      plansView.collection.reset(createPlanModels(supportedPlans));
     });
 
     router.on('route:root', function () {

@@ -20,8 +20,11 @@ module.exports = Backbone.View.extend({
     this.$el.html(templates.get('plan'));
 
     this.$execute = this.$el.byName('execute');
-    this.$rating = this.$el.byName('rating');
+    this.$relativeRating = this.$el.byName('relative-rating');
     this.$ratingBar = this.$el.byName('rating-bar');
+    this.$widgetCount = this.$el.byName('widget-count');
+    this.$stepCount = this.$el.byName('step-count');
+    this.$interactionCount = this.$el.byName('interaction-count');
 
     this.listenTo(this.model, 'change', this.render);
   },
@@ -30,9 +33,12 @@ module.exports = Backbone.View.extend({
   render: function () {
     var attrs = this.model.attributes;
     var relativeRating = Math.floor(attrs.relativeRating * 100);
-    this.$rating.text(relativeRating);
-    this.$ratingBar.css({ width: relativeRating + '%' });
     this.$execute.attr('href', '#execution/' + this.model.id);
+    this.$relativeRating.text(relativeRating);
+    this.$ratingBar.css({ width: relativeRating + '%' });
+    this.$widgetCount.text(attrs.widgetCount);
+    this.$stepCount.text(attrs.stepCount);
+    this.$interactionCount.text(attrs.interactionCount);
     return this;
   }
 
