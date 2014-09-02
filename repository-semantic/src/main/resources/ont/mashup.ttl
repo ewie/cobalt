@@ -68,12 +68,12 @@
   rdfs:label "hasEffects" ;
   rdfs:comment "states an action's effects" .
 
-:hasInstruction a owl:DatatypeProperty ;
+:hasInstructionText a owl:DatatypeProperty ;
   rdfs:domain :Instruction ;
   rdfs:range xsd:string ;
   owl:cardinality 1 ;
-  rdfs:label "hasInstruction" ;
-  rdfs:comment "states the instruction of an interaction to a the user" .
+  rdfs:label "hasInstructionText" ;
+  rdfs:comment "states an interaction's instruction in non-standard textual form" .
 
 :hasInteraction a owl:ObjectProperty ;
   rdfs:domain :Action ;

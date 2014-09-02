@@ -30,7 +30,7 @@ public final class Ontology {
   public static final Property fillValueOf = property("fillValueOf");
   public static final Property hasAction = property("hasAction");
   public static final Property hasEffects = property("hasEffects");
-  public static final Property hasInstruction = property("hasInstruction");
+  public static final Property hasInstructionText = property("hasInstructionText");
   public static final Property hasInteraction = property("hasInteraction");
   public static final Property hasName = property("hasName");
   public static final Property hasPreConditions = property("hasPreConditions");

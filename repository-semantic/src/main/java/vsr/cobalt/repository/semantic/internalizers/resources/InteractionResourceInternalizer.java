@@ -19,7 +19,7 @@ public class InteractionResourceInternalizer extends ResourceInternalizer<Intera
 
   @Override
   public Interaction internalize(final Resource r) {
-    final String instruction = getLiteralObject(r, Ontology.hasInstruction).getString();
+    final String instruction = getLiteralObject(r, Ontology.hasInstructionText).getString();
     return new Interaction(instruction);
   }
 
