@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets"
+ id="https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/widgets/hotel-booking">
+ <name>Cobalt Hotel Booking</name>
+ <description>Book Hotels.</description>
+ <author email="ewie@tu-chemnitz.eu">Erik Wienhold</author>
+
+ <content src="index.html" type="text/html"/>
+ <content src="main.js" type="application/javascript"/>
+ <content src="style.css" type="text/css"/>
+
+ <feature name="http://www.openajax.org/hub" required="true"/>
+</widget>

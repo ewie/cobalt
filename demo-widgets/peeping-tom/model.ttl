@@ -1,0 +1,19 @@
+@prefix : <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<urn:example:type:Address> a rdfs:Class .
+
+<urn:example:fn:ShowImages> a :Functionality .
+
+_:address :hasType <urn:example:type:Address> .
+
+<https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/widgets/peeping-tom> a :Widget ;
+
+  :hasPublicProperty _:address ;
+
+  :hasAction [
+    :realizesFunctionality <urn:example:fn:ShowImages> ;
+    :hasPreConditions [
+      :fillValueOf _:address
+    ]
+  ] .

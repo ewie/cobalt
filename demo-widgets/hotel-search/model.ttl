@@ -1,0 +1,34 @@
+@prefix : <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<urn:example:type:Region> a rdfs:Class .
+<urn:example:type:Hotel> a rdfs:Class .
+<urn:example:type:Address> a rdfs:Class .
+
+<urn:example:fn:HotelSearch> a :Functionality .
+
+_:region :hasType <urn:example:type:Region> .
+_:hotel :hasType <urn:example:type:Hotel> .
+_:address :hasType <urn:example:type:Address> .
+
+<https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/widgets/hotel-search> a :Widget ;
+
+  :hasPublicProperty
+    _:region ,
+    _:address ,
+    _:hotel ;
+
+  :hasAction [
+    :realizesFunctionality <urn:example:fn:HotelSearch> ;
+    :hasInteraction [
+      :hasInstructionText "Select a hotel."
+    ] ;
+    :hasEffects [
+      :fillValueOf
+        _:hotel,
+        _:address
+    ] ;
+    :hasPreConditions [
+      :fillValueOf _:region
+    ]
+  ] .

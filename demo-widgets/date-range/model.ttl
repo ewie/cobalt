@@ -1,0 +1,19 @@
+@prefix : <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<urn:example:type:DateRange> a rdfs:Class .
+
+_:range :hasType <urn:example:type:DateRange> .
+
+<https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/widgets/date-range> a :Widget ;
+
+  :hasPublicProperty _:range ;
+
+  :hasAction [
+    :hasInteraction [
+      :hasInstructionText "Select a start and end date."
+    ] ;
+    :hasEffects [
+      :fillValueOf _:range
+    ]
+  ] .

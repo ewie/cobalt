@@ -1,0 +1,52 @@
+@prefix : <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<urn:example:type:CreditCardHolder> a rdfs:Class .
+<urn:example:type:CreditCardNumber> a rdfs:Class .
+<urn:example:type:CreditCardExpDate> a rdfs:Class .
+<urn:example:type:CreditCard> a rdfs:Class .
+
+_:holder :hasType <urn:example:type:CreditCardHolder> .
+_:number :hasType <urn:example:type:CreditCardNumber> .
+_:expDate :hasType <urn:example:type:CreditCardExpDate> .
+_:creditCard :hasType <urn:example:type:CreditCard> .
+
+<https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/widgets/credit-card> a :Widget ;
+
+  :hasPublicProperty _:creditCard ;
+
+  :hasAction [
+    :hasInteraction [
+      :hasInstructionText """Click button "verify" to verify credit card information."""
+    ] ;
+    :hasEffects [
+      :fillValueOf _:creditCard
+    ] ;
+    :hasPreConditions [
+      :fillValueOf
+        _:holder ,
+        _:number ,
+        _:expDate
+    ]
+  ] , [
+    :hasInteraction [
+      :hasInstructionText "Provide the credit card holder's name."
+    ] ;
+    :hasEffects [
+      :fillValueOf _:holder
+    ]
+  ] , [
+    :hasInteraction [
+      :hasInstructionText "Provide the credit card number."
+    ] ;
+    :hasEffects [
+      :fillValueOf _:number
+    ]
+  ] , [
+    :hasInteraction [
+      :hasInstructionText "Provide the credit card expiration date."
+    ] ;
+    :hasEffects [
+      :fillValueOf _:expDate
+    ]
+  ] .

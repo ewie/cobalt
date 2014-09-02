@@ -1,0 +1,17 @@
+@prefix : <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<urn:example:type:Region> a rdfs:Class .
+
+_:region :hasType <urn:example:type:Region> .
+
+<https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/widgets/map> a :Widget ;
+  :hasPublicProperty _:region ;
+  :hasAction [
+    :hasInteraction [
+      :hasInstructionText "Select a region by double-clicking the red area after placing and resizing it as necessary."
+    ] ;
+    :hasEffects [
+      :fillValueOf _:region
+    ]
+  ] .

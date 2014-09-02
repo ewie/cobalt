@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets"
+ id="https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/widgets/date-range">
+ <name>Cobalt Date Range</name>
+ <description>Input Date Ranges.</description>
+ <author email="ewie@tu-chemnitz.eu">Erik Wienhold</author>
+
+ <content src="index.html" type="text/html"/>
+ <content src="main.js" type="application/javascript"/>
+
+ <feature name="http://www.openajax.org/hub" required="true"/>
+</widget>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+  </head>
+  <body>
+    <form id="booking">
+      <fieldset>
+        <legend>Hotel</legend>
+        <div>
+          <label for="hotel">Hotel</label>
+          <input id="hotel" type="text"/>
+        </div>
+        <div>
+          <label for="address">Address</label>
+          <textarea id="address" rows="3"></textarea>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Booking</legend>
+        <div>
+          <label for="start-date">Date</label>
+          <input id="start-date" type="text" size="10">
+          <span>to</span>
+          <input id="end-date" type="text" size="10">
+        </div>
+        <div>
+          <label for="number-of-people">No. of People</label>
+          <input id="number-of-people" type="number" min="1" max="12" value="1"/>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Payment</legend>
+        <div>
+          <label for="credit-card">Credit Card</label>
+          <input id="credit-card" type="text" size="16">
+          <span>expires</span>
+          <input id="expiration-date" type="text" size="4">
+        </div>
+        <div>
+          <label for="holder">Holder</label>
+          <input id="holder" type="text"/>
+        </div>
+      </fieldset>
+      <input type="submit" value="book hotel"/>
+    </form>
+    <div id="response"></div>
+  </body>
+  <script type="application/javascript" src="main.js"></script>
+</html>

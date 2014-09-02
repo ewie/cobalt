@@ -1,0 +1,42 @@
+@prefix : <https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/mashup#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<urn:example:type:Hotel> a rdfs:Class .
+<urn:example:type:CreditCard> a rdfs:Class .
+<urn:example:type:DateRange> a rdfs:Class .
+<urn:example:type:NumberOfPeople> a rdfs:Class .
+
+<urn:example:fn:HotelBooking> a :Functionality .
+
+_:hotel :hasType <urn:example:type:Hotel> .
+_:creditCard :hasType <urn:example:type:CreditCard> .
+_:date :hasType <urn:example:type:DateRange> .
+_:numberOfPeople :hasType <urn:example:type:NumberOfPeople> .
+
+<https://vsr.informatik.tu-chemnitz.de/projects/2014/cobalt/widgets/hotel-booking> a :Widget ;
+
+  :hasPublicProperty
+    _:hotel ,
+    _:creditCard ,
+    _:date ;
+
+  :hasAction [
+    :realizesFunctionality <urn:example:fn:HotelBooking> ;
+    :hasInteraction [
+      :hasInstructionText """Click button "book" to book the hotel."""
+    ] ;
+    :hasPreConditions [
+      :fillValueOf
+        _:hotel ,
+        _:creditCard ,
+        _:date ,
+        _:numberOfPeople
+    ]
+  ], [
+    :hasInteraction [
+      :hasInstructionText "Select the number of people."
+    ] ;
+    :hasEffects [
+      :fillValueOf _:numberOfPeople
+    ]
+  ] .

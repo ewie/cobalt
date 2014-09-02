@@ -1,0 +1,7 @@
+form > div {
+  display: table-row;
+}
+
+form > div > label {
+  display: table-cell;
+}
