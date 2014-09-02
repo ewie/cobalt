@@ -35,7 +35,6 @@ public final class Config {
 
     @Override
     public Boolean parse(final String value) {
-      System.out.println("seedDataset parse " + value);
       return Boolean.parseBoolean(value);
     }
 
