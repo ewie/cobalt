@@ -49,7 +49,10 @@ public class PlannerJob {
       try {
         process.advance();
       } catch (final Exception ex) {
-        return new PlannerFailure(ex);
+        // it's only a failure when there are no plans
+        if (plans.isEmpty()) {
+          return new PlannerFailure(ex);
+        }
       }
     }
 

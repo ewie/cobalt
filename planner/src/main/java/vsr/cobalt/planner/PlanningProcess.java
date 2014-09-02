@@ -100,9 +100,9 @@ public class PlanningProcess {
   }
 
   /**
-   * Check if the planning process is done, i.e. there are no more plans to extract.
+   * Check if the planning process is done, i.e. there are no more plans to extract or an error occured.
    *
-   * @return true when the planner is done, false otherwise
+   * @return true when the planning process is done, false otherwise
    */
   public boolean isDone() {
     return isDone || (isDone = checkIfDone());
@@ -125,8 +125,14 @@ public class PlanningProcess {
       throw new PlanningException("planning process is already done");
     }
 
-    evolveGraph();
-    extractPlans();
+    try {
+      evolveGraph();
+      extractPlans();
+    } catch (final Exception ex) {
+      // we're done on the first error
+      isDone = true;
+      throw ex;
+    }
 
     // increase target depth for next graph extension
     targetDepth += 1;

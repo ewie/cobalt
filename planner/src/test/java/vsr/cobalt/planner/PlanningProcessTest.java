@@ -254,6 +254,62 @@ public class PlanningProcessTest {
       assertTrue(pt.isDone());
     }
 
+    @Test
+    public void returnTrueWhenGraphFactoryThrows() throws Exception {
+      final Mashup m = make(aMinimalMashup());
+      final PlanningProblem pp = new PlanningProblem(m, 1, 2);
+
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.createGraph(m)).thenThrow(new PlanningException());
+
+      final PlanningProcess pt = new PlanningProcess(mp, null, pp);
+
+      try {
+        pt.advance();
+      } catch (final Exception ignored) {
+      }
+
+      assertTrue(pt.isDone());
+    }
+
+    @Test
+    public void returnTrueWhenGraphExtenderThrows() throws Exception {
+      final Mashup m = make(aMinimalMashup());
+      final PlanningProblem pp = new PlanningProblem(m, 2, 2);
+
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.createGraph(m)).thenReturn(GRAPHS.get(0));
+      when(mp.extendGraph(GRAPHS.get(0))).thenThrow(new PlanningException());
+
+      final PlanningProcess pt = new PlanningProcess(mp, null, pp);
+
+      try {
+        pt.advance();
+      } catch (final Exception ignored) {
+      }
+
+      assertTrue(pt.isDone());
+    }
+
+    @Test
+    public void returnTrueWhenPlanExtractorThrows() throws Exception {
+      final Mashup m = make(aMinimalMashup());
+      final PlanningProblem pp = new PlanningProblem(m, 1, 2);
+
+      final MashupPlanner mp = mock(MashupPlanner.class);
+      when(mp.createGraph(m)).thenReturn(GRAPHS.get(0));
+      when(mp.extractPlans(GRAPHS.get(0), 1)).thenThrow(new RuntimeException());
+
+      final PlanningProcess pt = new PlanningProcess(mp, null, pp);
+
+      try {
+        pt.advance();
+      } catch (final Exception ignored) {
+      }
+
+      assertTrue(pt.isDone());
+    }
+
   }
 
   @Test
