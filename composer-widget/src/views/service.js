@@ -18,12 +18,15 @@ module.exports = TemplateView.extend({
 
 
   events: {
-    'change [name=media-type]':     '_change',
-    'change [name=goal-mashup]':    '_change',
-    'change [name=min-plan-depth]': '_change',
-    'change [name=max-plan-depth]': '_change',
-    'change [name=service-url]':    '_change',
-    'submit [name=request]':        '_submit'
+    'change [name=media-type]':                '_change',
+    'change [name=goal-mashup]':               '_change',
+    'change [name=min-plan-depth]':            '_change',
+    'change [name=max-plan-depth]':            '_change',
+    'change [name=precursor-composition]':     '_change',
+    'change [name=functionality-composition]': '_change',
+    'change [name=property-composition]':      '_change',
+    'change [name=service-url]':               '_change',
+    'submit [name=request]':                   '_submit'
   },
 
 
@@ -35,6 +38,9 @@ module.exports = TemplateView.extend({
     this.$serviceUrl = this.$el.byName('service-url');
     this.$minPlanDepth = this.$el.byName('min-plan-depth');
     this.$maxPlanDepth = this.$el.byName('max-plan-depth');
+    this.$precursorComposition = this.$el.byName('precursor-composition');
+    this.$functionalityComposition = this.$el.byName('functionality-composition');
+    this.$propertyComposition = this.$el.byName('property-composition');
 
     this.$error = this.$el.byName('error');
 
@@ -60,6 +66,9 @@ module.exports = TemplateView.extend({
     this.$goalMashup.val(attrs.goalMashup);
     this.$minPlanDepth.val(attrs.minPlanDepth);
     this.$maxPlanDepth.val(attrs.maxPlanDepth);
+    this.$precursorComposition.val(attrs.precursorComposition);
+    this.$functionalityComposition.prop('checked', attrs.functionalityComposition);
+    this.$propertyComposition.prop('checked', attrs.propertyComposition);
     this.$serviceUrl.val(attrs.serviceUrl);
     return this;
   },
@@ -70,14 +79,20 @@ module.exports = TemplateView.extend({
     var mashup = this.$goalMashup.val();
     var minPlanDepth = asInt(this.$minPlanDepth.val());
     var maxPlanDepth = asInt(this.$maxPlanDepth.val());
+    var precursorComposition = this.$precursorComposition.val();
+    var functionalityComposition = this.$functionalityComposition.is(':checked');
+    var propertyComposition = this.$propertyComposition.is(':checked');
     var serviceUrl = this.$serviceUrl.val();
 
     this.model.set({
-      mediaType:    mediaType,
-      goalMashup:   mashup,
-      minPlanDepth: minPlanDepth,
-      maxPlanDepth: maxPlanDepth,
-      serviceUrl:   serviceUrl
+      mediaType:                mediaType,
+      goalMashup:               mashup,
+      minPlanDepth:             minPlanDepth,
+      maxPlanDepth:             maxPlanDepth,
+      precursorComposition:     precursorComposition,
+      functionalityComposition: functionalityComposition,
+      propertyComposition:      propertyComposition,
+      serviceUrl:               serviceUrl
     });
   },
 

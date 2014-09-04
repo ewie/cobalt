@@ -30,9 +30,14 @@ function requestPlans(model) {
   }
 
   var data = {
-    mashup:   mashup,
-    minDepth: attrs.minPlanDepth,
-    maxDepth: attrs.maxPlanDepth
+    mashup:                   mashup,
+    minDepth:                 attrs.minPlanDepth,
+    maxDepth:                 attrs.maxPlanDepth,
+    actionComposition: {
+      precursorActions:       attrs.precursorComposition,
+      functionalityProviders: attrs.functionalityComposition,
+      propertyProviders:      attrs.propertyComposition,
+    }
   };
 
   var request = $.ajax({
