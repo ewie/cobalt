@@ -58,7 +58,7 @@ public class ComposingMinimalPrecursorActionProvider implements PrecursorActionP
   private static Set<Action> selectPartialPrecursors(final Action action, final Set<Action> actions) {
     final Set<Action> partials = new HashSet<>();
     for (final Action a : actions) {
-      if (isPartialPrecursor(a, action)) {
+      if (a.isPartialPrecursorOf(action)) {
         partials.add(a);
       }
     }
@@ -99,7 +99,7 @@ public class ComposingMinimalPrecursorActionProvider implements PrecursorActionP
       final Set<Action> combination = it.next();
       if (Action.isComposable(combination)) {
         final Action ca = Action.compose(combination);
-        if (!ca.isMaintenance() && ca.canBePrecursorOf(action)) {
+        if (!ca.isMaintenance() && ca.isPrecursorOf(action)) {
           precursors.add(ca);
           // supersets of a sufficient combination can be skipped because they would not satisfy anything not already
           // satisfied
@@ -112,31 +112,6 @@ public class ComposingMinimalPrecursorActionProvider implements PrecursorActionP
     }
 
     return precursors;
-  }
-
-  /**
-   * Test if an action is a partial precursor for another action, i.e. it satisfies a subset of requirements for which
-   * a precursor action is required.
-   *
-   * @param candidate a candidate action to test
-   * @param action    an action requiring a precursor
-   *
-   * @return true when the candidate is a partial precursor, false otherwise
-   */
-  private static boolean isPartialPrecursor(final Action candidate, final Action action) {
-    final PropositionSet post = candidate.getPostConditions();
-    final PropositionSet pre = action.getPreConditions();
-    for (final Property p : pre.getClearedProperties()) {
-      // a partial precursor must clear at least one property required cleared
-      if (post.isCleared(p)) {
-        return true;
-      }
-      // cannot be a partial precursor when it fills a property required cleared
-      if (post.isFilled(p)) {
-        return false;
-      }
-    }
-    return false;
   }
 
 }

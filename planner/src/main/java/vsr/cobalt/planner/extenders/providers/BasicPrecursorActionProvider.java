@@ -34,7 +34,7 @@ public class BasicPrecursorActionProvider implements PrecursorActionProvider {
   public Set<Action> getPrecursorActionsFor(final Action action) {
     final Set<Action> precursors = new HashSet<>();
     for (final Action a : getWidgetActions(action.getWidget())) {
-      if (a.canBePrecursorOf(action)) {
+      if (a.isPrecursorOf(action)) {
         precursors.add(a);
       }
     }

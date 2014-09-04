@@ -43,7 +43,7 @@ public final class ActionProvision {
 
   /**
    * Create a provision with a requested action and an optional precursor action according to {@link
-   * Action#canBePrecursorOf(Action) }. A set of zero or more property provisions specify how properties, not provided
+   * Action#isPrecursorOf(Action) }. A set of zero or more property provisions specify how properties, not provided
    * by the precursor, can be attained through other actions.
    *
    * @param requestedAction    an action to enable
@@ -65,7 +65,7 @@ public final class ActionProvision {
 
   /**
    * Create a provision with a requested action and a precursor action according to {@link
-   * Action#canBePrecursorOf(Action) }. A set of zero or more property provisions specify how properties, not provided
+   * Action#isPrecursorOf(Action) }. A set of zero or more property provisions specify how properties, not provided
    * by the precursor, can be attained through other actions.
    *
    * @param requestedAction    an action to enable
@@ -115,7 +115,7 @@ public final class ActionProvision {
   }
 
   /**
-   * An action which is required by {@link #getRequestedAction()} according to {@link Action#canBePrecursorOf(Action)}.
+   * An action which is required by {@link #getRequestedAction()} according to {@link Action#isPrecursorOf(Action)}.
    *
    * @return the precursor action or null when not specified
    */
@@ -215,7 +215,7 @@ public final class ActionProvision {
 
   private static void assertWithPrecursor(final Action requestedAction, final Action precursorAction,
                                           final Collection<PropertyProvision> provisions) {
-    if (!precursorAction.canBePrecursorOf(requestedAction)) {
+    if (!precursorAction.isPrecursorOf(requestedAction)) {
       throw new IllegalArgumentException("expecting a satisfying precursor to the requested action");
     }
 

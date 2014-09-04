@@ -310,14 +310,14 @@ public abstract class Action {
   }
 
   /**
-   * Check if this action can be the precursor of the given action, i.e. the precursor, when executed, satisfies all
+   * Check if this action is a precursor of the given action, i.e. the precursor, when executed, satisfies all
    * pre-conditions of the other action, which can only be satisfied from within the same widget instance.
    *
    * @param other an action of the same widget which should be executed immediately after this action
    *
-   * @return true when this action can be the precursor, false otherwise
+   * @return true when this action is a precursor, false otherwise
    */
-  public boolean canBePrecursorOf(final Action other) {
+  public boolean isPrecursorOf(final Action other) {
     if (!belongsToSameWidget(other)) {
       return false;
     }
@@ -330,7 +330,28 @@ public abstract class Action {
   }
 
   /**
-   * Check if this action requires a precursor according to {@link #canBePrecursorOf(Action)}.
+   * Check if this action is a partial precursor of the given action, i.e. the precursor, when executed,
+   * satisfies at least one pre-conditions of the other action, which can only be satisfied from within the same
+   * widget instance.
+   *
+   * @param other an action of the same widget which should be executed immediately after this action
+   *
+   * @return true when this action is a partial precursor, false otherwise
+   */
+  public boolean isPartialPrecursorOf(final Action other) {
+    if (!belongsToSameWidget(other)) {
+      return false;
+    }
+    for (final Proposition p : other.preConditions) {
+      if (requiresPrecursor(p) && postConditions.contains(p)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Check if this action requires a precursor according to {@link #isPrecursorOf(Action)}.
    *
    * @return true when a precursor is required, false otherwise
    */
@@ -351,7 +372,7 @@ public abstract class Action {
    * @return a set of properties whose values cannot be provided by the precursor action
    */
   public Set<Property> getPublicPropertiesNotSatisfiedByPrecursor(final Action precursor) {
-    if (!precursor.canBePrecursorOf(this)) {
+    if (!precursor.isPrecursorOf(this)) {
       throw new IllegalArgumentException("expecting a precursor action");
     }
     final Set<Property> ps = new HashSet<>();

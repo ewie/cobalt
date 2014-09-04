@@ -504,7 +504,7 @@ public class ActionTest {
   }
 
   @Test
-  public static class CanBePrecursorOf {
+  public static class IsPrecursorOf {
 
     @Test
     public void returnFalseWhenWidgetDiffers() {
@@ -514,36 +514,109 @@ public class ActionTest {
       final Action target = make(aMinimalAction()
           .withWidget(aWidget().withIdentifier("w2")));
 
-      assertFalse(source.canBePrecursorOf(target));
+      assertFalse(source.isPrecursorOf(target));
     }
 
     @Test
     public void returnFalseWhenSourceDoesNotClearAllPropertiesRequiredClearedByTarget() {
-      final Property p = make(aMinimalProperty());
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
 
-      final Action source = make(aMinimalAction());
+      final Action source = make(aMinimalAction()
+          .withEffects(aPropositionSet().withCleared(p1)));
 
       final Action target = make(aMinimalAction()
-          .withPre(aPropositionSet().withCleared(p)));
+          .withPre(aPropositionSet().withCleared(p1, p2)));
 
-      assertFalse(source.canBePrecursorOf(target));
+      assertFalse(source.isPrecursorOf(target));
     }
 
     @Test
     public void returnTrueWhenSourceClearsAllPropertiesRequiredClearedByTarget() {
-      final Property p = make(aMinimalProperty());
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action source = make(aMinimalAction()
-          .withEffects(aPropositionSet().withCleared(p)));
+          .withEffects(aPropositionSet().withCleared(p1, p2)));
 
       final Action target = make(aMinimalAction()
-          .withPre(aPropositionSet().withCleared(p)));
+          .withPre(aPropositionSet().withCleared(p1, p2)));
 
-      assertTrue(source.canBePrecursorOf(target));
+      assertTrue(source.isPrecursorOf(target));
     }
 
     @Test
     public void returnFalseWhenSourceDoesNotFillAllNonPublicPropertiesRequiredFilledByTarget() {
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+
+      final Action source = make(aMinimalAction()
+          .withEffects(aPropositionSet().withFilled(p1)));
+
+      final Action target = make(aMinimalAction()
+          .withPre(aPropositionSet().withFilled(p1, p2)));
+
+      assertFalse(source.isPrecursorOf(target));
+    }
+
+    @Test
+    public void returnTrueWhenSourceFillsAllNonPublicPropertiesRequiredFilledByTarget() {
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+
+      final Action source = make(aMinimalAction()
+          .withEffects(aPropositionSet().withFilled(p1, p2)));
+
+      final Action target = make(aMinimalAction()
+          .withPre(aPropositionSet().withFilled(p1, p2)));
+
+      assertTrue(source.isPrecursorOf(target));
+    }
+
+  }
+
+  @Test
+  public static class IsPartialPrecursorOf {
+
+    @Test
+    public void returnFalseWhenWidgetDiffers() {
+      final Action source = make(aMinimalAction()
+          .withWidget(aWidget().withIdentifier("w1")));
+
+      final Action target = make(aMinimalAction()
+          .withWidget(aWidget().withIdentifier("w2")));
+
+      assertFalse(source.isPartialPrecursorOf(target));
+    }
+
+    @Test
+    public void returnFalseWhenSourceDoesNotClearAnyPropertyRequiredClearedByTarget() {
+      final Property p = make(aMinimalProperty());
+
+      final Action source = make(aMinimalAction());
+
+      final Action target = make(aMinimalAction()
+          .withPre(aPropositionSet().withCleared(p)));
+
+      assertFalse(source.isPartialPrecursorOf(target));
+    }
+
+    @Test
+    public void returnTrueWhenSourceClearsSomePropertyRequiredClearedByTarget() {
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
+
+      final Action source = make(aMinimalAction()
+          .withEffects(aPropositionSet().withCleared(p1)));
+
+      final Action target = make(aMinimalAction()
+          .withPre(aPropositionSet().withCleared(p1, p2)));
+
+      assertTrue(source.isPartialPrecursorOf(target));
+    }
+
+    @Test
+    public void returnFalseWhenSourceDoesNotFillAnyNonPublicPropertiesRequiredFilledByTarget() {
       final Property p = make(aMinimalProperty());
 
       final Action source = make(aMinimalAction());
@@ -551,20 +624,21 @@ public class ActionTest {
       final Action target = make(aMinimalAction()
           .withPre(aPropositionSet().withFilled(p)));
 
-      assertFalse(source.canBePrecursorOf(target));
+      assertFalse(source.isPartialPrecursorOf(target));
     }
 
     @Test
-    public void returnTrueWhenSourceFillsAllNonPublicPropertiesRequiredFilledByTarget() {
-      final Property p = make(aMinimalProperty());
+    public void returnTrueWhenSourceFillsSomeNonPublicPropertiesRequiredFilledByTarget() {
+      final Property p1 = make(aMinimalProperty().withName("p1"));
+      final Property p2 = make(aMinimalProperty().withName("p2"));
 
       final Action source = make(aMinimalAction()
-          .withEffects(aPropositionSet().withFilled(p)));
+          .withEffects(aPropositionSet().withFilled(p1)));
 
       final Action target = make(aMinimalAction()
-          .withPre(aPropositionSet().withFilled(p)));
+          .withPre(aPropositionSet().withFilled(p1, p2)));
 
-      assertTrue(source.canBePrecursorOf(target));
+      assertTrue(source.isPartialPrecursorOf(target));
     }
 
   }
