@@ -21,15 +21,27 @@ public final class PlannerRequest {
 
   private final PlanningProblem problem;
 
-  public PlannerRequest(final Mashup goalMashup, final int minDepth, final int maxDepth) {
+  private final ActionCompositionStrategy compositionStrategy;
+
+  public PlannerRequest(final Mashup goalMashup, final int minDepth, final int maxDepth,
+                        final ActionCompositionStrategy compositionStrategy) {
     if (goalMashup == null) {
       throw new IllegalArgumentException("expecting some goal mashup");
     }
     problem = new PlanningProblem(goalMashup, minDepth, maxDepth);
+    this.compositionStrategy = compositionStrategy;
+  }
+
+  public PlannerRequest(final Mashup goalMashup, final int minDepth, final int maxDepth) {
+    this(goalMashup, minDepth, maxDepth, ActionCompositionStrategy.getDefault());
   }
 
   public PlanningProblem getPlanningProblem() {
     return problem;
+  }
+
+  public ActionCompositionStrategy getActionCompositionStrategy() {
+    return compositionStrategy;
   }
 
 }

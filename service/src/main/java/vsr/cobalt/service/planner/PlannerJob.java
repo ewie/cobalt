@@ -21,10 +21,16 @@ import vsr.cobalt.planner.Repository;
 import vsr.cobalt.planner.extenders.DefaultGraphExtender;
 import vsr.cobalt.planner.extenders.DefaultGraphFactory;
 import vsr.cobalt.planner.extenders.PathWalkingCyclicDependencyDetector;
+import vsr.cobalt.planner.extenders.providers.BasicFunctionalityProvisionProvider;
 import vsr.cobalt.planner.extenders.providers.BasicPrecursorActionProvider;
+import vsr.cobalt.planner.extenders.providers.BasicPropertyProvisionProvider;
 import vsr.cobalt.planner.extenders.providers.ComposingExtendedPrecursorActionProvider;
 import vsr.cobalt.planner.extenders.providers.ComposingFunctionalityProvisionProvider;
+import vsr.cobalt.planner.extenders.providers.ComposingMinimalPrecursorActionProvider;
 import vsr.cobalt.planner.extenders.providers.ComposingPropertyProvisionProvider;
+import vsr.cobalt.planner.extenders.providers.FunctionalityProvisionProvider;
+import vsr.cobalt.planner.extenders.providers.PrecursorActionProvider;
+import vsr.cobalt.planner.extenders.providers.PropertyProvisionProvider;
 import vsr.cobalt.planner.extractors.BackwardChainingPlanExtractor;
 
 /**
@@ -78,15 +84,58 @@ public class PlannerJob {
   }
 
   private GraphFactory createGraphFactory() {
-    return new DefaultGraphFactory(new ComposingFunctionalityProvisionProvider(repository));
+    return new DefaultGraphFactory(createFunctionalityProvisionProvider());
   }
 
   private GraphExtender createGraphExtender() {
     return new DefaultGraphExtender(
-        new ComposingExtendedPrecursorActionProvider(repository,
-            new BasicPrecursorActionProvider(repository)),
-        new ComposingPropertyProvisionProvider(repository),
+        createPrecursorActionProvider(),
+        createPropertyProvisionProvider(),
         new PathWalkingCyclicDependencyDetector());
+  }
+
+  private FunctionalityProvisionProvider createFunctionalityProvisionProvider() {
+    if (request.getActionCompositionStrategy().composeFunctionalityProviders()) {
+      return new ComposingFunctionalityProvisionProvider(repository);
+    } else {
+      return new BasicFunctionalityProvisionProvider(repository);
+    }
+  }
+
+  private PrecursorActionProvider createPrecursorActionProvider() {
+    switch (request.getActionCompositionStrategy().getPrecursorCompositionStrategy()) {
+    case NONE:
+      return createBasicPrecursorActionProvider();
+    case MINIMAL:
+      return createComposingMinimalPrecursorActionProvider();
+    case EXTENDED_ATOMIC:
+      return createComposingExtendedPrecursorActionProvider(createBasicPrecursorActionProvider());
+    case EXTENDED_MINIMAL:
+      return createComposingExtendedPrecursorActionProvider(createComposingMinimalPrecursorActionProvider());
+    default:
+      throw new RuntimeException("unsupported precursor action composition strategy");
+    }
+  }
+
+  private PropertyProvisionProvider createPropertyProvisionProvider() {
+    if (request.getActionCompositionStrategy().composePropertyProviders()) {
+      return new ComposingPropertyProvisionProvider(repository);
+    } else {
+      return new BasicPropertyProvisionProvider(repository);
+    }
+  }
+
+  private BasicPrecursorActionProvider createBasicPrecursorActionProvider() {
+    return new BasicPrecursorActionProvider(repository);
+  }
+
+  private ComposingMinimalPrecursorActionProvider createComposingMinimalPrecursorActionProvider() {
+    return new ComposingMinimalPrecursorActionProvider(repository);
+  }
+
+  private ComposingExtendedPrecursorActionProvider
+  createComposingExtendedPrecursorActionProvider(final PrecursorActionProvider provider) {
+    return new ComposingExtendedPrecursorActionProvider(repository, provider);
   }
 
   private PlanExtractor createPlanExtractor() {

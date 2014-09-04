@@ -20,6 +20,29 @@
       "description": "the maximum plan depth",
       "type": "integer",
       "minimum": 1
+    },
+    "actionComposition": {
+      "type": "object",
+      "properties": {
+        "precursorActions": {
+          "type": "string",
+          "default": "NONE",
+          "enum": [
+            "NONE",
+            "MINIMAL",
+            "EXTENDED_ATOMIC",
+            "EXTENDED_MINIMAL"
+          ]
+        },
+        "functionalityProviders": {
+          "type": "boolean",
+          "default": false
+        },
+        "propertyProviders": {
+          "type": "boolean",
+          "default": false
+        }
+      }
     }
   },
   "definitions": {

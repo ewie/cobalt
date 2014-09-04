@@ -14,6 +14,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
+import javax.json.JsonString;
 import javax.json.JsonStructure;
 import javax.json.JsonValue;
 import javax.json.JsonWriter;
@@ -26,7 +27,9 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFLanguages;
 import vsr.cobalt.models.Mashup;
 import vsr.cobalt.repository.semantic.internalizers.models.MashupInternalizer;
+import vsr.cobalt.service.planner.ActionCompositionStrategy;
 import vsr.cobalt.service.planner.PlannerRequest;
+import vsr.cobalt.service.planner.PrecursorCompositionStrategy;
 
 /**
  * @author Erik Wienhold
@@ -38,6 +41,10 @@ public class JsonPlannerRequestDeserializer {
   private static final String content = "content";
   private static final String minDepth = "minDepth";
   private static final String maxDepth = "maxDepth";
+  private static final String actionComposition = "actionComposition";
+  private static final String precursorActions = "precursorActions";
+  private static final String functionalityProviders = "functionalityProviders";
+  private static final String propertyProviders = "propertyProviders";
 
   public PlannerRequest deserialize(final JsonStructure objOrAry) {
     if (objOrAry instanceof JsonArray) {
@@ -49,8 +56,9 @@ public class JsonPlannerRequestDeserializer {
     final int minDepth = getMinDepth(obj);
     final int maxDepth = getMaxDepth(obj);
     final Mashup mashup = getMashup(obj);
+    final ActionCompositionStrategy compositionStrategy = getCompositionStrategy(obj);
 
-    return new PlannerRequest(mashup, minDepth, maxDepth);
+    return new PlannerRequest(mashup, minDepth, maxDepth, compositionStrategy);
   }
 
   private Mashup getMashup(final JsonObject obj) {
@@ -106,6 +114,29 @@ public class JsonPlannerRequestDeserializer {
     return val;
   }
 
+  private ActionCompositionStrategy getCompositionStrategy(final JsonObject obj) {
+    final JsonValue val = obj.get(actionComposition);
+    if (val == null || val == JsonValue.NULL) {
+      return ActionCompositionStrategy.getDefault();
+    }
+    if (!(val instanceof JsonObject)) {
+      throw new IllegalArgumentException("expecting an object specifying the action composition strategy");
+    }
+    final JsonObject obj2 = (JsonObject) val;
+    final PrecursorCompositionStrategy a = parsePrecursorCompositionSrategy(getString(obj2, precursorActions, "none"));
+    final boolean b = getBoolean(obj2, functionalityProviders, false);
+    final boolean c = getBoolean(obj2, propertyProviders, false);
+    return new ActionCompositionStrategy(a, b, c);
+  }
+
+  private PrecursorCompositionStrategy parsePrecursorCompositionSrategy(final String s) {
+    try {
+      return PrecursorCompositionStrategy.valueOf(s);
+    } catch (final Exception ex) {
+      throw new IllegalArgumentException("unsupported precursor composition strategy", ex);
+    }
+  }
+
   private Integer getInt(final JsonObject obj, final String key, final int defaultValue) {
     final JsonValue val = obj.get(key);
     if (val == null || val == JsonValue.NULL) {
@@ -113,6 +144,31 @@ public class JsonPlannerRequestDeserializer {
     }
     if (val instanceof JsonNumber) {
       return ((JsonNumber) val).intValue();
+    }
+    return null;
+  }
+
+  private String getString(final JsonObject obj, final String key, final String defaultValue) {
+    final JsonValue val = obj.get(key);
+    if (val == null || val == JsonValue.NULL) {
+      return defaultValue;
+    }
+    if (val instanceof JsonString) {
+      return ((JsonString) val).getString();
+    }
+    return null;
+  }
+
+  private Boolean getBoolean(final JsonObject obj, final String key, final boolean defaultValue) {
+    final JsonValue val = obj.get(key);
+    if (val == null || val == JsonValue.NULL) {
+      return defaultValue;
+    }
+    if (val == JsonValue.FALSE) {
+      return false;
+    }
+    if (val == JsonValue.TRUE) {
+      return true;
     }
     return null;
   }
