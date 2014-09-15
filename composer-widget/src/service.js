@@ -48,7 +48,7 @@ function requestPlans(model) {
     dataType: 'json',
     headers:  {
       // override the default header jQuery would use for JSON
-      'accept': 'application/json; charset=utf-8; x-json-pointer=true'
+      'accept': 'application/json; charset=utf-8; json-pointer=true'
     }
   });
 

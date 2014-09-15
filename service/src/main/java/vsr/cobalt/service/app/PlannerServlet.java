@@ -45,10 +45,10 @@ public class PlannerServlet extends HttpServlet {
 
   private static final MediaType MEDIA_TYPE_JSON = MediaType.JSON_UTF_8.withoutParameters();
 
-  private static final String X_JSON_POINTER = "x-json-pointer";
+  private static final String JSON_POINTER = "json-pointer";
 
-  private static final String X_JSON_POINTER_TRUE = "true";
-  private static final String X_JSON_POINTER_FALSE = "false";
+  private static final String JSON_POINTER_TRUE = "true";
+  private static final String JSON_POINTER_FALSE = "false";
 
   @Override
   public void doOptions(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
@@ -128,11 +128,11 @@ public class PlannerServlet extends HttpServlet {
   }
 
   private boolean acceptJsonPointer(final MediaType mediaType) {
-    // media type must contain x-json-pointer=true
-    final List<String> jps = mediaType.parameters().get(X_JSON_POINTER);
+    // media type must contain json-pointer=true
+    final List<String> jps = mediaType.parameters().get(JSON_POINTER);
     return jps != null
         && !jps.isEmpty()
-        && X_JSON_POINTER_TRUE.equals(jps.get(0));
+        && JSON_POINTER_TRUE.equals(jps.get(0));
   }
 
   private PlannerRequest parseRequest(final Reader reader) {
