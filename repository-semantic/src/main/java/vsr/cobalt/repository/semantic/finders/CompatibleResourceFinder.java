@@ -95,15 +95,12 @@ public class CompatibleResourceFinder {
       try {
 
         final Model model = dataset.getDefaultModel();
-        final QueryExecution qx = QueryExecutionFactory.create(getQuery(request, model), dataset);
 
-        try {
+        try (QueryExecution qx = QueryExecutionFactory.create(getQuery(request, model), dataset)) {
           final ResultSet rs = qx.execSelect();
           while (rs.hasNext()) {
             offers.add(createOffer(rs.next()));
           }
-        } finally {
-          qx.close();
         }
 
       } finally {

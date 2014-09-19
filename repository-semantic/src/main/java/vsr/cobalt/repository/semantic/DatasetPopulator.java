@@ -65,26 +65,22 @@ public class DatasetPopulator {
   }
 
   private static boolean containsMutexPropositions(final Model model) {
-    final QueryExecution qx = createQuery(model, getQuery("/sparql/mutex-propositions.rq"));
 
-    try {
+    try (QueryExecution qx = createQuery(model, getQuery("/sparql/mutex-propositions.rq"))) {
       final ResultSet rs = qx.execSelect();
       if (rs.hasNext()) {
         return true;
       }
-    } finally {
-      qx.close();
     }
 
     return false;
   }
 
   private static void inferPropertyNames(final Model model) {
-    final QueryExecution qx = createQuery(model, getQuery("/sparql/nameless-properties.rq"));
 
     final Model names = ModelFactory.createDefaultModel();
 
-    try {
+    try (QueryExecution qx = createQuery(model, getQuery("/sparql/nameless-properties.rq"))) {
       final ResultSet rs = qx.execSelect();
       while (rs.hasNext()) {
         final QuerySolution qs = rs.next();
@@ -92,8 +88,6 @@ public class DatasetPopulator {
         final Resource t = qs.getResource("type");
         names.add(p, Ontology.hasName, t.getURI());
       }
-    } finally {
-      qx.close();
     }
 
     model.add(names);
