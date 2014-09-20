@@ -61,8 +61,8 @@ module.exports = function (grunt) {
     },
 
     zip: {
-      debug: configZip('cobalt-widget-debug.wgt', 'widget/main.debug.js'),
-      release: configZip('cobalt-widget-release.wgt', 'widget/main.min.js')
+      debug: configZip('cobalt-composer-widget.debug.wgt', 'widget/main.debug.js'),
+      release: configZip('cobalt-composer-widget.release.wgt', 'widget/main.min.js')
     }
 
   });
