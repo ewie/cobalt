@@ -17,6 +17,9 @@
 
   <properties>
     <jettyVersion>9.2.2.v20140723</jettyVersion>
+    <vsr.cobalt.service.datasetDir>--mem--</vsr.cobalt.service.datasetDir>
+    <vsr.cobalt.service.seedDataset>true</vsr.cobalt.service.seedDataset>
+    <vsr.cobalt.service.widgetDir>${project.parent.basedir}/demo/widgets/</vsr.cobalt.service.widgetDir>
   </properties>
 
   <build>
@@ -26,6 +29,22 @@
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${jettyVersion}</version>
+        <configuration>
+          <systemProperties>
+            <systemProperty>
+              <name>vsr.cobalt.service.datasetDir</name>
+              <value>${vsr.cobalt.service.datasetDir}</value>
+            </systemProperty>
+            <systemProperty>
+              <name>vsr.cobalt.service.seedDataset</name>
+              <value>${vsr.cobalt.service.seedDataset}</value>
+            </systemProperty>
+            <systemProperty>
+              <name>vsr.cobalt.service.widgetDir</name>
+              <value>${vsr.cobalt.service.widgetDir}</value>
+            </systemProperty>
+          </systemProperties>
+        </configuration>
       </plugin>
 
     </plugins>

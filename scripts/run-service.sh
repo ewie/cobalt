@@ -10,7 +10,7 @@ usage() {
 	Cobalt user interface mashup planner
 	Copyright (c) 2014 Erik Wienhold
 
-	  -d --dataset [DIR]  dataset directory (default in memory dataset)
+	  -d --dataset [DIR]  dataset directory (default in-memory dataset)
 	  -h --help           this help
 	  -j --java-opts      optional java options
 	  -p --port [PORT]    port number (default 9000)
