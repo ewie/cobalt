@@ -90,7 +90,7 @@ function loadWidgets(execution) {
 
       // add the widgets one after another with a delay in between, otherwise
       // the request may happen to quickly for Rave to handle
-      return $.Deferred.sequence(fns, 200);
+      return $.Deferred.sequence(fns, 500);
 
     });
 }
