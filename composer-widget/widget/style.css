@@ -571,3 +571,37 @@ label[for] {
   font-family: 'FontAwesome';
   content: '\F065';
 }
+
+
+.checkbox > input[type=checkbox] {
+  visibility: hidden;
+  position: relative;
+     -moz-appearance: none;
+  -webkit-appearance: none;
+          appearance: none;
+  width: 1.3em;
+  height: 1.3em;
+  vertical-align: middle;
+  padding: 0;
+  margin: 0;
+}
+
+
+.checkbox > input[type=checkbox]::after {
+  visibility: visible;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  padding: 0.3em;
+  background-color: #ccc;
+  content: '';
+  font-family: 'FontAwesome';
+  font-size: 80%;
+}
+
+
+.checkbox > input[type=checkbox]:checked::after {
+  content: '\F00C';
+}
