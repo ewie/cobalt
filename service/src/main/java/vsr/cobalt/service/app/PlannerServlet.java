@@ -8,10 +8,9 @@
 package vsr.cobalt.service.app;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import javax.json.Json;
@@ -20,6 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.common.base.Joiner;
 import com.google.common.net.HttpHeaders;
 import com.google.common.net.MediaType;
 import org.eclipse.jetty.http.HttpMethod;
@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vsr.cobalt.models.Functionality;
 import vsr.cobalt.planner.PlanningProblem;
+import vsr.cobalt.service.planner.ActionCompositionStrategy;
 import vsr.cobalt.service.planner.PlannerFailure;
 import vsr.cobalt.service.planner.PlannerJob;
 import vsr.cobalt.service.planner.PlannerRequest;
@@ -149,17 +150,20 @@ public class PlannerServlet extends HttpServlet {
   }
 
   private void logPlannerRequest(final PlannerRequest request) {
-    final StringWriter sw = new StringWriter();
-    final PrintWriter pw = new PrintWriter(sw);
+    final PlanningProblem pp = request.getPlanningProblem();
+    final ActionCompositionStrategy acs = request.getActionCompositionStrategy();
 
-    final PlanningProblem p = request.getPlanningProblem();
-
-    for (final Functionality f : p.getGoalMashup().getFunctionalities()) {
-      pw.printf("    functionality: %s", f.getIdentifier()).println();
+    final List<String> fns = new ArrayList<>();
+    for (final Functionality fn : pp.getGoalMashup().getFunctionalities()) {
+      fns.add(fn.getIdentifier().toString());
     }
 
-    logger.info("planner request:\n  minDepth: {}\n  maxDepth: {}\n  mashup:\n{}",
-        p.getMinDepth(), p.getMaxDepth(), sw);
+    logger.info("planner request: planDepth=[{}..{}], actionComposition=({}, {}, {}), mashup=[{}]",
+        pp.getMinDepth(), pp.getMaxDepth(),
+        acs.getPrecursorCompositionStrategy(),
+        acs.composeFunctionalityProviders(),
+        acs.composePropertyProviders(),
+        Joiner.on(", ").join(fns));
   }
 
 }
