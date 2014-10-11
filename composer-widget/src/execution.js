@@ -131,27 +131,33 @@ function getActions(level, prevLevel) {
     level.actionProvisions.forEach(function (ap) {
       var pa = ap.precursorAction;
       if (pa) {
-        index.putWhenMissing(pa, function () {
-          return {
-            done:           false,
-            interactions:   getInteractions(pa),
-            communications: getCommunications(pa, level, prevLevel),
-            instance:       instances.get(ap.requestedAction, prevLevel)
-          };
-        });
+        var ints = getInteractions(pa);
+        if (ints.length) {
+          index.putWhenMissing(pa, function () {
+            return {
+              done:           false,
+              interactions:   ints,
+              communications: getCommunications(pa, level, prevLevel),
+              instance:       instances.get(ap.requestedAction, prevLevel)
+            };
+          });
+        }
       }
     });
   }
 
   level.requiredActions.forEach(function (action) {
-    index.putWhenMissing(action, function () {
-      return {
-        done:           false,
-        interactions:   getInteractions(action),
-        communications: getCommunications(action, level, prevLevel),
-        instance:       instances.get(action, level)
-      };
-    });
+    var ints = getInteractions(action);
+    if (ints.length) {
+      index.putWhenMissing(action, function () {
+        return {
+          done:           false,
+          interactions:   ints,
+          communications: getCommunications(action, level, prevLevel),
+          instance:       instances.get(action, level)
+        };
+      });
+    }
   });
 
   return new ActionCollection(index.values());
