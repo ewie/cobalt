@@ -81,16 +81,16 @@ function loadWidgets(execution) {
       var fns = instances.map(function (instance) {
         return function () {
           return rave.addWookieWidgetToPage(instance.wookie)
-            .then(function (regionWidget) {
+            .done(function (regionWidget) {
               instance.region = regionWidget;
               return instance;
             });
         };
       });
 
-      // add the widgets one after another with a delay in between, otherwise
-      // the request may happen to quickly for Rave to handle
-      return $.Deferred.sequence(fns, 500);
+      // add the widgets one after another, otherwise the requests may happen
+      // to quickly for Rave to handle
+      return $.Deferred.sequence(fns);
 
     });
 }

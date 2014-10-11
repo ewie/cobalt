@@ -79,7 +79,8 @@ function addWookieWidgetToPage(widget) {
       widgetId: widget.id,
       successCallback: function (id) {
         renderWidget(id)
-          .then(function (r) { dfd.resolve(r) });
+          .done(function (r) { dfd.resolve(r) })
+          .fail(function (r) { dfd.reject(r) });
       }
     });
   });
@@ -108,9 +109,16 @@ function renderWidget(id) {
     var _load = parent.$.fn.load;
 
     _$.fn.load = function (url, callback) {
-      _load.call(this, url, function () {
-        callback();
-        dfd.resolve(getRegionWidget(id));
+      _load.call(this, url, function (response, status, xhr) {
+        try {
+          callback();
+        } catch (e) {
+          dfd.reject();
+          return;
+        }
+        xhr
+          .done(function () { dfd.resolve(getRegionWidget(id)) })
+          .fail(function () { dfd.reject() });
       });
     };
 
@@ -189,7 +197,7 @@ function clearRegionWidgets() {
         return removeRegionWidget(widget);
       };
     });
-  return $.Deferred.sequence(fns, 200);
+  return $.Deferred.sequence(fns);
 }
 
 

@@ -140,24 +140,22 @@ $.Deferred.sequence = function (fns, delay) {
   (function next(index, promise) {
     // create the next promise and push its result when available
     var p = fns[index]()
-      .then(function (r) {
+      .fail(function (r) { dfd.reject(r) })
+      .done(function (r) {
         results.push(r);
         if (index === lastIndex) {
           dfd.resolve(results);
+        } else {
+          setTimeout(function () {
+            next(index + 1, promise);
+          }, delay);
         }
       });
 
     // set up the promise for the next step, either chain on the promise from
     // the previous step or use the promise from the current step (the very
     // first step)
-    promise = promise ? promise.then(p) : p;
-
-    if (index < lastIndex) {
-      // delay the next step
-      setTimeout(function () {
-        next(index + 1, promise);
-      }, delay);
-    }
+    promise = promise ? promise.done(p) : p;
   }(0));
 
   return dfd.promise();
