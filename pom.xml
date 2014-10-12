@@ -7,7 +7,7 @@
 
   <groupId>vsr.cobalt</groupId>
   <artifactId>cobalt</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <packaging>pom</packaging>
 
   <modules>
