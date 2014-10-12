@@ -81,7 +81,7 @@ function loadWidgets(execution) {
       var fns = instances.map(function (instance) {
         return function () {
           return rave.addWookieWidgetToPage(instance.wookie)
-            .done(function (regionWidget) {
+            .then(function (regionWidget) {
               instance.region = regionWidget;
               return instance;
             });
