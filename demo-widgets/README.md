@@ -24,7 +24,7 @@ make widgets
 mv *.wgt {deploy-dir}
 ```
 The files to bundle in Zip-Archives are determined by examining the files declared in each widgets `config.xml`.
-Care has to be taken when authoring new widgets that should be handles by this Makefile.
+Care has to be taken when authoring new widgets that should be handled by this Makefile.
 Make sure each `<content/>` element declares the respective file (attribute `src`) as their very first attribute (cf. example below).
 This is requires as the `config.xml` is processed as plain text (using `sed` and `grep`) rather than as proper XML (e.g. traversing its DOM).
 ```xml
